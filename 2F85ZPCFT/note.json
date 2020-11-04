@@ -2,8 +2,8 @@
   "paragraphs": [
     {
       "text": "%pyspark\nimport sys\nsys.version_info\nimport pandas\nimport matplotlib",
-      "user": "gaiauser",
-      "dateUpdated": "2020-09-24 17:12:34.177",
+      "user": "admin",
+      "dateUpdated": "2020-11-04 18:30:33.362",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -22,21 +22,16 @@
         "forms": {}
       },
       "results": {
-        "code": "ERROR",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "io.grpc.StatusRuntimeException: UNAVAILABLE: Channel shutdown invoked\n\tat io.grpc.Status.asRuntimeException(Status.java:526)\n\tat io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:434)\n\tat io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39)\n\tat io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23)\n\tat io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40)\n\tat io.grpc.internal.CensusStatsModule$StatsClientInterceptor$1$1.onClose(CensusStatsModule.java:678)\n\tat io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39)\n\tat io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23)\n\tat io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40)\n\tat io.grpc.internal.CensusTracingModule$TracingClientInterceptor$1$1.onClose(CensusTracingModule.java:403)\n\tat io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:459)\n\tat io.grpc.internal.ClientCallImpl.access$300(ClientCallImpl.java:63)\n\tat io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.close(ClientCallImpl.java:546)\n\tat io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.access$600(ClientCallImpl.java:467)\n\tat io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInContext(ClientCallImpl.java:584)\n\tat io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)\n\tat io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
-          }
-        ]
+        "code": "SUCCESS",
+        "msg": []
       },
       "apps": [],
       "jobName": "paragraph_1597700067863_572409186",
       "id": "20200817-213427_1162718354",
       "dateCreated": "2020-08-17 21:34:27.863",
-      "dateStarted": "2020-09-24 17:12:34.247",
-      "dateFinished": "2020-09-24 17:20:46.951",
-      "status": "ERROR",
+      "dateStarted": "2020-11-04 18:30:33.523",
+      "dateFinished": "2020-11-04 18:31:53.017",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -768,7 +763,7 @@
   "noteParams": {},
   "noteForms": {},
   "angularObjects": {
-    "spark::2F85ZPCFT": []
+    "spark:shared_process": []
   },
   "config": {
     "isZeppelinNotebookCronEnable": false
