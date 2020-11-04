@@ -1,0 +1,175 @@
+{
+  "paragraphs": [
+    {
+      "text": "%pyspark\nsometext\u003d\"TEST\"\nrdd \u003d sc.parallelize([sometext])\n",
+      "user": "admin",
+      "dateUpdated": "2020-04-07 14:42:53.943",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1586269889723_-335059138",
+      "id": "20200407-141615_1626111956",
+      "dateCreated": "2020-04-07 14:31:29.723",
+      "dateStarted": "2020-04-07 14:42:53.950",
+      "dateFinished": "2020-04-07 14:42:53.961",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n\n# then save as text file , using below if underline storage is HDFS\nrdd.saveAsTextFile(\"hdfs:///hadoop/temp/test2.txt\")",
+      "user": "admin",
+      "dateUpdated": "2020-04-07 14:42:55.050",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1586269889723_-2008346344",
+      "id": "20200407-142442_495812219",
+      "dateCreated": "2020-04-07 14:31:29.723",
+      "dateStarted": "2020-04-07 14:42:55.058",
+      "dateFinished": "2020-04-07 14:42:55.686",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nmy_rdd \u003d sc.textFile(\"hdfs:///hadoop/temp/test2.txt\")\n",
+      "user": "admin",
+      "dateUpdated": "2020-04-07 14:42:56.504",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1586269889724_2077682447",
+      "id": "20200407-142519_1587648838",
+      "dateCreated": "2020-04-07 14:31:29.724",
+      "dateStarted": "2020-04-07 14:42:56.512",
+      "dateFinished": "2020-04-07 14:42:56.537",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nprint(my_rdd)\nmy_rdd.collect()",
+      "user": "admin",
+      "dateUpdated": "2020-04-07 14:42:59.116",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "hdfs:///hadoop/temp/test2.txt MapPartitionsRDD[67] at textFile at NativeMethodAccessorImpl.java:0\n[\u0027TEST\u0027]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1586269889724_-1545463892",
+      "id": "20200407-142647_803790622",
+      "dateCreated": "2020-04-07 14:31:29.724",
+      "dateStarted": "2020-04-07 14:42:59.127",
+      "dateFinished": "2020-04-07 14:42:59.250",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n",
+      "user": "admin",
+      "dateUpdated": "2020-04-07 14:42:59.117",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1586270579116_-1796774497",
+      "id": "20200407-144259_1963433269",
+      "dateCreated": "2020-04-07 14:42:59.117",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/stv-hdfs-write",
+  "id": "2F4D9WC6M",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

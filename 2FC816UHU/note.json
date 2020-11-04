@@ -1,0 +1,151 @@
+{
+  "paragraphs": [
+    {
+      "user": "admin",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1590680882810_192778198",
+      "id": "20200528-154802_1181047241",
+      "dateCreated": "2020-05-28 15:48:02.810",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "admin",
+      "dateUpdated": "2020-05-28 15:47:02.243",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1590680766384_1215130417",
+      "id": "20200528-154606_363894878",
+      "dateCreated": "2020-05-28 15:46:06.384",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nval count \u003d sc.parallelize(1 to NUM_SAMPLES).filter { _ \u003d\u003e\n  val x \u003d math.random\n  val y \u003d math.random\n  x*x + y*y \u003c 1\n}.count()\n",
+      "user": "admin",
+      "dateUpdated": "2020-05-28 15:47:02.248",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "count: Long \u003d 785920\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1590680717407_1005522834",
+      "id": "20200528-154517_524474617",
+      "dateCreated": "2020-05-28 15:45:17.407",
+      "dateStarted": "2020-05-28 15:47:02.254",
+      "dateFinished": "2020-05-28 15:47:02.719",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "c",
+      "user": "admin",
+      "dateUpdated": "2020-05-28 15:47:02.754",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:24: error: not found: value c\n       c\n       ^\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1590680733897_-1417284845",
+      "id": "20200528-154533_839244392",
+      "dateCreated": "2020-05-28 15:45:33.897",
+      "dateStarted": "2020-05-28 15:47:02.760",
+      "dateFinished": "2020-05-28 15:47:02.777",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "admin",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1590680822754_-41751625",
+      "id": "20200528-154702_113071318",
+      "dateCreated": "2020-05-28 15:47:02.754",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/pi2",
+  "id": "2FC816UHU",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

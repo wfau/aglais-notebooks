@@ -1,0 +1,184 @@
+{
+  "paragraphs": [
+    {
+      "text": "%pyspark\n\nimport random\nfrom pyspark import SparkContext\ndef inside(p):\n    x, y \u003d random.random(), random.random()\n    return x*x + y*y \u003c 1\nNUM_SAMPLES \u003d 1000000\ncount \u003d sc.parallelize(range(0, NUM_SAMPLES)) \\\n             .filter(inside).count()\nprint(\"Pi is roughly %f\" % (4.0 * count / NUM_SAMPLES))",
+      "user": "admin",
+      "dateUpdated": "2020-04-14 18:24:30.980",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "org.apache.zeppelin.interpreter.InterpreterNotFoundException: No interpreter is binded to this note: 2F5VRDNCF"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1585684709573_-300265324",
+      "id": "20200331-195829_1829802623",
+      "dateCreated": "2020-03-31 19:58:29.573",
+      "dateStarted": "2020-03-31 19:59:06.893",
+      "dateFinished": "2020-03-31 19:59:07.067",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.InterpreterNotFoundException: No interpreter is binded to this note: 2F5VRDNCF\n\tat org.apache.zeppelin.interpreter.InterpreterFactory.getInterpreter(InterpreterFactory.java:60)\n\tat org.apache.zeppelin.notebook.Paragraph.getBindedInterpreter(Paragraph.java:243)\n\tat org.apache.zeppelin.notebook.Paragraph.execute(Paragraph.java:351)\n\tat org.apache.zeppelin.notebook.Note.run(Note.java:683)\n\tat org.apache.zeppelin.socket.NotebookServer.persistAndExecuteSingleParagraph(NotebookServer.java:1881)\n\tat org.apache.zeppelin.socket.NotebookServer.runParagraph(NotebookServer.java:1840)\n\tat org.apache.zeppelin.socket.NotebookServer.onMessage(NotebookServer.java:262)\n\tat org.apache.zeppelin.socket.NotebookSocket.onWebSocketText(NotebookSocket.java:59)\n\tat org.eclipse.jetty.websocket.common.events.JettyListenerEventDriver.onTextMessage(JettyListenerEventDriver.java:189)\n\tat org.eclipse.jetty.websocket.common.message.SimpleTextMessage.messageComplete(SimpleTextMessage.java:69)\n\tat org.eclipse.jetty.websocket.common.events.AbstractEventDriver.appendMessage(AbstractEventDriver.java:66)\n\tat org.eclipse.jetty.websocket.common.events.JettyListenerEventDriver.onTextFrame(JettyListenerEventDriver.java:158)\n\tat org.eclipse.jetty.websocket.common.events.AbstractEventDriver.incomingFrame(AbstractEventDriver.java:162)\n\tat org.eclipse.jetty.websocket.common.WebSocketSession.incomingFrame(WebSocketSession.java:459)\n\tat org.eclipse.jetty.websocket.common.extensions.AbstractExtension.nextIncomingFrame(AbstractExtension.java:182)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension.nextIncomingFrame(PerMessageDeflateExtension.java:105)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.CompressExtension.forwardIncoming(CompressExtension.java:142)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension.incomingFrame(PerMessageDeflateExtension.java:85)\n\tat org.eclipse.jetty.websocket.common.extensions.ExtensionStack.incomingFrame(ExtensionStack.java:220)\n\tat org.eclipse.jetty.websocket.common.Parser.notifyFrame(Parser.java:219)\n\tat org.eclipse.jetty.websocket.common.Parser.parse(Parser.java:244)\n\tat org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection.readParse(AbstractWebSocketConnection.java:559)\n\tat org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection.onFillable(AbstractWebSocketConnection.java:390)\n\tat org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)\n\tat org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)\n\tat org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:118)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)\n\tat org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:765)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)\n\tat java.lang.Thread.run(Thread.java:748)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nprint(\"Pi is roughly %f\" % (4.0 * count / NUM_SAMPLES))",
+      "user": "gaiauser",
+      "dateUpdated": "2020-03-31 19:59:17.392",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Pi is roughly 3.140032\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1585684741280_1405829989",
+      "id": "20200331-195901_1049910047",
+      "dateCreated": "2020-03-31 19:59:01.280",
+      "dateStarted": "2020-03-31 19:59:17.403",
+      "dateFinished": "2020-03-31 19:59:17.411",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import hdbscan\n",
+      "user": "admin",
+      "dateUpdated": "2020-04-08 11:00:03.774",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:2: error: \u0027.\u0027 expected but \u0027;\u0027 found.\nprint(\"\")\n^\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1585684757392_2070545685",
+      "id": "20200331-195917_1211996567",
+      "dateCreated": "2020-03-31 19:59:17.392",
+      "dateStarted": "2020-04-08 11:00:03.784",
+      "dateFinished": "2020-04-08 11:00:03.791",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import hdbscan",
+      "user": "admin",
+      "dateUpdated": "2020-04-08 11:00:15.480",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:2: error: \u0027.\u0027 expected but \u0027;\u0027 found.\nprint(\"\")\n^\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1586343596736_-861959838",
+      "id": "20200408-105956_55221958",
+      "dateCreated": "2020-04-08 10:59:56.736",
+      "dateStarted": "2020-04-08 11:00:15.492",
+      "dateFinished": "2020-04-08 11:00:15.497",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "admin",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1586343615480_318310723",
+      "id": "20200408-110015_760328596",
+      "dateCreated": "2020-04-08 11:00:15.480",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/stv-test-2",
+  "id": "2F5VRDNCF",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

@@ -1,0 +1,521 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\n\n# Simple Pi example, so that we can have an app to monitor\nimport random \nNUM_SAMPLES \u003d 2000000000\n\ndef inside(p):\n    x, y \u003d random.random(), random.random()\n    return x*x + y*y \u003c 1\n\ncount \u003d sc.parallelize(xrange(0, NUM_SAMPLES)) \\\n             .filter(inside).count()\nprint \"Pi is roughly %f\" % (4.0 * count / NUM_SAMPLES)",
+      "user": "admin",
+      "dateUpdated": "2020-06-10 20:57:41.363",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "tableHide": false,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Pi is roughly 3.141553\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1588241807555_-1211671200",
+      "id": "20200430-101647_12719057",
+      "dateCreated": "2020-04-30 10:16:47.555",
+      "dateStarted": "2020-06-10 20:34:00.341",
+      "dateFinished": "2020-06-10 20:34:57.271",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# Import SparkMonitor\nfrom sparkmonitor import SparkMonitor\n",
+      "user": "admin",
+      "dateUpdated": "2020-06-10 20:57:41.372",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "tableHide": false,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1591799833848_-1788978012",
+      "id": "20200610-143713_1250988762",
+      "dateCreated": "2020-06-10 14:37:13.848",
+      "dateStarted": "2020-06-10 19:51:47.653",
+      "dateFinished": "2020-06-10 19:51:47.661",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# Initialize SparkMonitor \nsm \u003d SparkMonitor(\"stv-dev-master\", \"8088\", sparkcontext\u003dsc)\n",
+      "user": "admin",
+      "dateUpdated": "2020-06-10 20:57:41.379",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "tableHide": false,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1590677257101_32654474",
+      "id": "20200528-144737_1252112577",
+      "dateCreated": "2020-05-28 14:47:37.102",
+      "dateStarted": "2020-06-10 19:45:59.654",
+      "dateFinished": "2020-06-10 19:45:59.661",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\njob_info \u003d sm.get_job_info()t\njob_info_df \u003d job_info.to_pandas()\njob_info_json \u003d job_info.to_json()\ndf \u003d spark.createDataFrame(job_info_df.astype(str)) \nz.show(df)\n\n# Use JSON version to access the first job status\nprint(\"Status of first job: {}\".format(job_info_json[0][\"status\"]))\n",
+      "user": "admin",
+      "dateUpdated": "2020-06-11 15:48:48.061",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "1": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "completionTime": "string",
+                      "jobGroup": "string",
+                      "jobId": "string",
+                      "killedTasksSummary": "string",
+                      "name": "string",
+                      "numActiveStages": "string",
+                      "numActiveTasks": "string",
+                      "numCompletedIndices": "string",
+                      "numCompletedStages": "string",
+                      "numCompletedTasks": "string",
+                      "numFailedStages": "string",
+                      "numFailedTasks": "string",
+                      "numKilledTasks": "string",
+                      "numSkippedStages": "string",
+                      "numSkippedTasks": "string",
+                      "numTasks": "string",
+                      "stageIds": "string",
+                      "status": "string",
+                      "submissionTime": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "tableHide": false,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "http://stv-dev-master:8088/proxy/application_1588261403747_0017/api/v1/applications/application_1588261403747_0017/jobs\n"
+          },
+          {
+            "type": "TABLE",
+            "data": "completionTime\tjobGroup\tjobId\tkilledTasksSummary\tname\tnumActiveStages\tnumActiveTasks\tnumCompletedIndices\tnumCompletedStages\tnumCompletedTasks\tnumFailedStages\tnumFailedTasks\tnumKilledTasks\tnumSkippedStages\tnumSkippedTasks\tnumTasks\tstageIds\tstatus\tsubmissionTime\n2020-06-10T20:52:01.655GMT\tzeppelin-admin-2F7Z8KVFN-20200610-114032_225139328\t13\t{}\ttake at NativeMethodAccessorImpl.java:0\t0\t0\t19\t1\t19\t0\t0\t0\t0\t0\t19\t[13]\tSUCCEEDED\t2020-06-10T20:52:01.527GMT\n2020-06-10T20:52:01.523GMT\tzeppelin-admin-2F7Z8KVFN-20200610-114032_225139328\t12\t{}\ttake at NativeMethodAccessorImpl.java:0\t0\t0\t4\t1\t4\t0\t0\t0\t0\t0\t4\t[12]\tSUCCEEDED\t2020-06-10T20:52:01.444GMT\n2020-06-10T20:52:01.437GMT\tzeppelin-admin-2F7Z8KVFN-20200610-114032_225139328\t11\t{}\ttake at NativeMethodAccessorImpl.java:0\t0\t0\t1\t1\t1\t0\t0\t0\t0\t0\t1\t[11]\tSUCCEEDED\t2020-06-10T20:52:01.353GMT\n2020-06-10T20:50:59.984GMT\tzeppelin-admin-2F7Z8KVFN-20200610-204115_1642011870\t10\t{}\ttake at NativeMethodAccessorImpl.java:0\t0\t0\t19\t1\t19\t0\t0\t0\t0\t0\t19\t[10]\tSUCCEEDED\t2020-06-10T20:50:59.858GMT\n2020-06-10T20:50:59.853GMT\tzeppelin-admin-2F7Z8KVFN-20200610-204115_1642011870\t9\t{}\ttake at NativeMethodAccessorImpl.java:0\t0\t0\t4\t1\t4\t0\t0\t0\t0\t0\t4\t[9]\tSUCCEEDED\t2020-06-10T20:50:59.720GMT\n2020-06-10T20:50:59.713GMT\tzeppelin-admin-2F7Z8KVFN-20200610-204115_1642011870\t8\t{}\ttake at NativeMethodAccessorImpl.java:0\t0\t0\t1\t1\t1\t0\t0\t0\t0\t0\t1\t[8]\tSUCCEEDED\t2020-06-10T20:50:59.615GMT\n2020-06-10T20:42:04.524GMT\tzeppelin-admin-2F7Z8KVFN-20200610-204115_1642011870\t7\t{}\ttake at NativeMethodAccessorImpl.java:0\t0\t0\t19\t1\t19\t0\t0\t0\t0\t0\t19\t[7]\tSUCCEEDED\t2020-06-10T20:42:04.410GMT\n2020-06-10T20:42:04.406GMT\tzeppelin-admin-2F7Z8KVFN-20200610-204115_1642011870\t6\t{}\ttake at NativeMethodAccessorImpl.java:0\t0\t0\t4\t1\t4\t0\t0\t0\t0\t0\t4\t[6]\tSUCCEEDED\t2020-06-10T20:42:04.335GMT\n2020-06-10T20:42:04.326GMT\tzeppelin-admin-2F7Z8KVFN-20200610-204115_1642011870\t5\t{}\ttake at NativeMethodAccessorImpl.java:0\t0\t0\t1\t1\t1\t0\t0\t0\t0\t0\t1\t[5]\tSUCCEEDED\t2020-06-10T20:42:04.254GMT\n2020-06-10T20:42:03.820GMT\tzeppelin-admin-2F7Z8KVFN-20200610-204115_1642011870\t4\t{}\ttoPandas at \u003cstdin\u003e:14\t0\t0\t24\t1\t24\t0\t0\t0\t0\t0\t24\t[4]\tSUCCEEDED\t2020-06-10T20:42:03.615GMT\n2020-06-10T20:41:52.182GMT\tzeppelin-admin-2F7Z8KVFN-20200610-204115_1642011870\t3\t{}\ttoPandas at \u003cstdin\u003e:14\t0\t0\t24\t1\t24\t0\t0\t0\t0\t0\t24\t[3]\tSUCCEEDED\t2020-06-10T20:41:52.028GMT\n2020-06-10T20:41:22.518GMT\tzeppelin-admin-2F7Z8KVFN-20200610-204115_1642011870\t2\t{}\ttoPandas at \u003cstdin\u003e:14\t0\t0\t24\t1\t24\t0\t0\t0\t0\t0\t24\t[2]\tSUCCEEDED\t2020-06-10T20:41:21.092GMT\n2020-06-10T20:34:57.262GMT\tzeppelin-admin-2F7Z8KVFN-20200430-101647_12719057\t1\t{}\tcount at \u003cstdin\u003e:10\t0\t0\t24\t1\t24\t0\t0\t0\t0\t0\t24\t[1]\tSUCCEEDED\t2020-06-10T20:34:00.413GMT\n2020-06-10T19:44:15.901GMT\tzeppelin-admin-2F7Z8KVFN-20200430-101647_12719057\t0\t{}\tcount at \u003cstdin\u003e:10\t0\t0\t24\t1\t24\t0\t0\t0\t0\t0\t24\t[0]\tSUCCEEDED\t2020-06-10T19:43:14.352GMT\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "\nStatus of first job: SUCCEEDED\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591789232065_-1174760365",
+      "id": "20200610-114032_225139328",
+      "dateCreated": "2020-06-10 11:40:32.065",
+      "dateStarted": "2020-06-10 20:53:03.374",
+      "dateFinished": "2020-06-10 20:53:03.904",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nexecutor_info \u003d sm.get_executor_info()\nexec_info_df \u003d executor_info.to_pandas()\ndf \u003d spark.createDataFrame(exec_info_df.astype(str)) \nz.show(df)",
+      "user": "admin",
+      "dateUpdated": "2020-06-10 20:57:41.394",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 242.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "activeTasks": "string",
+                      "addTime": "string",
+                      "blacklistedInStages": "string",
+                      "completedTasks": "string",
+                      "diskUsed": "string",
+                      "executorLogs": "string",
+                      "failedTasks": "string",
+                      "hostPort": "string",
+                      "id": "string",
+                      "isActive": "string",
+                      "isBlacklisted": "string",
+                      "maxMemory": "string",
+                      "maxTasks": "string",
+                      "memoryMetrics": "string",
+                      "memoryUsed": "string",
+                      "rddBlocks": "string",
+                      "totalCores": "string",
+                      "totalDuration": "string",
+                      "totalGCTime": "string",
+                      "totalInputBytes": "string",
+                      "totalShuffleRead": "string",
+                      "totalShuffleWrite": "string",
+                      "totalTasks": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "activeTasks",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "addTime",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "editorHide": false,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "activeTasks\taddTime\tblacklistedInStages\tcompletedTasks\tdiskUsed\texecutorLogs\tfailedTasks\thostPort\tid\tisActive\tisBlacklisted\tmaxMemory\tmaxTasks\tmemoryMetrics\tmemoryUsed\trddBlocks\ttotalCores\ttotalDuration\ttotalGCTime\ttotalInputBytes\ttotalShuffleRead\ttotalShuffleWrite\ttotalTasks\n0\t2020-06-10T16:04:53.116GMT\t[]\t0\t0\t{u\u0027stderr\u0027: u\u0027http://stv-dev-worker-2:8042/node/containerlogs/container_1588261403747_0017_01_000001/fedora/stderr?start\u003d-4096\u0027, u\u0027stdout\u0027: u\u0027http://stv-dev-worker-2:8042/node/containerlogs/container_1588261403747_0017_01_000001/fedora/stdout?start\u003d-4096\u0027}\t0\tstv-dev-worker-2:41863\tdriver\tTrue\tFalse\t9546655334\t0\t{u\u0027usedOffHeapStorageMemory\u0027: 0, u\u0027usedOnHeapStorageMemory\u0027: 89080, u\u0027totalOffHeapStorageMemory\u0027: 0, u\u0027totalOnHeapStorageMemory\u0027: 9546655334L}\t89080\t0\t0\t0\t0\t0\t0\t0\t0\n0\t2020-06-10T16:04:59.108GMT\t[]\t35\t0\t{u\u0027stderr\u0027: u\u0027http://stv-dev-worker-3:8042/node/containerlogs/container_1588261403747_0017_01_000007/fedora/stderr?start\u003d-4096\u0027, u\u0027stdout\u0027: u\u0027http://stv-dev-worker-3:8042/node/containerlogs/container_1588261403747_0017_01_000007/fedora/stdout?start\u003d-4096\u0027}\t0\tstv-dev-worker-3:42845\t6\tTrue\tFalse\t9546655334\t4\t{u\u0027usedOffHeapStorageMemory\u0027: 0, u\u0027usedOnHeapStorageMemory\u0027: 61857, u\u0027totalOffHeapStorageMemory\u0027: 0, u\u0027totalOnHeapStorageMemory\u0027: 9546655334L}\t61857\t0\t4\t449865\t564\t0\t0\t0\t35\n0\t2020-06-10T16:04:59.174GMT\t[]\t36\t0\t{u\u0027stderr\u0027: u\u0027http://stv-dev-worker-7:8042/node/containerlogs/container_1588261403747_0017_01_000006/fedora/stderr?start\u003d-4096\u0027, u\u0027stdout\u0027: u\u0027http://stv-dev-worker-7:8042/node/containerlogs/container_1588261403747_0017_01_000006/fedora/stdout?start\u003d-4096\u0027}\t0\tstv-dev-worker-7:37581\t5\tTrue\tFalse\t9546655334\t4\t{u\u0027usedOffHeapStorageMemory\u0027: 0, u\u0027usedOnHeapStorageMemory\u0027: 61871, u\u0027totalOffHeapStorageMemory\u0027: 0, u\u0027totalOnHeapStorageMemory\u0027: 9546655334L}\t61871\t0\t4\t437422\t536\t0\t0\t0\t36\n0\t2020-06-10T16:04:59.485GMT\t[]\t35\t0\t{u\u0027stderr\u0027: u\u0027http://stv-dev-worker-5:8042/node/containerlogs/container_1588261403747_0017_01_000005/fedora/stderr?start\u003d-4096\u0027, u\u0027stdout\u0027: u\u0027http://stv-dev-worker-5:8042/node/containerlogs/container_1588261403747_0017_01_000005/fedora/stdout?start\u003d-4096\u0027}\t0\tstv-dev-worker-5:36103\t4\tTrue\tFalse\t9546655334\t4\t{u\u0027usedOffHeapStorageMemory\u0027: 0, u\u0027usedOnHeapStorageMemory\u0027: 56319, u\u0027totalOffHeapStorageMemory\u0027: 0, u\u0027totalOnHeapStorageMemory\u0027: 9546655334L}\t56319\t0\t4\t473786\t1152\t0\t0\t0\t35\n0\t2020-06-10T16:05:00.126GMT\t[]\t35\t0\t{u\u0027stderr\u0027: u\u0027http://stv-dev-worker-1:8042/node/containerlogs/container_1588261403747_0017_01_000004/fedora/stderr?start\u003d-4096\u0027, u\u0027stdout\u0027: u\u0027http://stv-dev-worker-1:8042/node/containerlogs/container_1588261403747_0017_01_000004/fedora/stdout?start\u003d-4096\u0027}\t0\tstv-dev-worker-1:40227\t3\tTrue\tFalse\t9546655334\t4\t{u\u0027usedOffHeapStorageMemory\u0027: 0, u\u0027usedOnHeapStorageMemory\u0027: 61857, u\u0027totalOffHeapStorageMemory\u0027: 0, u\u0027totalOnHeapStorageMemory\u0027: 9546655334L}\t61857\t0\t4\t474952\t784\t0\t0\t0\t35\n0\t2020-06-10T16:04:58.918GMT\t[]\t38\t0\t{u\u0027stderr\u0027: u\u0027http://stv-dev-worker-4:8042/node/containerlogs/container_1588261403747_0017_01_000003/fedora/stderr?start\u003d-4096\u0027, u\u0027stdout\u0027: u\u0027http://stv-dev-worker-4:8042/node/containerlogs/container_1588261403747_0017_01_000003/fedora/stdout?start\u003d-4096\u0027}\t0\tstv-dev-worker-4:36165\t2\tTrue\tFalse\t9546655334\t4\t{u\u0027usedOffHeapStorageMemory\u0027: 0, u\u0027usedOnHeapStorageMemory\u0027: 73470, u\u0027totalOffHeapStorageMemory\u0027: 0, u\u0027totalOnHeapStorageMemory\u0027: 9546655334L}\t73470\t0\t4\t459667\t868\t0\t0\t0\t38\n0\t2020-06-10T16:04:58.259GMT\t[]\t37\t0\t{u\u0027stderr\u0027: u\u0027http://stv-dev-worker-8:8042/node/containerlogs/container_1588261403747_0017_01_000002/fedora/stderr?start\u003d-4096\u0027, u\u0027stdout\u0027: u\u0027http://stv-dev-worker-8:8042/node/containerlogs/container_1588261403747_0017_01_000002/fedora/stdout?start\u003d-4096\u0027}\t0\tstv-dev-worker-8:39637\t1\tTrue\tFalse\t9546655334\t4\t{u\u0027usedOffHeapStorageMemory\u0027: 0, u\u0027usedOnHeapStorageMemory\u0027: 67409, u\u0027totalOffHeapStorageMemory\u0027: 0, u\u0027totalOnHeapStorageMemory\u0027: 9546655334L}\t67409\t0\t4\t444453\t616\t0\t0\t0\t37\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591818060390_1168032717",
+      "id": "20200610-194100_269324125",
+      "dateCreated": "2020-06-10 19:41:00.390",
+      "dateStarted": "2020-06-10 20:54:13.048",
+      "dateFinished": "2020-06-10 20:54:13.647",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nstorage_info \u003d sm.get_storage_info()\nstorage_info_df \u003d storage_info.to_pandas()\nif len(storage_info_df)\u003e0:\n    df \u003d spark.createDataFrame(storage_info_df.astype(str)) \n    z.show(df)",
+      "user": "admin",
+      "dateUpdated": "2020-06-11 15:21:40.419",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 117.0,
+              "optionOpen": false
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "editorHide": false,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1591789436432_-486532465",
+      "id": "20200610-114356_43559395",
+      "dateCreated": "2020-06-10 11:43:56.432",
+      "dateStarted": "2020-06-11 15:21:40.449",
+      "dateFinished": "2020-06-11 15:21:40.494",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nstage_info \u003d sm.get_stage_info()\nstage_info \u003d stage_info.to_pandas()\ndf \u003d spark.createDataFrame(stage_info.astype(str)) \nz.show(df)",
+      "user": "admin",
+      "dateUpdated": "2020-06-10 20:57:41.410",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "accumulatorUpdates": "string",
+                      "attemptId": "string",
+                      "completionTime": "string",
+                      "description": "string",
+                      "details": "string",
+                      "diskBytesSpilled": "string",
+                      "executorCpuTime": "string",
+                      "executorRunTime": "string",
+                      "firstTaskLaunchedTime": "string",
+                      "inputBytes": "string",
+                      "inputRecords": "string",
+                      "killedTasksSummary": "string",
+                      "memoryBytesSpilled": "string",
+                      "name": "string",
+                      "numActiveTasks": "string",
+                      "numCompleteTasks": "string",
+                      "numCompletedIndices": "string",
+                      "numFailedTasks": "string",
+                      "numKilledTasks": "string",
+                      "numTasks": "string",
+                      "outputBytes": "string",
+                      "outputRecords": "string",
+                      "rddIds": "string",
+                      "schedulingPool": "string",
+                      "shuffleReadBytes": "string",
+                      "shuffleReadRecords": "string",
+                      "shuffleWriteBytes": "string",
+                      "shuffleWriteRecords": "string",
+                      "stageId": "string",
+                      "status": "string",
+                      "submissionTime": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "editorHide": false,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "accumulatorUpdates\tattemptId\tcompletionTime\tdescription\tdetails\tdiskBytesSpilled\texecutorCpuTime\texecutorRunTime\tfirstTaskLaunchedTime\tinputBytes\tinputRecords\tkilledTasksSummary\tmemoryBytesSpilled\tname\tnumActiveTasks\tnumCompleteTasks\tnumCompletedIndices\tnumFailedTasks\tnumKilledTasks\tnumTasks\toutputBytes\toutputRecords\trddIds\tschedulingPool\tshuffleReadBytes\tshuffleReadRecords\tshuffleWriteBytes\tshuffleWriteRecords\tstageId\tstatus\tsubmissionTime\n[]\t0\t2020-06-10T20:54:13.639GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t173350095\t1111\t2020-06-10T20:54:13.505GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t19\t19\t0\t0\t19\t0\t0\t[59, 52, 53, 58, 54, 57, 56, 55]\tdefault\t0\t0\t0\t0\t19\tCOMPLETE\t2020-06-10T20:54:13.499GMT\n[]\t0\t2020-06-10T20:54:13.491GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t109323760\t220\t2020-06-10T20:54:13.402GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t4\t4\t0\t0\t4\t0\t0\t[59, 52, 53, 58, 54, 57, 56, 55]\tdefault\t0\t0\t0\t0\t18\tCOMPLETE\t2020-06-10T20:54:13.395GMT\n[]\t0\t2020-06-10T20:54:13.388GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t42235835\t114\t2020-06-10T20:54:13.253GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t1\t1\t0\t0\t1\t0\t0\t[59, 52, 53, 58, 54, 57, 56, 55]\tdefault\t0\t0\t0\t0\t17\tCOMPLETE\t2020-06-10T20:54:13.241GMT\n[]\t0\t2020-06-10T20:53:03.891GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t125116819\t1090\t2020-06-10T20:53:03.737GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t19\t19\t0\t0\t19\t0\t0\t[51, 46, 47, 44, 48, 49, 45, 50]\tdefault\t0\t0\t0\t0\t16\tCOMPLETE\t2020-06-10T20:53:03.730GMT\n[]\t0\t2020-06-10T20:53:03.723GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t25931165\t176\t2020-06-10T20:53:03.658GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t4\t4\t0\t0\t4\t0\t0\t[51, 46, 47, 44, 48, 49, 45, 50]\tdefault\t0\t0\t0\t0\t15\tCOMPLETE\t2020-06-10T20:53:03.652GMT\n[]\t0\t2020-06-10T20:53:03.642GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t6475792\t48\t2020-06-10T20:53:03.569GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t1\t1\t0\t0\t1\t0\t0\t[51, 46, 47, 44, 48, 49, 45, 50]\tdefault\t0\t0\t0\t0\t14\tCOMPLETE\t2020-06-10T20:53:03.561GMT\n[]\t0\t2020-06-10T20:52:01.652GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t119713196\t972\t2020-06-10T20:52:01.535GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t19\t19\t0\t0\t19\t0\t0\t[43, 38, 40, 36, 39, 37, 41, 42]\tdefault\t0\t0\t0\t0\t13\tCOMPLETE\t2020-06-10T20:52:01.530GMT\n[]\t0\t2020-06-10T20:52:01.522GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t24924049\t193\t2020-06-10T20:52:01.452GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t4\t4\t0\t0\t4\t0\t0\t[43, 38, 40, 36, 39, 37, 41, 42]\tdefault\t0\t0\t0\t0\t12\tCOMPLETE\t2020-06-10T20:52:01.446GMT\n[]\t0\t2020-06-10T20:52:01.437GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t6529724\t53\t2020-06-10T20:52:01.366GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t1\t1\t0\t0\t1\t0\t0\t[43, 38, 40, 36, 39, 37, 41, 42]\tdefault\t0\t0\t0\t0\t11\tCOMPLETE\t2020-06-10T20:52:01.353GMT\n[]\t0\t2020-06-10T20:50:59.984GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t205087989\t1107\t2020-06-10T20:50:59.868GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t19\t19\t0\t0\t19\t0\t0\t[35, 32, 34, 28, 31, 30, 33, 29]\tdefault\t0\t0\t0\t0\t10\tCOMPLETE\t2020-06-10T20:50:59.861GMT\n[]\t0\t2020-06-10T20:50:59.846GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t143163378\t233\t2020-06-10T20:50:59.728GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t4\t4\t0\t0\t4\t0\t0\t[35, 32, 34, 28, 31, 30, 33, 29]\tdefault\t0\t0\t0\t0\t9\tCOMPLETE\t2020-06-10T20:50:59.722GMT\n[]\t0\t2020-06-10T20:50:59.713GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t46095457\t64\t2020-06-10T20:50:59.628GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t1\t1\t0\t0\t1\t0\t0\t[35, 32, 34, 28, 31, 30, 33, 29]\tdefault\t0\t0\t0\t0\t8\tCOMPLETE\t2020-06-10T20:50:59.616GMT\n[]\t0\t2020-06-10T20:42:04.524GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t63106175\t1033\t2020-06-10T20:42:04.416GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t19\t19\t0\t0\t19\t0\t0\t[27, 25, 20, 26, 21, 19, 18, 22]\tdefault\t0\t0\t0\t0\t7\tCOMPLETE\t2020-06-10T20:42:04.411GMT\n[]\t0\t2020-06-10T20:42:04.406GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t15401520\t178\t2020-06-10T20:42:04.342GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t4\t4\t0\t0\t4\t0\t0\t[27, 25, 20, 26, 21, 19, 18, 22]\tdefault\t0\t0\t0\t0\t6\tCOMPLETE\t2020-06-10T20:42:04.336GMT\n[]\t0\t2020-06-10T20:42:04.326GMT\tZeppelin\torg.apache.spark.sql.Dataset.take(Dataset.scala:2764)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\norg.apache.zeppelin.spark.SparkZeppelinContext.showData(SparkZeppelinContext.java:108)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t4273390\t44\t2020-06-10T20:42:04.264GMT\t0\t0\t{}\t0\ttake at NativeMethodAccessorImpl.java:0\t0\t1\t1\t0\t0\t1\t0\t0\t[27, 25, 20, 26, 21, 19, 18, 22]\tdefault\t0\t0\t0\t0\t5\tCOMPLETE\t2020-06-10T20:42:04.255GMT\n[]\t0\t2020-06-10T20:42:03.820GMT\tStarted by: admin\torg.apache.spark.sql.Dataset$$anonfun$collectAsArrowToPython$1$$anonfun$apply$17.apply(Dataset.scala:3287)\norg.apache.spark.api.python.PythonRDD$$anonfun$7$$anonfun$apply$3.apply$mcV$sp(PythonRDD.scala:456)\norg.apache.spark.api.python.PythonRDD$$anonfun$7$$anonfun$apply$3.apply(PythonRDD.scala:456)\norg.apache.spark.api.python.PythonRDD$$anonfun$7$$anonfun$apply$3.apply(PythonRDD.scala:456)\norg.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1360)\norg.apache.spark.api.python.PythonRDD$$anonfun$7.apply(PythonRDD.scala:457)\norg.apache.spark.api.python.PythonRDD$$anonfun$7.apply(PythonRDD.scala:453)\norg.apache.spark.api.python.SocketFuncServer.handleConnection(PythonRDD.scala:994)\norg.apache.spark.api.python.SocketFuncServer.handleConnection(PythonRDD.scala:988)\norg.apache.spark.api.python.PythonServer$$anonfun$11$$anonfun$apply$9.apply(PythonRDD.scala:853)\nscala.util.Try$.apply(Try.scala:192)\norg.apache.spark.api.python.PythonServer$$anonfun$11.apply(PythonRDD.scala:853)\norg.apache.spark.api.python.PythonServer$$anonfun$11.apply(PythonRDD.scala:852)\norg.apache.spark.api.python.PythonServer$$anon$1.run(PythonRDD.scala:908)\t0\t125459248\t1480\t2020-06-10T20:42:03.623GMT\t0\t0\t{}\t0\ttoPandas at \u003cstdin\u003e:14\t0\t24\t24\t0\t0\t24\t0\t0\t[24, 23, 20, 21, 19, 18, 22]\tdefault\t0\t0\t0\t0\t4\tCOMPLETE\t2020-06-10T20:42:03.616GMT\n[]\t0\t2020-06-10T20:41:52.182GMT\tStarted by: admin\torg.apache.spark.sql.Dataset$$anonfun$collectAsArrowToPython$1$$anonfun$apply$17.apply(Dataset.scala:3287)\norg.apache.spark.api.python.PythonRDD$$anonfun$7$$anonfun$apply$3.apply$mcV$sp(PythonRDD.scala:456)\norg.apache.spark.api.python.PythonRDD$$anonfun$7$$anonfun$apply$3.apply(PythonRDD.scala:456)\norg.apache.spark.api.python.PythonRDD$$anonfun$7$$anonfun$apply$3.apply(PythonRDD.scala:456)\norg.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1360)\norg.apache.spark.api.python.PythonRDD$$anonfun$7.apply(PythonRDD.scala:457)\norg.apache.spark.api.python.PythonRDD$$anonfun$7.apply(PythonRDD.scala:453)\norg.apache.spark.api.python.SocketFuncServer.handleConnection(PythonRDD.scala:994)\norg.apache.spark.api.python.SocketFuncServer.handleConnection(PythonRDD.scala:988)\norg.apache.spark.api.python.PythonServer$$anonfun$11$$anonfun$apply$9.apply(PythonRDD.scala:853)\nscala.util.Try$.apply(Try.scala:192)\norg.apache.spark.api.python.PythonServer$$anonfun$11.apply(PythonRDD.scala:853)\norg.apache.spark.api.python.PythonServer$$anonfun$11.apply(PythonRDD.scala:852)\norg.apache.spark.api.python.PythonServer$$anon$1.run(PythonRDD.scala:908)\t0\t148274297\t1582\t2020-06-10T20:41:52.037GMT\t0\t0\t{}\t0\ttoPandas at \u003cstdin\u003e:14\t0\t24\t24\t0\t0\t24\t0\t0\t[17, 13, 12, 14, 11, 16, 15]\tdefault\t0\t0\t0\t0\t3\tCOMPLETE\t2020-06-10T20:41:52.030GMT\n[]\t0\t2020-06-10T20:41:22.518GMT\tStarted by: admin\torg.apache.spark.sql.Dataset$$anonfun$collectAsArrowToPython$1$$anonfun$apply$17.apply(Dataset.scala:3287)\norg.apache.spark.api.python.PythonRDD$$anonfun$7$$anonfun$apply$3.apply$mcV$sp(PythonRDD.scala:456)\norg.apache.spark.api.python.PythonRDD$$anonfun$7$$anonfun$apply$3.apply(PythonRDD.scala:456)\norg.apache.spark.api.python.PythonRDD$$anonfun$7$$anonfun$apply$3.apply(PythonRDD.scala:456)\norg.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1360)\norg.apache.spark.api.python.PythonRDD$$anonfun$7.apply(PythonRDD.scala:457)\norg.apache.spark.api.python.PythonRDD$$anonfun$7.apply(PythonRDD.scala:453)\norg.apache.spark.api.python.SocketFuncServer.handleConnection(PythonRDD.scala:994)\norg.apache.spark.api.python.SocketFuncServer.handleConnection(PythonRDD.scala:988)\norg.apache.spark.api.python.PythonServer$$anonfun$11$$anonfun$apply$9.apply(PythonRDD.scala:853)\nscala.util.Try$.apply(Try.scala:192)\norg.apache.spark.api.python.PythonServer$$anonfun$11.apply(PythonRDD.scala:853)\norg.apache.spark.api.python.PythonServer$$anonfun$11.apply(PythonRDD.scala:852)\norg.apache.spark.api.python.PythonServer$$anon$1.run(PythonRDD.scala:908)\t0\t4109378408\t23988\t2020-06-10T20:41:21.118GMT\t0\t0\t{}\t0\ttoPandas at \u003cstdin\u003e:14\t0\t24\t24\t0\t0\t24\t0\t0\t[10, 6, 9, 4, 5, 8, 7]\tdefault\t0\t0\t0\t0\t2\tCOMPLETE\t2020-06-10T20:41:21.094GMT\n[]\t0\t2020-06-10T20:34:57.261GMT\tStarted by: admin\torg.apache.spark.rdd.RDD.collect(RDD.scala:944)\norg.apache.spark.api.python.PythonRDD$.collectAndServe(PythonRDD.scala:166)\norg.apache.spark.api.python.PythonRDD.collectAndServe(PythonRDD.scala)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t84317165\t1328427\t2020-06-10T20:34:00.422GMT\t0\t0\t{}\t0\tcount at \u003cstdin\u003e:10\t0\t24\t24\t0\t0\t24\t0\t0\t[3, 2]\tdefault\t0\t0\t0\t0\t1\tCOMPLETE\t2020-06-10T20:34:00.414GMT\n[]\t0\t2020-06-10T19:44:15.897GMT\tStarted by: admin\torg.apache.spark.rdd.RDD.collect(RDD.scala:944)\norg.apache.spark.api.python.PythonRDD$.collectAndServe(PythonRDD.scala:166)\norg.apache.spark.api.python.PythonRDD.collectAndServe(PythonRDD.scala)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:498)\npy4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\npy4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\npy4j.Gateway.invoke(Gateway.java:282)\npy4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\npy4j.commands.CallCommand.execute(CallCommand.java:79)\npy4j.GatewayConnection.run(GatewayConnection.java:238)\njava.lang.Thread.run(Thread.java:748)\t0\t598044851\t1361030\t2020-06-10T19:43:14.550GMT\t0\t0\t{}\t0\tcount at \u003cstdin\u003e:10\t0\t24\t24\t0\t0\t24\t0\t0\t[1, 0]\tdefault\t0\t0\t0\t0\t0\tCOMPLETE\t2020-06-10T19:43:14.381GMT\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591789440715_-252178613",
+      "id": "20200610-114400_416907092",
+      "dateCreated": "2020-06-10 11:44:00.715",
+      "dateStarted": "2020-06-10 20:57:14.020",
+      "dateFinished": "2020-06-10 20:57:14.841",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "admin",
+      "dateUpdated": "2020-06-10 20:57:41.421",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "tableHide": false,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1591799810128_-1749709309",
+      "id": "20200610-143650_1363900210",
+      "dateCreated": "2020-06-10 14:36:50.128",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/experiments/stv/simple-test",
+  "id": "2F7Z8KVFN",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

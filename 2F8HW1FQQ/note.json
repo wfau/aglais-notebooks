@@ -1,0 +1,166 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark\nval NUM_SAMPLES \u003d 1000000\nval count \u003d sc.parallelize(1 to NUM_SAMPLES).filter { _ \u003d\u003e\n  val x \u003d math.random\n  val y \u003d math.random\n  x*x + y*y \u003c 1\n}.count()\nprintln(s\"Pi is roughly ${4.0 * count / NUM_SAMPLES}\")",
+      "user": "gaiauser",
+      "dateUpdated": "2020-09-24 16:56:10.949",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Pi is roughly 3.14032\nNUM_SAMPLES: Int \u003d 1000000\ncount: Long \u003d 785080\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1588242068203_672813097",
+      "id": "20200430-102108_437503447",
+      "dateCreated": "2020-04-30 10:21:08.203",
+      "dateStarted": "2020-09-24 16:56:11.008",
+      "dateFinished": "2020-09-24 16:56:42.906",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nimport hdbscan",
+      "user": "gaiauser",
+      "dateUpdated": "2020-09-24 16:57:01.156",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1588242094160_102881315",
+      "id": "20200430-102134_1099892186",
+      "dateCreated": "2020-04-30 10:21:34.160",
+      "dateStarted": "2020-09-24 16:57:01.185",
+      "dateFinished": "2020-09-24 16:57:04.010",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nimport astropy",
+      "user": "gaiauser",
+      "dateUpdated": "2020-09-24 16:17:30.553",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1597698405840_1549087083",
+      "id": "20200817-210645_1719387929",
+      "dateCreated": "2020-08-17 21:06:45.840",
+      "dateStarted": "2020-09-24 16:17:30.566",
+      "status": "ABORT",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nfrom pyspark.ml.feature import VectorAssembler\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-09-24 16:57:21.055",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1600964250553_1372517122",
+      "id": "20200924-161730_476361186",
+      "dateCreated": "2020-09-24 16:17:30.553",
+      "dateStarted": "2020-09-24 16:57:21.076",
+      "dateFinished": "2020-09-24 16:57:21.267",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-09-24 16:22:40.786",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1600964560785_-1818431894",
+      "id": "20200924-162240_778061411",
+      "dateCreated": "2020-09-24 16:22:40.785",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/experiments/stv/test2",
+  "id": "2F8HW1FQQ",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

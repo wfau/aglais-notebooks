@@ -1,0 +1,81 @@
+{
+  "paragraphs": [
+    {
+      "text": "%pyspark\nimport pandas",
+      "user": "gaiauser",
+      "dateUpdated": "2020-04-09 13:33:00.135",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1586438681100_-1684411880",
+      "id": "20200409-132441_1897330731",
+      "dateCreated": "2020-04-09 13:24:41.100",
+      "dateStarted": "2020-04-09 13:33:00.147",
+      "dateFinished": "2020-04-09 13:33:00.319",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "gaiauser",
+      "dateUpdated": "2020-04-09 13:30:21.916",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala",
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1586438977682_1214939062",
+      "id": "20200409-132937_1110532017",
+      "dateCreated": "2020-04-09 13:29:37.682",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/stv-pandas",
+  "id": "2F5YQJR5Y",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

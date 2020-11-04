@@ -1,0 +1,69 @@
+{
+  "paragraphs": [
+    {
+      "text": "%python\nprint(1)",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-13 15:08:03.548",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "1\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1602601674972_170361809",
+      "id": "20201013-150754_476164772",
+      "dateCreated": "2020-10-13 15:07:54.972",
+      "dateStarted": "2020-10-13 15:08:03.560",
+      "dateFinished": "2020-10-13 15:08:06.802",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-13 15:08:03.549",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602601683548_1065872426",
+      "id": "20201013-150803_1766794499",
+      "dateCreated": "2020-10-13 15:08:03.548",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/Untitled Note 3",
+  "id": "2FNW76EZ5",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "python:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

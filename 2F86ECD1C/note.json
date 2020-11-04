@@ -1,0 +1,103 @@
+{
+  "paragraphs": [
+    {
+      "text": "%pyspark\nimport hdbscan",
+      "user": "admin",
+      "dateUpdated": "2020-04-08 11:26:10.524",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1586344086531_-510325701",
+      "id": "20200408-110806_521980189",
+      "dateCreated": "2020-04-08 11:08:06.531",
+      "dateStarted": "2020-04-08 11:26:10.580",
+      "dateFinished": "2020-04-08 11:26:35.560",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nimport pandas",
+      "user": "admin",
+      "dateUpdated": "2020-04-09 13:24:25.502",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Fail to execute line 1: import pandas\nTraceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-5299132999488458986.py\", line 380, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\nImportError: No module named pandas\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1586344587775_1421602648",
+      "id": "20200408-111627_2115320608",
+      "dateCreated": "2020-04-08 11:16:27.775",
+      "dateStarted": "2020-04-09 13:24:25.512",
+      "dateFinished": "2020-04-09 13:24:25.519",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n",
+      "user": "admin",
+      "dateUpdated": "2020-04-08 11:08:09.784",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1586344089783_314815011",
+      "id": "20200408-110809_534047374",
+      "dateCreated": "2020-04-08 11:08:09.783",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/stv-hdbscan",
+  "id": "2F86ECD1C",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

@@ -1,0 +1,408 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n\n# Using ML to define an astrometrically clean sample of stars\n\n   Follows Gaia EDR3 science demonstration paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\n   via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\n\n   https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\n\n   (DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \"GCNS Generation\"\n   (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\n\n   Presently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0027s in the paper.\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-15 16:06:49.138",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eUsing ML to define an astrometrically clean sample of stars\u003c/h1\u003e\n\u003cp\u003eFollows Gaia EDR3 science demonstration paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\u003cbr/\u003e via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\"\u003ehttps://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e(DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \u0026ldquo;GCNS Generation\u0026rdquo;\u003cbr/\u003e (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\u003c/p\u003e\n\u003cp\u003ePresently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0026rsquo;s in the paper.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1602594659718_1847672831",
+      "id": "20201013-131059_546082898",
+      "dateCreated": "2020-10-13 13:10:59.718",
+      "dateStarted": "2020-10-15 16:06:49.109",
+      "dateFinished": "2020-10-15 16:06:49.124",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# this is the set of astrometric features to be used. In reality several iterations of this workflow would be required with an expanded set, and some figure-of-merit,\n# e.g. Gini index, would be used to select those most important to the RF classification...? cf. Table A.1 in the GCNS paper:\nastrometric_features \u003d [\n    \u0027parallax_error\u0027, \n    \u0027parallax_over_error\u0027,\n    \u0027astrometric_sigma5d_max\u0027,\n    \u0027pmra_error\u0027,\n    \u0027pmdec_error\u0027,\n    \u0027astrometric_excess_noise\u0027,\n    #\u0027ipd_gof_harmonic_amplitude\u0027,\n    #\u0027ruwe\u0027,                             TODO: reinstate all at GEDR3 !!!\n    \u0027visibility_periods_used\u0027,\n    \u0027pmdec\u0027,\n    \u0027pmra\u0027,\n    #\u0027ipd_frac_odd_win\u0027,\n    #\u0027ipd_frac_multi_peak\u0027,\n    \u0027astrometric_gof_al\u0027,\n    #\u0027scan_direction_strength_k2\u0027,\n    \u0027parallax_pmdec_corr\u0027\n]\n# ... the last two are included to cross check against the Gini index results presented in the paper.\n\n# quick mode: set an additional precicate filter on random_index here to limit to 1% or 0.1% sampling etc:\nquick_filter \u003d \u0027 AND MOD(random_index, 100) \u003d 0\u0027\n# ... to switch this off, simply specify an empty string.\n\n# reformat the above attribute list into an SQL comma-separated select string\nfeatures_select_string \u003d (\u0027%s, \u0027*(len(astrometric_features) - 1) + \u0027%s \u0027)%tuple(astrometric_features)\n#print (features_select_string)\n\n# define the data source\ngs_df \u003d sqlContext.read.parquet(\"/hadoop/gaia/parquet/gdr2/gaia_source/*.parquet\")\n\n# register as SQL-queryable \ngs_df.createOrReplaceTempView(\"gaia_source\")\n\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-16 15:23:23.935",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1602595009813_-1685315021",
+      "id": "20201013-131649_1734629667",
+      "dateCreated": "2020-10-13 13:16:49.813",
+      "dateStarted": "2020-10-16 15:23:23.982",
+      "dateFinished": "2020-10-16 15:23:27.979",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# a conservative selection of everything that COULD be within 100pc, including things with measured \n# distances putting them outside the 100pc horizon when their true distances are within, and also including \n# loads of spurious chaff with the wheat of course:\nall_sources_df \u003d spark.sql(\"SELECT source_id, \" + features_select_string + \"FROM gaia_source WHERE parallax \u003e +8.0\" + quick_filter)\nall_sources_df.count()\n# (cf. GEDR3: 1,211,740 sources) ",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-16 15:24:51.280",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "14274"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1602595458186_-1515484488",
+      "id": "20201013-132418_278702125",
+      "dateCreated": "2020-10-13 13:24:18.187",
+      "dateStarted": "2020-10-16 15:24:51.318",
+      "dateFinished": "2020-10-16 15:25:36.123",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# bad astrometric solutions: negative (unphysical!) parallaxes at high significance where\n# the parallax threshold corresponds to that on the +ve (physical) side of the parallax distribution\nbad_ast_df \u003d spark.sql(\"SELECT source_id, \" + features_select_string + \"FROM gaia_source WHERE parallax \u003c -8.0\" + quick_filter)\nbad_ast_df.count()\n# (cf. GEDR3: 512,288 sources)\n\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-16 15:28:18.605",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "6848"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1602594724290_637454818",
+      "id": "20201013-131204_2008164958",
+      "dateCreated": "2020-10-13 13:12:04.290",
+      "dateStarted": "2020-10-16 15:28:18.631",
+      "dateFinished": "2020-10-16 15:29:01.057",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# get the 2MASS photometry for the set of examples of good astrometric solutions (uses GACS call-out for DPAC crossmatch at GDR2)\n#\n# TODO: replace this with an internal GEDR3/2MASS match (using AXS) when deployed.\n\nimport warnings\nwarnings.filterwarnings(\"ignore\")\nfrom astroquery.utils.tap.core import TapPlus\ngaia \u003d TapPlus(url\u003d\"https://gea.esac.esa.int/tap-server/tap\")\n\nadql_query \u003d \"SELECT g.source_id, phot_g_mean_mag - j_m AS gminusj, \" + \\\n             \"phot_g_mean_mag + 5.0*log10(parallax/100.0) AS Mg, \" + \\\n             \"j_m + 5.0*log10(parallax/100.0) AS Mj, \" + \\\n             \"h_m + 5.0*log10(parallax/100.0) AS Mh, \" + \\\n             \"ks_m + 5.0*log10(parallax/100.0) AS Mk, \" + features_select_string + \\\n             \"FROM gaiadr2.gaia_source AS g, gaiadr2.tmass_best_neighbour AS x, gaiadr1.tmass_original_valid AS t \" + \\\n             \"WHERE g.source_id \u003d x.source_id AND x.tmass_oid \u003d t.tmass_oid\" + quick_filter + \\\n             \" AND parallax \u003e 8.0 AND ABS(g.b) \u003e 25.0\" + \\\n             \" AND 0\u003dCONTAINS(POINT(\u0027ICRS\u0027, g.ra, g.dec), CIRCLE(\u0027ICRS\u0027 , 13.1866666667, -72.82861111111, 3.0))\" + \\\n             \" AND 0\u003dCONTAINS(POINT(\u0027ICRS\u0027, g.ra, g.dec), CIRCLE(\u0027ICRS\u0027, 80.89375, -69.7561111111, 6.0))\"\n# ... last three predicates exclude low Galactic latitudes and the Magellanic Clouds.\n\n# execute the query\njob \u003d gaia.launch_job_async(adql_query)\nresults \u003d job.get_results()\nlen(results)\n# direct execution via the GACS UI yields a count of 291,394 in 2min\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-16 15:30:10.785",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Created TAP+ (v1.2.1) - Connection:\n\tHost: gea.esac.esa.int\n\tUse HTTPS: True\n\tPort: 443\n\tSSL Port: 443\nINFO: Query finished. [astroquery.utils.tap.core]\n2813"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1602596936428_1070427082",
+      "id": "20201013-134856_1401782262",
+      "dateCreated": "2020-10-13 13:48:56.428",
+      "dateStarted": "2020-10-16 15:30:10.813",
+      "dateFinished": "2020-10-16 15:30:44.626",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# transform from astropy.table.table.Table (?!) to a Spark partitioned dataframe\nphotometry_df \u003d spark.createDataFrame(results.to_pandas())\n\n# Sanity checks:\n#photometry_df.schema\n#photometry_df.rdd.getNumPartitions()\n#photometry_df.show()\n\n# TODO: refine the raw crossmatch photometry selection using GMM (WD, Red Clump and Giant Branch) and 5d Principal Curve (Main Sequence)\n# select them all for now:\ngood_ast_df \u003d photometry_df.select(astrometric_features)\ngood_ast_df.show()\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-16 15:31:52.036",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------------------+-----------------------+--------------------+--------------------+------------------------+-----------------------+-------------------+-------------------+------------------+--------------------+\n|      parallax_error|parallax_over_error|astrometric_sigma5d_max|          pmra_error|         pmdec_error|astrometric_excess_noise|visibility_periods_used|              pmdec|               pmra|astrometric_gof_al| parallax_pmdec_corr|\n+--------------------+-------------------+-----------------------+--------------------+--------------------+------------------------+-----------------------+-------------------+-------------------+------------------+--------------------+\n| 0.09628907989636805|  83.08872985839844|    0.14707030355930328| 0.16094097853226383|  0.1086716269933741|      0.5302448559307609|                     14| -41.40232088062163| 30.756881445198314|29.651460647583008|-0.34931308031082153|\n| 0.04971239855563428|  160.9632110595703|     0.0965086817741394|  0.0905562721361929|0.051598995539592234|     0.21016740328276384|                     13|-0.5407164526282342|-20.873758130656046| 8.384095191955566| 0.20328101515769958|\n| 0.13688667129654689|  58.45625305175781|    0.24151240289211273|  0.2609065675110585| 0.20622039491707048|      0.6151768390957375|                     10| -39.72554207734012|-46.637450943571785| 5.897881507873535| -0.2316150665283203|\n| 0.09087717841340771|   88.0549087524414|     0.1144799217581749|    0.14085704736854|  0.1707958344324594|     0.06471943564611157|                      8| -9.623618580628868| -73.61081102680814|10.598008155822754|  0.6611088514328003|\n| 0.09869157448670592|  81.08684539794922|    0.14848493039608002| 0.16298946278745635| 0.14876401204044437|       0.389186433882777|                     10|  7.393285053728769|-21.678105339490507| 5.117405891418457| 0.28566601872444153|\n| 0.03398300722852009| 235.52410888671875|    0.06862187385559082| 0.05996858701296206| 0.06450605460022715|     0.14650890033152894|                     12| -35.43875483175143|  28.57901772584234| 4.510565280914307|-0.00887699611485...|\n|  0.2214984101818869|  36.13985061645508|    0.28617429733276367| 0.28998661802500775|  0.2023272383523165|     0.20676274175406184|                     13|-372.40749880283124|-18.290995285890418|  1.31745445728302|-0.41746264696121216|\n|  0.1944721709480628| 41.162811279296875|    0.26364028453826904|  0.2870562786598416| 0.18124835454479388|      0.5735041557128958|                      8|-48.698367159101224| 22.452704126701196| 8.018160820007324|  0.0324040912091732|\n|0.043969228916691146| 182.06568908691406|    0.04423011094331741|0.059671775102234356| 0.06434312918966409|                     0.0|                     11| -13.52634611395607| -68.82042176659454| 8.752388000488281|-0.14967502653598785|\n|  0.7160008979455248| 11.181891441345215|     1.0635656118392944|   1.035523357441256|  1.0075185337700785|      2.2672951306501874|                      7| -3.472622667978216|  5.982719038621091| 13.42624568939209|-0.06276975572109222|\n| 0.07128258643509025|  112.3440170288086|    0.11377842724323273|  0.1075039597533461| 0.11615876991068418|      0.3442817062257219|                     17|-23.088666168168842| 43.276047720463815| 6.405690670013428|-0.01118044275790453|\n| 0.10797570057779603|  74.17036437988281|     0.2326078563928604| 0.19362144184670518|  0.2466741501528982|      0.2473409432265829|                     14|  98.32192091942045| 17.621013050458995|1.8976566791534424| 0.08190982788801193|\n|0.028385248226417466| 282.14605712890625|    0.02862532064318657|0.033316039109760436|0.039319925322007704|                     0.0|                     15|-10.214791456339457|-18.532153050231244| 8.737112045288086|-0.05780742317438...|\n| 0.09340840917130244|  85.74545288085938|    0.16068346798419952| 0.12451193502242722| 0.13209396636772794|     0.21066063263469362|                      8|-11.825799501673638| 59.630064219826956| 3.755889654159546|  -0.509986937046051|\n| 0.15751628995493078|  50.85569763183594|     0.2916049361228943|   0.324960454954718|   0.211690781648768|     0.45947084573282737|                      9|   -43.162999305206| 13.316431045663698| 2.861769676208496| 0.03558648005127907|\n| 0.10247971053012793|  78.16828918457031|    0.20856697857379913|  0.2284221764950215|   0.152181708584174|      0.5089497078789889|                      9|0.03216892651053588|-12.802352667508522| 8.091547012329102| 0.19032031297683716|\n| 0.05759632210742439|    139.08447265625|    0.06879552453756332| 0.06144979784746607|  0.0675632284248911|     0.23649158588514654|                     18|-12.778415227172115|  56.99169463783136| 5.549718379974365|-0.19711945950984955|\n|0.050499558452300426|  158.6505584716797|     0.0541805699467659| 0.08004361286885535|0.048660058683581545|                     0.0|                     12|  40.03211748157693| 16.164104067623654| 4.245771408081055| -0.2648104429244995|\n| 0.11025077155466347|  72.67188262939453|    0.16288524866104126|   0.168908816240004| 0.11144305811993772|     0.43119979309401474|                     13|-11.787063190584497|  46.62971818294429|7.9932475090026855| -0.2317396104335785|\n|  0.6313208962085177| 12.692346572875977|     1.4069048166275024|  1.1054816599680155|    1.17133377821526|      1.1224751582673163|                      9| -17.58861274821744|-15.674582552729335|3.2164430618286133| 0.05977747589349747|\n+--------------------+-------------------+-----------------------+--------------------+--------------------+------------------------+-----------------------+-------------------+-------------------+------------------+--------------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1602757318236_-1556018870",
+      "id": "20201015-102158_1056136694",
+      "dateCreated": "2020-10-15 10:21:58.236",
+      "dateStarted": "2020-10-16 15:31:52.057",
+      "dateFinished": "2020-10-16 15:31:57.590",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# TODO: map the training data frames into a new DF consisting of appropriately labelled LabelPoint objects - something like this:\n# see https://stackoverflow.com/questions/32556178/create-labeledpoints-from-spark-dataframe-in-python\n# from pyspark.ml.feature import VectorAssembler\n# assembler \u003d VectorAssembler(inputCols\u003dastrometric_features, outputCol\u003d\"features\")\n# transformed \u003d assembler.transform(parsedData)\n\nfrom pyspark.mllib.regression import LabeledPoint\n\n# why not simply for the bad training set\n# bad_training_df \u003d bad_ast_df.drop(\u0027source_id\u0027).transform(lambda row: LabeledPoint(0, row))\n# AttributeError: \u0027DataFrame\u0027 object has no attribute \u0027transform\u0027\n# .... argh we\u0027re in Spark 2.4.4... this functionality is available only from 3.0 ... but we need an RDD anyway, so:\nbad_training_rdd \u003d bad_ast_df.drop(\u0027source_id\u0027).rdd.map(lambda row: LabeledPoint(0, row))\n\n# and for the good set, need to drop also the photometry (these must not be used as features - see GCNS paper)\ngood_training_rdd \u003d good_ast_df.drop(\u0027source_id\u0027, \u0027gminusj\u0027, \u0027Mg\u0027, \u0027Mj\u0027, \u0027Mh\u0027, \u0027Mk\u0027).rdd.map(lambda row: LabeledPoint(1, row))\n\n# concatenate:\ntraining_rdd \u003d good_training_rdd.union(bad_training_rdd)\ntype(training_rdd.collect()[0])\n\n# problem in this cell: mapping is incorrect at execution with a dynamic typing error:\n# -\u003e TypeError: Cannot convert type \u003cclass \u0027pyspark.sql.types.Row\u0027\u003e into Vector\n\n\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-28 15:26:03.167",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "org.apache.spark.SparkException: Application application_1588261403747_0220 was killed by user fedora at 10.0.0.14\n\tat org.apache.spark.scheduler.cluster.YarnClientSchedulerBackend.waitForApplication(YarnClientSchedulerBackend.scala:94)\n\tat org.apache.spark.scheduler.cluster.YarnClientSchedulerBackend.start(YarnClientSchedulerBackend.scala:63)\n\tat org.apache.spark.scheduler.TaskSchedulerImpl.start(TaskSchedulerImpl.scala:183)\n\tat org.apache.spark.SparkContext.\u003cinit\u003e(SparkContext.scala:501)\n\tat org.apache.spark.SparkContext$.getOrCreate(SparkContext.scala:2520)\n\tat org.apache.spark.sql.SparkSession$Builder$$anonfun$7.apply(SparkSession.scala:935)\n\tat org.apache.spark.sql.SparkSession$Builder$$anonfun$7.apply(SparkSession.scala:926)\n\tat scala.Option.getOrElse(Option.scala:121)\n\tat org.apache.spark.sql.SparkSession$Builder.getOrCreate(SparkSession.scala:926)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat org.apache.zeppelin.spark.BaseSparkScalaInterpreter.spark2CreateContext(BaseSparkScalaInterpreter.scala:263)\n\tat org.apache.zeppelin.spark.BaseSparkScalaInterpreter.createSparkContext(BaseSparkScalaInterpreter.scala:182)\n\tat org.apache.zeppelin.spark.SparkScala211Interpreter.open(SparkScala211Interpreter.scala:90)\n\tat org.apache.zeppelin.spark.NewSparkInterpreter.open(NewSparkInterpreter.java:102)\n\tat org.apache.zeppelin.spark.SparkInterpreter.open(SparkInterpreter.java:62)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.open(LazyOpenInterpreter.java:69)\n\tat org.apache.zeppelin.spark.PySparkInterpreter.getSparkInterpreter(PySparkInterpreter.java:664)\n\tat org.apache.zeppelin.spark.PySparkInterpreter.createGatewayServerAndStartScript(PySparkInterpreter.java:260)\n\tat org.apache.zeppelin.spark.PySparkInterpreter.open(PySparkInterpreter.java:194)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.open(LazyOpenInterpreter.java:69)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:616)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.FIFOScheduler$1.run(FIFOScheduler.java:140)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1602778270935_1745846627",
+      "id": "20201015-161110_18118893",
+      "dateCreated": "2020-10-15 16:11:10.936",
+      "dateStarted": "2020-10-28 15:26:03.219",
+      "dateFinished": "2020-10-28 15:27:55.020",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# This cell does the business, given the data and training sets. Follows the example Python code at \n# https://spark.apache.org/docs/latest/api/python/pyspark.mllib.html#pyspark.mllib.tree.RandomForest\n\nfrom pyspark.mllib.tree import RandomForest\n\n\n# instantiate a trained RF classifier, seeded for repeatability at this stage:\nmodel \u003d RandomForest.trainClassifier(training_rdd, numClasses \u003d 2, categoricalFeaturesInfo \u003d {}, numTrees \u003d 5000, impurity \u003d \u0027gini\u0027, seed\u003d42)\n# data should be an RDD of LabeledPoint, say 0 \u003d bad/negative, 1 \u003d good/positive: [LabeledPoint(0, [list of features of a bad example]), LabeledPoint(1, [list of features of a good example]), ... ]\n# type(model) \u003d RandomForestModel that can be used for prediction.\n# TODO:\n# - DPACP-81 example \"The random Forest consists of 5000 decision trees built by selecting amongst three randomly selected predictors at each split.\" ... how to implement this?\n\n\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-16 16:10:50.935",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m\n\u001b[0;31mPy4JJavaError\u001b[0m                             Traceback (most recent call last)\n\u001b[0;32m\u003cipython-input-40-3a778724f6e4\u003e\u001b[0m in \u001b[0;36m\u003cmodule\u003e\u001b[0;34m\u001b[0m\n\u001b[1;32m      6\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      7\u001b[0m \u001b[0;31m# instantiate a trained RF classifier, seeded for repeatability at this stage:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----\u003e 8\u001b[0;31m \u001b[0mmodel\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mRandomForest\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtrainClassifier\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtraining_rdd\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnumClasses\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;36m2\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcategoricalFeaturesInfo\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;34m{\u001b[0m\u001b[0;34m}\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnumTrees\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;36m5000\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mimpurity\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;34m\u0027gini\u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mseed\u001b[0m\u001b[0;34m\u003d\u001b[0m\u001b[0;36m42\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      9\u001b[0m \u001b[0;31m# data should be an RDD of LabeledPoint, say 0 \u003d bad/negative, 1 \u003d good/positive: [LabeledPoint(0, [list of features of a bad example]), LabeledPoint(1, [list of features of a good example]), ... ]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     10\u001b[0m \u001b[0;31m# type(model) \u003d RandomForestModel that can be used for prediction.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~/spark/python/lib/pyspark.zip/pyspark/mllib/tree.py\u001b[0m in \u001b[0;36mtrainClassifier\u001b[0;34m(cls, data, numClasses, categoricalFeaturesInfo, numTrees, featureSubsetStrategy, impurity, maxDepth, maxBins, seed)\u001b[0m\n\u001b[1;32m    405\u001b[0m         return cls._train(data, \"classification\", numClasses,\n\u001b[1;32m    406\u001b[0m                           \u001b[0mcategoricalFeaturesInfo\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnumTrees\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfeatureSubsetStrategy\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mimpurity\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 407\u001b[0;31m                           maxDepth, maxBins, seed)\n\u001b[0m\u001b[1;32m    408\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    409\u001b[0m     \u001b[0;34m@\u001b[0m\u001b[0mclassmethod\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~/spark/python/lib/pyspark.zip/pyspark/mllib/tree.py\u001b[0m in \u001b[0;36m_train\u001b[0;34m(cls, data, algo, numClasses, categoricalFeaturesInfo, numTrees, featureSubsetStrategy, impurity, maxDepth, maxBins, seed)\u001b[0m\n\u001b[1;32m    304\u001b[0m     def _train(cls, data, algo, numClasses, categoricalFeaturesInfo, numTrees,\n\u001b[1;32m    305\u001b[0m                featureSubsetStrategy, impurity, maxDepth, maxBins, seed):\n\u001b[0;32m--\u003e 306\u001b[0;31m         \u001b[0mfirst\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mdata\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfirst\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    307\u001b[0m         \u001b[0;32massert\u001b[0m \u001b[0misinstance\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfirst\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mLabeledPoint\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m\"the data should be RDD of LabeledPoint\"\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    308\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mfeatureSubsetStrategy\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mcls\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msupportedFeatureSubsetStrategies\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~/spark/python/lib/pyspark.zip/pyspark/rdd.py\u001b[0m in \u001b[0;36mfirst\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m   1376\u001b[0m         \u001b[0mValueError\u001b[0m\u001b[0;34m:\u001b[0m \u001b[0mRDD\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0mempty\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1377\u001b[0m         \"\"\"\n\u001b[0;32m-\u003e 1378\u001b[0;31m         \u001b[0mrs\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtake\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;36m1\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1379\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mrs\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1380\u001b[0m             \u001b[0;32mreturn\u001b[0m \u001b[0mrs\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;36m0\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~/spark/python/lib/pyspark.zip/pyspark/rdd.py\u001b[0m in \u001b[0;36mtake\u001b[0;34m(self, num)\u001b[0m\n\u001b[1;32m   1358\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1359\u001b[0m             \u001b[0mp\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mrange\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mpartsScanned\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmin\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mpartsScanned\u001b[0m \u001b[0;34m+\u001b[0m \u001b[0mnumPartsToTry\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtotalParts\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-\u003e 1360\u001b[0;31m             \u001b[0mres\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcontext\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mrunJob\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtakeUpToNumLeft\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mp\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1361\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1362\u001b[0m             \u001b[0mitems\u001b[0m \u001b[0;34m+\u003d\u001b[0m \u001b[0mres\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~/spark/python/lib/pyspark.zip/pyspark/context.py\u001b[0m in \u001b[0;36mrunJob\u001b[0;34m(self, rdd, partitionFunc, partitions, allowLocal)\u001b[0m\n\u001b[1;32m   1067\u001b[0m         \u001b[0;31m# SparkContext#runJob.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1068\u001b[0m         \u001b[0mmappedRDD\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mrdd\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mmapPartitions\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mpartitionFunc\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-\u003e 1069\u001b[0;31m         \u001b[0msock_info\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_jvm\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mPythonRDD\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mrunJob\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_jsc\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmappedRDD\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_jrdd\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mpartitions\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1070\u001b[0m         \u001b[0;32mreturn\u001b[0m \u001b[0mlist\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0m_load_from_socket\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0msock_info\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmappedRDD\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_jrdd_deserializer\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1071\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~/spark/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py\u001b[0m in \u001b[0;36m__call__\u001b[0;34m(self, *args)\u001b[0m\n\u001b[1;32m   1255\u001b[0m         \u001b[0manswer\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mgateway_client\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msend_command\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcommand\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1256\u001b[0m         return_value \u003d get_return_value(\n\u001b[0;32m-\u003e 1257\u001b[0;31m             answer, self.gateway_client, self.target_id, self.name)\n\u001b[0m\u001b[1;32m   1258\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1259\u001b[0m         \u001b[0;32mfor\u001b[0m \u001b[0mtemp_arg\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mtemp_args\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~/spark/python/lib/pyspark.zip/pyspark/sql/utils.py\u001b[0m in \u001b[0;36mdeco\u001b[0;34m(*a, **kw)\u001b[0m\n\u001b[1;32m     61\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mdeco\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0ma\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkw\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     62\u001b[0m         \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---\u003e 63\u001b[0;31m             \u001b[0;32mreturn\u001b[0m \u001b[0mf\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0ma\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkw\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     64\u001b[0m         \u001b[0;32mexcept\u001b[0m \u001b[0mpy4j\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mprotocol\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mPy4JJavaError\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     65\u001b[0m             \u001b[0ms\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mjava_exception\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtoString\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~/spark/python/lib/py4j-0.10.7-src.zip/py4j/protocol.py\u001b[0m in \u001b[0;36mget_return_value\u001b[0;34m(answer, gateway_client, target_id, name)\u001b[0m\n\u001b[1;32m    326\u001b[0m                 raise Py4JJavaError(\n\u001b[1;32m    327\u001b[0m                     \u001b[0;34m\"An error occurred while calling {0}{1}{2}.\\n\"\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 328\u001b[0;31m                     format(target_id, \".\", name), value)\n\u001b[0m\u001b[1;32m    329\u001b[0m             \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    330\u001b[0m                 raise Py4JError(\n\n\u001b[0;31mPy4JJavaError\u001b[0m: An error occurred while calling z:org.apache.spark.api.python.PythonRDD.runJob.\n: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 11.0 failed 4 times, most recent failure: Lost task 0.3 in stage 11.0 (TID 25014, stv-dev-worker-2, executor 6): org.apache.spark.api.python.PythonException: Traceback (most recent call last):\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/worker.py\", line 377, in main\n    process()\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/worker.py\", line 372, in process\n    serializer.dump_stream(func(split_index, iterator), outfile)\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/serializers.py\", line 393, in dump_stream\n    vs \u003d list(itertools.islice(iterator, batch))\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/util.py\", line 99, in wrapper\n    return f(*args, **kwargs)\n  File \"\u003cipython-input-38-51abf66b49ca\u003e\", line 16, in \u003clambda\u003e\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/mllib/regression.py\", line 56, in __init__\n    self.features \u003d _convert_to_vector(features)\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/mllib/linalg/__init__.py\", line 83, in _convert_to_vector\n    raise TypeError(\"Cannot convert type %s into Vector\" % type(l))\nTypeError: Cannot convert type \u003cclass \u0027pyspark.sql.types.Row\u0027\u003e into Vector\n\n\tat org.apache.spark.api.python.BasePythonRunner$ReaderIterator.handlePythonException(PythonRunner.scala:456)\n\tat org.apache.spark.api.python.PythonRunner$$anon$1.read(PythonRunner.scala:592)\n\tat org.apache.spark.api.python.PythonRunner$$anon$1.read(PythonRunner.scala:575)\n\tat org.apache.spark.api.python.BasePythonRunner$ReaderIterator.hasNext(PythonRunner.scala:410)\n\tat org.apache.spark.InterruptibleIterator.hasNext(InterruptibleIterator.scala:37)\n\tat scala.collection.Iterator$class.foreach(Iterator.scala:891)\n\tat org.apache.spark.InterruptibleIterator.foreach(InterruptibleIterator.scala:28)\n\tat org.apache.spark.api.python.PythonRDD$.writeIteratorToStream(PythonRDD.scala:224)\n\tat org.apache.spark.api.python.PythonRunner$$anon$2.writeIteratorToStream(PythonRunner.scala:561)\n\tat org.apache.spark.api.python.BasePythonRunner$WriterThread$$anonfun$run$1.apply(PythonRunner.scala:346)\n\tat org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1945)\n\tat org.apache.spark.api.python.BasePythonRunner$WriterThread.run(PythonRunner.scala:195)\n\nDriver stacktrace:\n\tat org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1889)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1877)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1876)\n\tat scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)\n\tat scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)\n\tat org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1876)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:926)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:926)\n\tat scala.Option.foreach(Option.scala:257)\n\tat org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:926)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2110)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2059)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2048)\n\tat org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)\n\tat org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:737)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2061)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2082)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2101)\n\tat org.apache.spark.api.python.PythonRDD$.runJob(PythonRDD.scala:153)\n\tat org.apache.spark.api.python.PythonRDD.runJob(PythonRDD.scala)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\n\tat py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\n\tat py4j.Gateway.invoke(Gateway.java:282)\n\tat py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\n\tat py4j.commands.CallCommand.execute(CallCommand.java:79)\n\tat py4j.GatewayConnection.run(GatewayConnection.java:238)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: org.apache.spark.api.python.PythonException: Traceback (most recent call last):\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/worker.py\", line 377, in main\n    process()\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/worker.py\", line 372, in process\n    serializer.dump_stream(func(split_index, iterator), outfile)\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/serializers.py\", line 393, in dump_stream\n    vs \u003d list(itertools.islice(iterator, batch))\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/util.py\", line 99, in wrapper\n    return f(*args, **kwargs)\n  File \"\u003cipython-input-38-51abf66b49ca\u003e\", line 16, in \u003clambda\u003e\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/mllib/regression.py\", line 56, in __init__\n    self.features \u003d _convert_to_vector(features)\n  File \"/tmp/hadoop-fedora/nm-local-dir/usercache/fedora/appcache/application_1588261403747_0211/container_1588261403747_0211_01_000007/pyspark.zip/pyspark/mllib/linalg/__init__.py\", line 83, in _convert_to_vector\n    raise TypeError(\"Cannot convert type %s into Vector\" % type(l))\nTypeError: Cannot convert type \u003cclass \u0027pyspark.sql.types.Row\u0027\u003e into Vector\n\n\tat org.apache.spark.api.python.BasePythonRunner$ReaderIterator.handlePythonException(PythonRunner.scala:456)\n\tat org.apache.spark.api.python.PythonRunner$$anon$1.read(PythonRunner.scala:592)\n\tat org.apache.spark.api.python.PythonRunner$$anon$1.read(PythonRunner.scala:575)\n\tat org.apache.spark.api.python.BasePythonRunner$ReaderIterator.hasNext(PythonRunner.scala:410)\n\tat org.apache.spark.InterruptibleIterator.hasNext(InterruptibleIterator.scala:37)\n\tat scala.collection.Iterator$class.foreach(Iterator.scala:891)\n\tat org.apache.spark.InterruptibleIterator.foreach(InterruptibleIterator.scala:28)\n\tat org.apache.spark.api.python.PythonRDD$.writeIteratorToStream(PythonRDD.scala:224)\n\tat org.apache.spark.api.python.PythonRunner$$anon$2.writeIteratorToStream(PythonRunner.scala:561)\n\tat org.apache.spark.api.python.BasePythonRunner$WriterThread$$anonfun$run$1.apply(PythonRunner.scala:346)\n\tat org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1945)\n\tat org.apache.spark.api.python.BasePythonRunner$WriterThread.run(PythonRunner.scala:195)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1602602470244_-1828846118",
+      "id": "20201013-152110_1282917873",
+      "dateCreated": "2020-10-13 15:21:10.244",
+      "dateStarted": "2020-10-16 16:10:50.961",
+      "dateFinished": "2020-10-16 16:10:56.400",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# classify based on the above trained model:\nclassifications \u003d model.predict(rdd).collect()\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-15 13:38:26.376",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602767903162_-464828232",
+      "id": "20201015-131823_1744793710",
+      "dateCreated": "2020-10-15 13:18:23.162",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nspark.version\n\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-16 15:48:47.595",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u00272.4.4\u0027"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1602863275943_-249308458",
+      "id": "20201016-154755_24366630",
+      "dateCreated": "2020-10-16 15:47:55.943",
+      "dateStarted": "2020-10-16 15:48:47.620",
+      "dateFinished": "2020-10-16 15:48:47.650",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-10-16 15:48:05.297",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602863285296_2116895870",
+      "id": "20201016-154805_154855220",
+      "dateCreated": "2020-10-16 15:48:05.296",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Good astrometric solutions via Random Forrest classifier",
+  "id": "2FQ9BR1YM",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "spark::2FQ9BR1YM": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
