@@ -3,7 +3,7 @@
     {
       "text": "%md\n\n# Using ML to define an astrometrically clean sample of stars\n\n   Follows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\n   via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\n\n   https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\n\n   (DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \"GCNS Generation\"\n   (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\n\n   Presently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0027s in the paper.\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-20 11:05:14.872",
+      "dateUpdated": "2020-11-23 09:32:03.876",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -36,15 +36,15 @@
       "jobName": "paragraph_1602594659718_1847672831",
       "id": "20201013-131059_546082898",
       "dateCreated": "2020-10-13 13:10:59.718",
-      "dateStarted": "2020-11-20 11:05:14.843",
-      "dateFinished": "2020-11-20 11:05:14.859",
+      "dateStarted": "2020-11-23 09:32:03.846",
+      "dateFinished": "2020-11-23 09:32:03.857",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# this is the set of astrometric features to be used. In reality several iterations of this workflow might be required with an expanded set, and some figure-of-merit,\n# e.g. Gini index, would be used to select those most important to the RF classification - cf. Table A.1 in the GCNS paper.\nastrometric_features \u003d [\n    \u0027parallax_error\u0027, \n    \u0027parallax_over_error\u0027,\n    \u0027astrometric_sigma5d_max\u0027,\n    \u0027pmra_error\u0027,\n    \u0027pmdec_error\u0027,\n    \u0027astrometric_excess_noise\u0027,\n    #\u0027ipd_gof_harmonic_amplitude\u0027,\n    #\u0027ruwe\u0027,                             TODO: reinstate all at GEDR3 !!!\n    \u0027visibility_periods_used\u0027,\n    \u0027pmdec\u0027,\n    \u0027pmra\u0027,\n    #\u0027ipd_frac_odd_win\u0027,\n    #\u0027ipd_frac_multi_peak\u0027,\n    \u0027astrometric_gof_al\u0027,\n    #\u0027scan_direction_strength_k2\u0027,\n    \u0027parallax_pmdec_corr\u0027\n]\n# ... the last two are included to cross check against the Gini index results presented in the paper.\n\n# quick mode: set an additional precicate filter on random_index here to limit to 1% or 0.1% sampling etc:\nquick_filter \u003d \u0027 AND MOD(random_index, 10) \u003d 0\u0027\n# ... to switch this off, simply specify an empty string.\n\n# reformat the above attribute list into an SQL comma-separated select string\nfeatures_select_string \u003d (\u0027%s, \u0027*(len(astrometric_features) - 1) + \u0027%s \u0027)%tuple(astrometric_features)\n#print (features_select_string)\n\n# define the data source\ngs_df \u003d sqlContext.read.parquet(\"/data/gaia/*.parquet\")\n\n# register as SQL-queryable \ngs_df.createOrReplaceTempView(\"gaia_source\")\n\n",
+      "text": "%spark.pyspark\n\n# this is the set of astrometric features to be used. In reality several iterations of this workflow might be required with an expanded set, and some figure-of-merit,\n# e.g. Gini index, would be used to select those most important to the RF classification - cf. Table A.1 in the GCNS paper.\nastrometric_features \u003d [\n    \u0027parallax_error\u0027, \n    \u0027parallax_over_error\u0027,\n    \u0027astrometric_sigma5d_max\u0027,\n    \u0027pmra_error\u0027,\n    \u0027pmdec_error\u0027,\n    \u0027astrometric_excess_noise\u0027,\n    #\u0027ipd_gof_harmonic_amplitude\u0027,\n    #\u0027ruwe\u0027,                             TODO: reinstate all at GEDR3 !!!\n    \u0027visibility_periods_used\u0027,\n    \u0027pmdec\u0027,\n    \u0027pmra\u0027,\n    #\u0027ipd_frac_odd_win\u0027,\n    #\u0027ipd_frac_multi_peak\u0027,\n    \u0027astrometric_gof_al\u0027,\n    #\u0027scan_direction_strength_k2\u0027,\n    \u0027parallax_pmdec_corr\u0027\n]\n# ... the last two are included to cross check against the Gini index results presented in the paper.\n\n# quick mode: set an additional precicate filter on random_index here to limit to 1% or 0.1% sampling etc:\nquick_filter \u003d \u0027 AND MOD(random_index, 10) \u003d 0\u0027\n# ... to switch this off, simply specify an empty string.\n\n# reformat the above attribute list into an SQL comma-separated select string\nfeatures_select_string \u003d (\u0027%s, \u0027*(len(astrometric_features) - 1) + \u0027%s \u0027)%tuple(astrometric_features)\n#print (features_select_string)\n\n# photometric consistency predicate - e.g. Evans et al. (2018), Babusiaux et al. (2018) for DR2:\nphotometric_consistency_filter \u003d \" AND phot_bp_rp_excess_factor BETWEEN 1.0 + (0.03 * POW(bp_rp, 2.0)) AND 1.3 + (0.06 * POW(bp_rp, 2.0))\"\n\n# define the data source\ngs_df \u003d sqlContext.read.parquet(\"/data/gaia/*.parquet\")\n\n# register as SQL-queryable \ngs_df.createOrReplaceTempView(\"gaia_source\")\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-20 11:21:19.568",
+      "dateUpdated": "2020-11-23 11:13:36.000",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -71,15 +71,15 @@
       "jobName": "paragraph_1602595009813_-1685315021",
       "id": "20201013-131649_1734629667",
       "dateCreated": "2020-10-13 13:16:49.813",
-      "dateStarted": "2020-11-20 11:21:19.582",
-      "dateFinished": "2020-11-20 11:21:25.260",
+      "dateStarted": "2020-11-23 09:32:06.220",
+      "dateFinished": "2020-11-23 09:32:11.656",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# a conservative selection of everything that COULD be within 100pc, including things with measured \n# distances putting them outside the 100pc horizon when their true distances are within, and also including \n# loads of spurious chaff with the wheat of course:\nall_sources_df \u003d spark.sql(\"SELECT source_id, random_index, \" + features_select_string + \"FROM gaia_source WHERE parallax \u003e +8.0\" + quick_filter)\n\nall_sources_df.count()\n# (cf. GEDR3: 1,211,740 sources) ",
+      "text": "%spark.pyspark\n\n# clear any previously cached data in the context (cells may be executed in any order, and out-dated by changes from here onwards)\nsqlContext.clearCache()\n\n# a conservative selection of everything that COULD be within 100pc, including things with measured \n# distances putting them outside the 100pc horizon when their true distances are within, and also including \n# loads of spurious chaff with the wheat of course, plus bad things with significant, unphysical parallaxes:\nraw_sources_df \u003d spark.sql(\"SELECT source_id, random_index, phot_g_mean_mag, phot_bp_rp_excess_factor, bp_rp, g_rp, parallax, ra, dec, b \" + features_select_string + \"FROM gaia_source WHERE ABS(parallax) \u003e 8.0\")\n\n# cache it for speedy access below (all subsequent samples are derived from this):\nraw_sources_df.cache()\n\n# register as SQL-queryable\nraw_sources_df.createOrReplaceTempView(\"raw_sources\")\n\nraw_sources_df.count()\n# (cf. GEDR3: 1,211,740 sources) ",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-20 10:17:21.239",
+      "dateUpdated": "2020-11-23 11:14:27.665",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -91,7 +91,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -102,7 +103,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "142526"
+            "data": "2116773"
           }
         ]
       },
@@ -110,15 +111,15 @@
       "jobName": "paragraph_1602595458186_-1515484488",
       "id": "20201013-132418_278702125",
       "dateCreated": "2020-10-13 13:24:18.187",
-      "dateStarted": "2020-11-18 13:27:43.669",
-      "dateFinished": "2020-11-18 13:29:55.613",
+      "dateStarted": "2020-11-23 11:14:27.688",
+      "dateFinished": "2020-11-23 11:24:48.696",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# plot an observational Hertzsprung-Russell diagram (aka colour / absolute magnitude diagram) for the unclassified sample to show the problem\nunclassified_camd_df \u003d spark.sql(\"SELECT phot_g_mean_mag + 5.0*LOG10(parallax/100.0) AS m_g, g_rp FROM gaia_source WHERE parallax \u003e +8.0\" + quick_filter)\n\nimport matplotlib.pyplot as plot\nplot.figure(0, figsize \u003d (6.0, 9.7))\nx \u003d list(unclassified_camd_df.select(\"g_rp\").toPandas()[\"g_rp\"])\ny \u003d list(unclassified_camd_df.select(\"m_g\").toPandas()[\"m_g\"])\nplot.scatter(x, y, marker \u003d \".\", s \u003d 1)\nplot.ylim(21.0, -3.0)\nplot.ylabel(\"Stellar brightness (absolute G magnitude) --\u003e\", fontsize \u003d 16)\nplot.xlabel(\"\u003c-- Stellar temperature (G - RP magnitude)\", fontsize \u003d 16)\nplot.show()\n\n",
+      "text": "%spark.pyspark\n\n# plot an observational Hertzsprung-Russell diagram (aka colour / absolute magnitude diagram) for the unclassified sample to show the problem,\n# include the photometric consistency filter to show the problem is astrometric in addition to photometric\nunclassified_camd_df \u003d spark.sql(\"SELECT phot_g_mean_mag + 5.0*LOG10(parallax/100.0) AS m_g, g_rp FROM raw_sources WHERE parallax \u003e +8.0\" + quick_filter)# + photometric_consistency_filter)\n\nimport matplotlib.pyplot as plot\nplot.figure(0, figsize \u003d (6.0, 9.7))\nx \u003d list(unclassified_camd_df.select(\"g_rp\").toPandas()[\"g_rp\"])\ny \u003d list(unclassified_camd_df.select(\"m_g\").toPandas()[\"m_g\"])\nplot.scatter(x, y, marker \u003d \".\", s \u003d 1)\nplot.ylim(21.0, -3.0)\nplot.ylabel(\"Stellar brightness (absolute G magnitude) --\u003e\", fontsize \u003d 16)\nplot.xlabel(\"\u003c-- Stellar temperature (G - RP magnitude)\", fontsize \u003d 16)\nplot.show()\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-20 11:31:54.246",
+      "dateUpdated": "2020-11-23 10:57:06.816",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -154,15 +155,15 @@
       "jobName": "paragraph_1605865610401_-561678662",
       "id": "20201120-094650_221463065",
       "dateCreated": "2020-11-20 09:46:50.401",
-      "dateStarted": "2020-11-20 11:31:54.267",
-      "dateFinished": "2020-11-20 11:37:54.156",
+      "dateStarted": "2020-11-23 10:50:21.118",
+      "dateFinished": "2020-11-23 10:50:28.254",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%md\n\nThe problem: while we see astrophysically interesting locii in this diagram, the lower right (cool, low temperature) regime \u003cbr\u003e is dominated by systematic errors (not random uncertainties - the data should be equally precise in all parts of this data \u003cbr\u003e space) that contaminate the raw sample. We wish to clean the sample to obtain high reliability\n\n* without compromising completeness;\n* utilising quality features in the raw catalogue;\n* and efficiently; \n\ni.e. without endless iterations of manual, subjective, axis-parallel and arbitrary cuts on available catalogue attributes. A neat solution to this is to use supervised ML. In the Gaia EDR3 performance verification paper \"Gaia Catalogue of Nearby Stars\" (Smart, Sarro, Rybicki, et al. 2020) we use a Random Forest of decision trees on selected features having first defined a training set based on the data itself. \n\nNote that plotting the \u003ci\u003eintrinsic brightness\u003c/i\u003e of a star as above requires determination of the \u003ci\u003edistance\u003c/i\u003e to it along with a measurement of it\u0027s apparent brightness. Stellar distance determination is a fundamental goal of the Gaia mission and is achieved via measurement of the \u003ci\u003estellar parallax\u003c/i\u003e, the apparent \"wobble\" in angular position exhibited by all stars as seen from our (annually changing) view point in the solar system. The sample plotted above is selected for parallax \u003e 8 milliarcseconds (mas) which corresponds to a distance within 125 parsecs (since a star at distance 1 parsec exhibits a parallax of 1 arcsecond; parsec \u003d \"parallax arcsecond\"; 1 parsec is around 3.3 light-years).\n\nAn 8 mas training set of \"good\" examples is \"cleaned\" of highly probable spurious sources using \u003ci\u003eindependent\u003c/i\u003e photometric criteria (i.e. we require consistency of optical and infrared colours). The \"bad\" examples are selected having (unphysical) parallax \u003c -8 mas, i.e. using parallax measurements that are formally highly significant, yet obviously spurious.\n",
+      "text": "%md\n\nThe problem: while we see astrophysically interesting locii in this diagram, the lower right (cool, low temperature) regime \u003cbr\u003e is dominated by systematic errors (not random uncertainties - the data should be equally precise in all parts of this data \u003cbr\u003e space) that contaminate the raw sample. We wish to clean the sample to obtain high reliability\n\n* without compromising completeness;\n* utilising quality features in the raw catalogue;\n* and efficiently; \n\ni.e. without endless iterations of manual, subjective, axis-parallel and arbitrary cuts on available catalogue attributes. A neat solution to this is to use supervised ML. In the Gaia EDR3 performance verification paper \"Gaia Catalogue of Nearby Stars\" (Smart, Sarro, Rybicki, et al. 2020) we use a Random Forest of decision trees on selected features having first defined a training set based on the data itself. \n\nNote that plotting the \u003ci\u003eintrinsic brightness\u003c/i\u003e of a star as above requires determination of the \u003ci\u003edistance\u003c/i\u003e to it along with a measurement of it\u0027s apparent brightness. Stellar distance determination is a fundamental goal of the Gaia mission and is achieved via measurement of the \u003ci\u003estellar parallax\u003c/i\u003e, the apparent \"wobble\" in angular position exhibited by all stars as seen from our (annually changing) view point in the solar system. The sample plotted above is selected for parallax \u003e 8 milliarcseconds (mas) which corresponds to a distance within 125 parsecs (since a star at distance 1 parsec exhibits a parallax of 1 arcsecond; parsec \u003d \"parallax arcsecond\"; 1 parsec is around 3.3 light-years).\n\nAn 8 mas training set of \"good\" examples is \"cleaned\" of highly probable spurious sources using \u003ci\u003eindependent\u003c/i\u003e photometric criteria (i.e. we require consistency of optical and infrared colours). The \"bad\" examples are selected having (unphysical) parallax \u003c -8 mas, i.e. using parallax measurements that are formally highly significant, yet obviously spurious. Under the assumption of normally distributed uncertainties on the parallax measurements, this bad sample should be representative of the corresponding spurious measurements having parallax \u003e 8 mas that contaminate the parallax-selected sample and, in particular, create the contamination illustrated in the plot above.\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-20 12:04:16.752",
+      "dateUpdated": "2020-11-20 15:18:21.430",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -187,7 +188,7 @@
         "msg": [
           {
             "type": "HTML",
-            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThe problem: while we see astrophysically interesting locii in this diagram, the lower right (cool, low temperature) regime \u003cbr\u003e is dominated by systematic errors (not random uncertainties - the data should be equally precise in all parts of this data \u003cbr\u003e space) that contaminate the raw sample. We wish to clean the sample to obtain high reliability\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003ewithout compromising completeness;\u003c/li\u003e\n  \u003cli\u003eutilising quality features in the raw catalogue;\u003c/li\u003e\n  \u003cli\u003eand efficiently;\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003ei.e. without endless iterations of manual, subjective, axis-parallel and arbitrary cuts on available catalogue attributes. A neat solution to this is to use supervised ML. In the Gaia EDR3 performance verification paper \u0026ldquo;Gaia Catalogue of Nearby Stars\u0026rdquo; (Smart, Sarro, Rybicki, et al. 2020) we use a Random Forest of decision trees on selected features having first defined a training set based on the data itself. \u003c/p\u003e\n\u003cp\u003eNote that plotting the \u003ci\u003eintrinsic brightness\u003c/i\u003e of a star as above requires determination of the \u003ci\u003edistance\u003c/i\u003e to it along with a measurement of it\u0026rsquo;s apparent brightness. Stellar distance determination is a fundamental goal of the Gaia mission and is achieved via measurement of the \u003ci\u003estellar parallax\u003c/i\u003e, the apparent \u0026ldquo;wobble\u0026rdquo; in angular position exhibited by all stars as seen from our (annually changing) view point in the solar system. The sample plotted above is selected for parallax \u0026gt; 8 milliarcseconds (mas) which corresponds to a distance within 125 parsecs (since a star at distance 1 parsec exhibits a parallax of 1 arcsecond; parsec \u003d \u0026ldquo;parallax arcsecond\u0026rdquo;; 1 parsec is around 3.3 light-years).\u003c/p\u003e\n\u003cp\u003eAn 8 mas training set of \u0026ldquo;good\u0026rdquo; examples is \u0026ldquo;cleaned\u0026rdquo; of highly probable spurious sources using \u003ci\u003eindependent\u003c/i\u003e photometric criteria (i.e. we require consistency of optical and infrared colours). The \u0026ldquo;bad\u0026rdquo; examples are selected having (unphysical) parallax \u0026lt; -8 mas, i.e. using parallax measurements that are formally highly significant, yet obviously spurious.\u003c/p\u003e\n\u003c/div\u003e"
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThe problem: while we see astrophysically interesting locii in this diagram, the lower right (cool, low temperature) regime \u003cbr\u003e is dominated by systematic errors (not random uncertainties - the data should be equally precise in all parts of this data \u003cbr\u003e space) that contaminate the raw sample. We wish to clean the sample to obtain high reliability\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003ewithout compromising completeness;\u003c/li\u003e\n  \u003cli\u003eutilising quality features in the raw catalogue;\u003c/li\u003e\n  \u003cli\u003eand efficiently;\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003ei.e. without endless iterations of manual, subjective, axis-parallel and arbitrary cuts on available catalogue attributes. A neat solution to this is to use supervised ML. In the Gaia EDR3 performance verification paper \u0026ldquo;Gaia Catalogue of Nearby Stars\u0026rdquo; (Smart, Sarro, Rybicki, et al. 2020) we use a Random Forest of decision trees on selected features having first defined a training set based on the data itself. \u003c/p\u003e\n\u003cp\u003eNote that plotting the \u003ci\u003eintrinsic brightness\u003c/i\u003e of a star as above requires determination of the \u003ci\u003edistance\u003c/i\u003e to it along with a measurement of it\u0026rsquo;s apparent brightness. Stellar distance determination is a fundamental goal of the Gaia mission and is achieved via measurement of the \u003ci\u003estellar parallax\u003c/i\u003e, the apparent \u0026ldquo;wobble\u0026rdquo; in angular position exhibited by all stars as seen from our (annually changing) view point in the solar system. The sample plotted above is selected for parallax \u0026gt; 8 milliarcseconds (mas) which corresponds to a distance within 125 parsecs (since a star at distance 1 parsec exhibits a parallax of 1 arcsecond; parsec \u003d \u0026ldquo;parallax arcsecond\u0026rdquo;; 1 parsec is around 3.3 light-years).\u003c/p\u003e\n\u003cp\u003eAn 8 mas training set of \u0026ldquo;good\u0026rdquo; examples is \u0026ldquo;cleaned\u0026rdquo; of highly probable spurious sources using \u003ci\u003eindependent\u003c/i\u003e photometric criteria (i.e. we require consistency of optical and infrared colours). The \u0026ldquo;bad\u0026rdquo; examples are selected having (unphysical) parallax \u0026lt; -8 mas, i.e. using parallax measurements that are formally highly significant, yet obviously spurious. Under the assumption of normally distributed uncertainties on the parallax measurements, this bad sample should be representative of the corresponding spurious measurements having parallax \u0026gt; 8 mas that contaminate the parallax-selected sample and, in particular, create the contamination illustrated in the plot above.\u003c/p\u003e\n\u003c/div\u003e"
           }
         ]
       },
@@ -195,15 +196,15 @@
       "jobName": "paragraph_1605870302626_1784435362",
       "id": "20201120-110502_1704727157",
       "dateCreated": "2020-11-20 11:05:02.626",
-      "dateStarted": "2020-11-20 12:04:16.754",
-      "dateFinished": "2020-11-20 12:04:16.765",
+      "dateStarted": "2020-11-20 15:18:21.438",
+      "dateFinished": "2020-11-20 15:18:21.452",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# get the optical and infrared (2MASS) photometry for the set of examples of good astrometric solutions (uses GACS call-out for DPAC crossmatch at GDR2)\n#\n# TODO: replace this with an internal GEDR3/2MASS match (using AXS) when deployed.\n\nimport warnings\nwarnings.filterwarnings(\"ignore\")\nfrom astroquery.utils.tap.core import TapPlus\ngaia \u003d TapPlus(url\u003d\"https://gea.esac.esa.int/tap-server/tap\")\n\nadql_query \u003d \"SELECT g.source_id, phot_g_mean_mag - j_m AS gminusj, \" + \\\n             \"phot_g_mean_mag + 5.0*log10(parallax/100.0) AS Mg, \" + \\\n             \"j_m + 5.0*log10(parallax/100.0) AS Mj, \" + \\\n             \"h_m + 5.0*log10(parallax/100.0) AS Mh, \" + \\\n             \"ks_m + 5.0*log10(parallax/100.0) AS Mk, \" + features_select_string + \\\n             \"FROM gaiadr2.gaia_source AS g, gaiadr2.tmass_best_neighbour AS x, gaiadr1.tmass_original_valid AS t \" + \\\n             \"WHERE g.source_id \u003d x.source_id AND x.tmass_oid \u003d t.tmass_oid\" + quick_filter + \\\n             \" AND parallax \u003e 8.0 AND ABS(g.b) \u003e 25.0\" + \\\n             \" AND 0\u003dCONTAINS(POINT(\u0027ICRS\u0027, g.ra, g.dec), CIRCLE(\u0027ICRS\u0027 , 13.1866666667, -72.82861111111, 3.0))\" + \\\n             \" AND 0\u003dCONTAINS(POINT(\u0027ICRS\u0027, g.ra, g.dec), CIRCLE(\u0027ICRS\u0027, 80.89375, -69.7561111111, 6.0))\"\n# ... last three predicates exclude low Galactic latitudes and the Magellanic Clouds.\n\n# execute the query\njob \u003d gaia.launch_job_async(adql_query)\nresults \u003d job.get_results()\nlen(results)\n# direct execution via the GACS UI yields a count of 291,394 in 2min\n",
+      "text": "%spark.pyspark\n\n# bad training data: negative parallaxes:\nall_bad_training_df \u003d spark.sql(\"SELECT \" + features_select_string + \" FROM raw_sources WHERE parallax \u003c -8.0\" + quick_filter)\n\n# good training data: first define rough positional cuts to exclude crowded regions at low Gaialctic latitude and inside the Large and Small Magellanic Clouds (Luri et al. 2020):\nlow_galactic_latitude_filter \u003d \" AND ABS(b) \u003e 25.0\"\nsmc_filter \u003d \" AND (dec \u003c -80.0 OR dec \u003e -65.0 OR (ra \u003c 350.0 AND ra \u003e +40.0))\"\nlmc_filter \u003d \" AND (dec \u003c -80.0 OR dec \u003e -55.0 OR ra \u003c 40.0 OR ra \u003e 120.0)\"\nall_good_training_df \u003d spark.sql(\"SELECT \" + features_select_string + \" FROM raw_sources WHERE parallax \u003e + 8.0 AND ABS(b) \u003e 25.0 AND  \" + photometric_consistency_filter + quick_filter + low_galactic_latitude_filte + smc_filter + lmc_filter)\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-20 11:40:49.026",
+      "dateUpdated": "2020-11-23 11:49:43.545",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -216,6 +217,35 @@
           "completionSupport": true
         },
         "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1606128885289_-599247288",
+      "id": "20201123-105445_95907042",
+      "dateCreated": "2020-11-23 10:54:45.289",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# get the optical and infrared (2MASS) photometry for the set of examples of good astrometric solutions (uses GACS call-out for DPAC crossmatch at GDR2)\n#\n# TODO: replace this with an internal GEDR3/2MASS match (using AXS) when deployed.\n\nimport warnings\nwarnings.filterwarnings(\"ignore\")\nfrom astroquery.utils.tap.core import TapPlus\ngaia \u003d TapPlus(url\u003d\"https://gea.esac.esa.int/tap-server/tap\")\n\nadql_query \u003d \"SELECT g.source_id, \" + \\\n             \"phot_g_mean_mag - phot_rp_mean_mag AS g_rp, \" + \\\n             \"phot_g_mean_mag - j_m AS g_j, \" + \\\n             \"phot_g_mean_mag - h_m AS g_h, \" + \\\n             \"phot_g_mean_mag - ks_m AS g_ks, \" + \\\n             \"phot_g_mean_mag + 5.0*log10(parallax/100.0) AS mg, \" + features_select_string + \\\n             \"FROM gaiadr2.gaia_source AS g, gaiadr2.tmass_best_neighbour AS x, gaiadr1.tmass_original_valid AS t \" + \\\n             \"WHERE g.source_id \u003d x.source_id AND x.tmass_oid \u003d t.tmass_oid\" + quick_filter + \\\n             \" AND parallax \u003e 8.0 AND ABS(g.b) \u003e 25.0\" + \\\n             \" AND 0\u003dCONTAINS(POINT(\u0027ICRS\u0027, g.ra, g.dec), CIRCLE(\u0027ICRS\u0027, 12.80, -73.15, 11.0))\" + \\\n             \" AND 0\u003dCONTAINS(POINT(\u0027ICRS\u0027, g.ra, g.dec), CIRCLE(\u0027ICRS\u0027, 81.28, -69.78, 20.0))\"\n# ... last three predicates exclude low Galactic latitudes and the Magellanic Clouds (Luri et al. 2020).\n\n# execute the query\njob \u003d gaia.launch_job_async(adql_query)\nresults \u003d job.get_results()\nlen(results)\n# direct execution via the GACS UI yields a count of 291,394 in 2min\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-11-23 11:12:02.150",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -234,15 +264,15 @@
       "jobName": "paragraph_1602596936428_1070427082",
       "id": "20201013-134856_1401782262",
       "dateCreated": "2020-10-13 13:48:56.428",
-      "dateStarted": "2020-11-18 13:32:34.817",
-      "dateFinished": "2020-11-18 13:34:59.115",
+      "dateStarted": "2020-11-20 16:49:40.428",
+      "dateFinished": "2020-11-20 16:50:12.079",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# transform from astropy.table.table.Table (?!) to a Spark partitioned dataframe\nphotometry_df \u003d spark.createDataFrame(results.to_pandas())\n\n# Sanity checks:\n#photometry_df.schema\n#photometry_df.rdd.getNumPartitions()\n#photometry_df.show()\n\n# TODO: refine the raw crossmatch photometry selection using GMM (WD, Red Clump and Giant Branch) and 5d Principal Curve (Main Sequence)\n# select them all for now:\ngood_ast_df \u003d photometry_df.select(astrometric_features)\ngood_ast_df.show()\n\n# record the number of good training solutions:\ngood_ast_count \u003d len(results)",
+      "text": "%spark.pyspark\n\n# convenience reformatting from astropy.table.table.Table (?!) to Pandas:\n#pandas_results \u003d results.to_pandas()\n#print(results.columns)\n\n# numpy vectors of the optical/IR photometry:\nimport numpy as np\ngmrp \u003d np.array(results[\"g_rp\"])\ngmj \u003d np.array(results[\"g_j\"])\ngmh \u003d np.array(results[\"g_h\"])\ngmks \u003d np.array(results[\"g_ks\"])\ngabs \u003d np.array(results[\"mg\"])\n\ngidx \u003d ((gabs \u003e 15.0) \u0026 (gabs \u003c 16.0))\n\n# plot a colour-colour diagram of an absolute magnitude slice:\nplot.figure(1, figsize \u003d (8.0, 8.0))\nplot.scatter(gmrp[gidx], gmks[gidx], marker \u003d \".\", s \u003d 1)\nplot.xlabel(\"Optical colour (G - RP)\", fontsize \u003d 16)\nplot.ylabel(\"Optical / infrared colour (G - Ks)\", fontsize \u003d 16)\nplot.show()\n\n# to a Spark partitioned dataframe TODO may not be needed in final implementation\n#photometry_df \u003d spark.createDataFrame(pandas_results)\n\n# Sanity checks:\n#photometry_df.schema\n#photometry_df.rdd.getNumPartitions()\n#photometry_df.show()\n\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-19 16:43:41.296",
+      "dateUpdated": "2020-11-23 11:42:53.485",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -254,20 +284,76 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": false
       },
       "settings": {
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "+--------------------+-------------------+-----------------------+--------------------+--------------------+------------------------+-----------------------+-------------------+--------------------+------------------+--------------------+\n|      parallax_error|parallax_over_error|astrometric_sigma5d_max|          pmra_error|         pmdec_error|astrometric_excess_noise|visibility_periods_used|              pmdec|                pmra|astrometric_gof_al| parallax_pmdec_corr|\n+--------------------+-------------------+-----------------------+--------------------+--------------------+------------------------+-----------------------+-------------------+--------------------+------------------+--------------------+\n| 0.10492550579831329|   76.2452621459961|     0.1891252100467682| 0.15919734627705562| 0.19678832021002726|     0.32599366815085923|                      8| -56.73550709557161|  -46.06528101869203| 4.166289806365967|    0.32963827252388|\n| 0.08663186410850478|  92.34642028808594|    0.11684087663888931| 0.09046851595859604| 0.11272473567345054|       0.420395938366394|                     18| 4.6549990850261995|   18.89842499127808| 9.443724632263184| 0.07614608108997345|\n|  0.1827970283167319|  43.76543045043945|    0.27825427055358887|  0.2786277240052668| 0.27679357802564286|     0.27667991425765504|                     10|-49.921260367784015|   92.83310692443068| 1.335990309715271| -0.2986980974674225|\n|  0.3086139113887167| 25.923553466796875|     0.5741842985153198|  0.5458307735037806|  0.5637793523630243|      0.4941578329913449|                     10|-10.872607493467106|   19.72614954279499|2.4157888889312744|-0.05550007149577141|\n| 0.08055175152003625|  99.31977844238281|     0.0696885734796524| 0.11120237627592774| 0.10677068371247687|     0.18810773623637628|                     10|  -44.5596402444617|   89.03357297433267| 18.51436424255371|  0.0760328620672226|\n|0.051685145311597555|  154.7922821044922|      0.050164595246315| 0.06449929289629544| 0.07300184735026669|                     0.0|                     10|  50.25686147142434|  116.35779233990041| 6.457258701324463| -0.5195099711418152|\n|  0.3878566124130534| 20.627445220947266|     0.5381308197975159|  0.5258819958535308|  0.5330279122802631|       1.305438572560609|                     19| -59.51494589335613|  13.953379061836344| 6.182307720184326|-0.21427267789840698|\n| 0.04482823360335253|  178.4704132080078|   0.056719813495874405|0.038953839586309484| 0.04810085784560507|     0.12656399199856844|                     17|  -29.3837530970108|   21.65966254801836| 6.432122230529785|-0.49751904606819153|\n| 0.10819651315125266|  73.94440460205078|     0.1944212168455124|  0.1834780361381668| 0.20586184240011343|     0.47131991507277216|                     17| 40.372152040724785|   67.47293037167796|3.5032787322998047|-0.04577820003032684|\n| 0.09628907989636805|  83.08872985839844|    0.14707030355930328| 0.16094097853226383|  0.1086716269933741|      0.5302448559307609|                     14| -41.40232088062163|  30.756881445198314|29.651460647583008|-0.34931308031082153|\n| 0.03667392236962393| 218.15374755859375|    0.05431641265749931| 0.04522125023276771| 0.05033137033866865|     0.28699776382392755|                     21|  -27.3709531843015|  -27.15337565563571|   23.742919921875|-0.30488377809524536|\n| 0.05710911394947151|  140.0930633544922|    0.14309099316596985| 0.12584700684485814| 0.13651689931607247|     0.41886664477681856|                     16| 10.649947586422446|-0.48867952913821916| 8.286086082458496|-0.04514826089143753|\n|  0.8815180440341657|  9.076107025146484|     1.3314602375030518|  0.9347186940071962|  1.0491716790553096|      1.4234376845063044|                      8|-60.767201613493036|   97.87826564285581|2.5689616203308105| -0.4339046776294708|\n| 0.15230525868768666| 52.531639099121094|      0.268190860748291| 0.29808192633172576| 0.21095223231727434|     0.35562512517743616|                      8| -47.94975246429606|  22.349467519315652| 3.393771171569824|  0.3394175171852112|\n|0.042657165577945626| 187.56204223632812|    0.05162564292550087| 0.08160451039509635| 0.05999084368678308|                     0.0|                      9| -93.33053554533626|   8.383311122124065|4.5186357498168945|-0.35064318776130676|\n| 0.15095238534113517|  53.00316619873047|     0.2149021327495575| 0.22907233097066376|   0.198336799137319|      0.5104488415831387|                     11|-1.4660128695823484| -10.891922321737475| 6.490929126739502|-0.03088975511491...|\n| 0.05319889080034444| 150.39820861816406|    0.08443684875965118| 0.08602649942583078| 0.06998023733891186|      0.1745784903756535|                     10| -40.22278637089162|  -46.81800145636176|3.8124353885650635|  0.0761495977640152|\n|  0.5117237333576662| 15.636429786682129|      0.767650306224823|   0.848055474870985|  0.6352140644381226|                     0.0|                      9| -47.18871307754162|  -60.89025190463256|0.5731258988380432| -0.5435431003570557|\n| 0.32125636896519866| 24.908008575439453|     0.5738906264305115|   0.605720112488915|  0.6229347183531805|      1.3452453902412045|                     17|  7.076585735317348|  25.702292517805617| 2.852928638458252|-0.00294402521103...|\n| 0.04971239855563428|  160.9632110595703|     0.0965086817741394|  0.0905562721361929|0.051598995539592234|     0.21016740328276384|                     13|-0.5407164526282342| -20.873758130656046| 8.384095191955566| 0.20328101515769958|\n+--------------------+-------------------+-----------------------+--------------------+--------------------+------------------------+-----------------------+-------------------+--------------------+------------------+--------------------+\nonly showing top 20 rows\n\n"
-          }
-        ]
+      "apps": [],
+      "jobName": "paragraph_1605885645566_1231816988",
+      "id": "20201120-152045_79377630",
+      "dateCreated": "2020-11-20 15:20:45.566",
+      "dateStarted": "2020-11-20 17:32:58.618",
+      "dateFinished": "2020-11-20 17:32:58.801",
+      "status": "FINISHED",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nplot.figure(3, figsize \u003d (6.0, 9.7))\nplot.scatter(gmj, gabs, marker \u003d \".\", s \u003d 1)\nplot.ylim(21.0, -3.0)\nplot.ylabel(\"Stellar brightness (absolute G magnitude) --\u003e\", fontsize \u003d 16)\nplot.xlabel(\"\u003c-- Stellar temperature (G - RP magnitude)\", fontsize \u003d 16)\nplot.show()",
+      "user": "gaiauser",
+      "dateUpdated": "2020-11-23 11:42:51.455",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1605892980886_1522920640",
+      "id": "20201120-172300_1978140728",
+      "dateCreated": "2020-11-20 17:23:00.886",
+      "dateStarted": "2020-11-20 17:33:02.098",
+      "dateFinished": "2020-11-20 17:33:02.291",
+      "status": "FINISHED",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# TODO: refine the raw crossmatch photometry selection using GMM (WD, Red Clump and Giant Branch) and 5d Principal Curve (Main Sequence)\n# select them all for now:\ngood_ast_df \u003d photometry_df.select(astrometric_features)\ngood_ast_df.show()\n\n# record the number of good training solutions:\ngood_ast_count \u003d len(results)",
+      "user": "gaiauser",
+      "dateUpdated": "2020-11-23 11:42:49.135",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
       },
       "apps": [],
       "jobName": "paragraph_1602757318236_-1556018870",
@@ -276,12 +362,13 @@
       "dateStarted": "2020-11-19 16:43:41.320",
       "dateFinished": "2020-11-19 16:43:44.707",
       "status": "FINISHED",
+      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n\n# bad astrometric solutions: negative (unphysical!) parallaxes at high significance where\n# the parallax threshold corresponds to that on the +ve (physical) side of the parallax distribution\nall_bad_ast_df \u003d spark.sql(\"SELECT source_id, random_index, \" + features_select_string + \"FROM gaia_source WHERE parallax \u003c -8.0\")\n\n# cache for for subsequent steps prior to count (aids performance... IIUC)\nall_bad_ast_df.cache()\nall_bad_ast_count \u003d all_bad_ast_df.count()\n\n# N.B. make a selection the same size as the good training set based on size of smaller (good) data set and count of all available bads\nfilter_factor \u003d int(all_bad_ast_count / good_ast_count)\nbad_ast_df \u003d all_bad_ast_df.where(\"MOD(random_index, %d) \u003d 0\"%(filter_factor))\nbad_ast_df.count()\n# (cf. GEDR3: 512,288 sources)\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-19 16:44:06.937",
+      "dateUpdated": "2020-11-23 11:42:42.488",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -293,7 +380,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -352,9 +440,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# This cell does the business, given the data and training sets. Follows the example Python code at \n# https://spark.apache.org/docs/latest/api/python/pyspark.mllib.html#pyspark.mllib.tree.RandomForest\n\nfrom pyspark.mllib.tree import RandomForest\n\n# instantiate a trained RF classifier, seeded for repeatability at this stage:\nmodel \u003d RandomForest.trainClassifier(training_rdd, numClasses \u003d 2, categoricalFeaturesInfo \u003d {}, numTrees \u003d 100, impurity \u003d \u0027gini\u0027, seed\u003d42)\n# data should be an RDD of LabeledPoint, say 0 \u003d bad/negative, 1 \u003d good/positive: [LabeledPoint(0, [list of features of a bad example]), LabeledPoint(1, [list of features of a good example]), ... ]\n# type(model) \u003d RandomForestModel that can be used for prediction.\n# TODO:\n# - DPACP-81 example \"The random Forest consists of 5000 decision trees built by selecting amongst three randomly selected predictors at each split.\" ... how to implement this?\n\n# Benchmarks: numTrees \u003d 10; 1% sampling: trains in 7m 09s \n#                       100 10          :           9m 24s !\n#                      5000 100         :\n\nmodel.numTrees()\n\nmodel.totalNumNodes()\n\n#print(model)\n\n#print(model.toDebugString())\n\n",
+      "text": "%spark.pyspark\n\n# This cell does the business, given the data and training sets. Follows the example Python code at \n# https://spark.apache.org/docs/latest/api/python/pyspark.mllib.html#pyspark.mllib.tree.RandomForest\n\nfrom pyspark.mllib.tree import RandomForest\n\n# instantiate a trained RF classifier, seeded for repeatability at this stage:\nmodel \u003d RandomForest.trainClassifier(training_rdd, numClasses \u003d 2, categoricalFeaturesInfo \u003d {}, featureSubsetStrategy \u003d 3, numTrees \u003d 100, impurity \u003d \u0027gini\u0027, seed\u003d42)\n# data should be an RDD of LabeledPoint, say 0 \u003d bad/negative, 1 \u003d good/positive: [LabeledPoint(0, [list of features of a bad example]), LabeledPoint(1, [list of features of a good example]), ... ]\n# type(model) \u003d RandomForestModel that can be used for prediction.\n# TODOs:\n# - DPACP-81 example \"The random Forest consists of 5000 decision trees built by selecting amongst three randomly selected predictors at each split.\" \n#   ... need to check that featureSubsetStrategy \u003d 3 option covers this and is appropriate to the task.\n\n# default featureSubsetStrategy:\n# Benchmarks: numTrees \u003d 10; 1% sampling: trains in 7m 09s \n#                       100 10          :           9m 24s !\n#                      5000 100         :\n\nmodel.numTrees()\n\nmodel.totalNumNodes()\n\n#print(model)\n\n#print(model.toDebugString())\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-20 10:49:27.318",
+      "dateUpdated": "2020-11-20 14:01:36.148",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -373,11 +461,11 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
+        "code": "ERROR",
         "msg": [
           {
             "type": "TEXT",
-            "data": "1506"
+            "data": "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m\n\u001b[0;31mValueError\u001b[0m                                Traceback (most recent call last)\n\u001b[0;32m\u003cipython-input-156-9196ac297331\u003e\u001b[0m in \u001b[0;36m\u003cmodule\u003e\u001b[0;34m\u001b[0m\n\u001b[1;32m      5\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      6\u001b[0m \u001b[0;31m# instantiate a trained RF classifier, seeded for repeatability at this stage:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----\u003e 7\u001b[0;31m \u001b[0mmodel\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mRandomForest\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtrainClassifier\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtraining_rdd\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnumClasses\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;36m2\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcategoricalFeaturesInfo\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;34m{\u001b[0m\u001b[0;34m}\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfeatureSubsetStrategy\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;36m3\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnumTrees\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;36m100\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mimpurity\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;34m\u0027gini\u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mseed\u001b[0m\u001b[0;34m\u003d\u001b[0m\u001b[0;36m42\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      8\u001b[0m \u001b[0;31m# data should be an RDD of LabeledPoint, say 0 \u003d bad/negative, 1 \u003d good/positive: [LabeledPoint(0, [list of features of a bad example]), LabeledPoint(1, [list of features of a good example]), ... ]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      9\u001b[0m \u001b[0;31m# type(model) \u003d RandomForestModel that can be used for prediction.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/pyspark.zip/pyspark/mllib/tree.py\u001b[0m in \u001b[0;36mtrainClassifier\u001b[0;34m(cls, data, numClasses, categoricalFeaturesInfo, numTrees, featureSubsetStrategy, impurity, maxDepth, maxBins, seed)\u001b[0m\n\u001b[1;32m    405\u001b[0m         return cls._train(data, \"classification\", numClasses,\n\u001b[1;32m    406\u001b[0m                           \u001b[0mcategoricalFeaturesInfo\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnumTrees\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfeatureSubsetStrategy\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mimpurity\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 407\u001b[0;31m                           maxDepth, maxBins, seed)\n\u001b[0m\u001b[1;32m    408\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    409\u001b[0m     \u001b[0;34m@\u001b[0m\u001b[0mclassmethod\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/pyspark.zip/pyspark/mllib/tree.py\u001b[0m in \u001b[0;36m_train\u001b[0;34m(cls, data, algo, numClasses, categoricalFeaturesInfo, numTrees, featureSubsetStrategy, impurity, maxDepth, maxBins, seed)\u001b[0m\n\u001b[1;32m    307\u001b[0m         \u001b[0;32massert\u001b[0m \u001b[0misinstance\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfirst\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mLabeledPoint\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m\"the data should be RDD of LabeledPoint\"\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    308\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mfeatureSubsetStrategy\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mcls\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msupportedFeatureSubsetStrategies\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 309\u001b[0;31m             \u001b[0;32mraise\u001b[0m \u001b[0mValueError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"unsupported featureSubsetStrategy: %s\"\u001b[0m \u001b[0;34m%\u001b[0m \u001b[0mfeatureSubsetStrategy\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    310\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mseed\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    311\u001b[0m             \u001b[0mseed\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mrandom\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mrandint\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;36m0\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;36m1\u001b[0m \u001b[0;34m\u003c\u003c\u001b[0m \u001b[0;36m30\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;31mValueError\u001b[0m: unsupported featureSubsetStrategy: 3"
           }
         ]
       },
@@ -385,9 +473,9 @@
       "jobName": "paragraph_1602602470244_-1828846118",
       "id": "20201013-152110_1282917873",
       "dateCreated": "2020-10-13 15:21:10.244",
-      "dateStarted": "2020-11-18 13:37:33.468",
-      "dateFinished": "2020-11-18 13:46:57.421",
-      "status": "FINISHED",
+      "dateStarted": "2020-11-20 14:01:36.171",
+      "dateFinished": "2020-11-20 14:01:36.816",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
