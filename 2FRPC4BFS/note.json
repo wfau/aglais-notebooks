@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "%md\n\n# Using ML to define an astrometrically clean sample of stars\n\n   Follows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\n   via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\n\n   https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\n\n   (DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \"GCNS Generation\"\n   (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\n\n   Presently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0027s in the paper.\n\n   \u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e",
+      "text": "%md\n\n# Using ML to define an astrometrically clean sample of stars\n\n   Follows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\n   via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\n\n   https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\n\n   (DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \"GCNS Generation\"\n   (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\n\n   Presently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0027s in the paper.\n\n   \u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e\n   \n   \u003cb\u003eIMPORTANT NOTE: \u003c/b\u003e current deployment has Spark 2.4.7 installed. That specific version\u0027s API is documented here:\n   \n   https://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\n   \n   Beware of following thrid-party message board posts for help and examples as they more often than not point to different versions, and the API is evolving \u003ci\u003eall the time\u003c/i\u003e.\n   \n   ",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-24 08:56:31.224",
+      "dateUpdated": "2020-11-24 10:17:15.991",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -28,7 +28,7 @@
         "msg": [
           {
             "type": "HTML",
-            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eUsing ML to define an astrometrically clean sample of stars\u003c/h1\u003e\n\u003cp\u003eFollows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\u003cbr/\u003e via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\"\u003ehttps://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e(DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \u0026ldquo;GCNS Generation\u0026rdquo;\u003cbr/\u003e (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\u003c/p\u003e\n\u003cp\u003ePresently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0026rsquo;s in the paper.\u003c/p\u003e\n\u003cp\u003e\u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e\u003c/p\u003e\n\u003c/div\u003e"
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eUsing ML to define an astrometrically clean sample of stars\u003c/h1\u003e\n\u003cp\u003eFollows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\u003cbr/\u003e via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\"\u003ehttps://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e(DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \u0026ldquo;GCNS Generation\u0026rdquo;\u003cbr/\u003e (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\u003c/p\u003e\n\u003cp\u003ePresently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0026rsquo;s in the paper.\u003c/p\u003e\n\u003cp\u003e\u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e\u003c/p\u003e\n\u003cp\u003e\u003cb\u003eIMPORTANT NOTE: \u003c/b\u003e current deployment has Spark 2.4.7 installed. That specific version\u0026rsquo;s API is documented here:\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\"\u003ehttps://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003eBeware of following thrid-party message board posts for help and examples as they more often than not point to different versions, and the API is evolving \u003ci\u003eall the time\u003c/i\u003e.\u003c/p\u003e\n\u003c/div\u003e"
           }
         ]
       },
@@ -36,8 +36,8 @@
       "jobName": "paragraph_1606207963366_2005713725",
       "id": "20201013-131059_546082898",
       "dateCreated": "2020-11-24 08:52:43.366",
-      "dateStarted": "2020-11-24 08:56:31.189",
-      "dateFinished": "2020-11-24 08:56:31.196",
+      "dateStarted": "2020-11-24 10:17:15.957",
+      "dateFinished": "2020-11-24 10:17:15.967",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -198,9 +198,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# good training data: first define rough positional cuts to exclude crowded regions at low Gaialctic latitude, and inside the Large and Small Magellanic Clouds (Luri et al. 2020):\nlow_galactic_latitude_filter \u003d \" AND ABS(b) \u003e 25.0\"\nsmc_filter \u003d \" AND (dec \u003c -80.0 OR dec \u003e -65.0 OR (ra \u003c 350.0 AND ra \u003e +40.0))\"\nlmc_filter \u003d \" AND (dec \u003c -80.0 OR dec \u003e -55.0 OR ra \u003c 40.0 OR ra \u003e 120.0)\"\nall_good_training_df \u003d spark.sql(\"SELECT \" + features_select_string + \" FROM raw_sources WHERE parallax \u003e + 8.0 AND ABS(b) \u003e 25.0\" + photometric_consistency_filter + quick_filter + low_galactic_latitude_filter + smc_filter + lmc_filter)\ngood_training_rows \u003d all_good_training_df.count()\n#print(\"Good training data size: %d rows\"%(good_training_rows))\n\n# bad training data: negative parallaxes: N.B. make a selection exactly the same size as the good training set based on size of smaller (good) data set and count of all available bads\nmaximal_bad_ast_count \u003d spark.sql(\"SELECT \" + features_select_string + \" FROM raw_sources WHERE parallax \u003c -8.0\").count()\nfilter_factor \u003d int(maximal_bad_ast_count / good_training_rows)\nall_bad_training_df \u003d spark.sql(\"SELECT \" + features_select_string + \" FROM raw_sources WHERE  parallax \u003c -8.0 AND MOD(random_index, %d) \u003d 0\"%(filter_factor) + \" ORDER BY random_index LIMIT %d\"%(good_training_rows))\n#all_bad_training_data_count \u003d all_bad_training_df.count()\n#print (\"Bad  training data size: %d rows\"%(all_bad_training_data_count))\n",
+      "text": "%spark.pyspark\n\n# good training data: first define rough positional cuts to exclude crowded regions at low Gaialctic latitude, and inside the Large and Small Magellanic Clouds (Luri et al. 2020):\nlow_galactic_latitude_filter \u003d \" AND ABS(b) \u003e 25.0\"\nsmc_filter \u003d \" AND (dec \u003c -80.0 OR dec \u003e -65.0 OR (ra \u003c 350.0 AND ra \u003e +40.0))\"\nlmc_filter \u003d \" AND (dec \u003c -80.0 OR dec \u003e -55.0 OR ra \u003c 40.0 OR ra \u003e 120.0)\"\nall_good_training_df \u003d spark.sql(\"SELECT 1 AS label, \" + features_select_string + \" FROM raw_sources WHERE parallax \u003e + 8.0 AND ABS(b) \u003e 25.0\" + photometric_consistency_filter + quick_filter + low_galactic_latitude_filter + smc_filter + lmc_filter)\ngood_training_rows \u003d all_good_training_df.count()\n#print(\"Good training data size: %d rows\"%(good_training_rows))\n\n# bad training data: negative parallaxes: N.B. make a selection exactly the same size as the good training set based on size of smaller (good) data set and count of all available bads\nmaximal_bad_ast_count \u003d spark.sql(\"SELECT \" + features_select_string + \" FROM raw_sources WHERE parallax \u003c -8.0\").count()\nfilter_factor \u003d int(maximal_bad_ast_count / good_training_rows)\nall_bad_training_df \u003d spark.sql(\"SELECT 0 AS label, \" + features_select_string + \" FROM raw_sources WHERE  parallax \u003c -8.0 AND MOD(random_index, %d) \u003d 0\"%(filter_factor) + \" ORDER BY random_index LIMIT %d\"%(good_training_rows))\n#all_bad_training_data_count \u003d all_bad_training_df.count()\n#print (\"Bad  training data size: %d rows\"%(all_bad_training_data_count))\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-24 08:52:43.373",
+      "dateUpdated": "2020-11-24 13:45:25.684",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -212,45 +212,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "Good training data size: 28131 rows\nBad  training data size: 28131 rows\n"
-          }
-        ]
-      },
-      "apps": [],
-      "jobName": "paragraph_1606207963373_98475139",
-      "id": "20201123-105445_95907042",
-      "dateCreated": "2020-11-24 08:52:43.373",
-      "status": "READY",
-      "errorMessage": "",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "%spark.pyspark\n\n# define training (67%) and test (33%) sample splits (seeded randomness for repeatability):\ngood_67pc, good_33pc \u003d all_good_training_df.randomSplit([0.67, 0.33], 42)\nbad_67pc, bad_33pc \u003d all_bad_training_df.randomSplit([0.67, 0.33], 42)\n\n# map the training data frames onto new RDD consisting of appropriately labeled [sic] LabelPoint objects\nfrom pyspark.mllib.regression import LabeledPoint\n\n# WRONG !!! refactor from here to use DF-based ML API. RDD-based API MLLIB is in the process of being deprecated... TODO\n# https://intellipaat.com/community/9624/whats-the-difference-between-spark-ml-and-mllib-packages\n\n# for the bad (label \u003d 0) training set\nbad_training_rdd \u003d bad_67pc.rdd.map(lambda row: LabeledPoint(0, [x for x in row]))\n\n# and for the good (label \u003d 1) set\ngood_training_rdd \u003d good_67pc.rdd.map(lambda row: LabeledPoint(1, [x for x in row]))\n\n# concatenate:\ntraining_rdd \u003d good_training_rdd.union(bad_training_rdd)\n",
-      "user": "gaiauser",
-      "dateUpdated": "2020-11-24 08:52:43.375",
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9.0,
-        "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -261,17 +224,18 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1606207963375_1659740506",
-      "id": "20201015-161110_18118893",
-      "dateCreated": "2020-11-24 08:52:43.375",
-      "status": "READY",
-      "errorMessage": "",
+      "jobName": "paragraph_1606207963373_98475139",
+      "id": "20201123-105445_95907042",
+      "dateCreated": "2020-11-24 08:52:43.373",
+      "dateStarted": "2020-11-24 12:22:15.562",
+      "dateFinished": "2020-11-24 12:22:25.005",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# sanity checks at this point\n\n# manual type safety check (!):\n#type(training_rdd.collect()[0])\n\n# sanity check on sample sizes:\nprint(\"Good training set has %d rows\"%(good_67pc.count()))\nprint(\"Good  testing set has %d rows\"%(good_33pc.count()))\nprint(\"Bad training set has %d rows\"%(bad_67pc.count()))\nprint(\"Bad  testing set has %d rows\"%(bad_33pc.count()))\n\n",
+      "text": "%spark.pyspark\n\n# define training (67%) and test (33%) sample splits (seeded randomness for repeatability)\ngood_67pc, good_33pc \u003d all_good_training_df.randomSplit([0.67, 0.33], 42)\nbad_67pc, bad_33pc \u003d all_bad_training_df.randomSplit([0.67, 0.33], 42)\n\n# transform to labelled feature vectors (0.0 \u003d bad, 1.0 \u003d good, as conveniently already defined in previous projections above)\n\n# Annotate and transform appropriate to the input required by the classifier\u0027s API.\n# Need a dataframe with labels and features: use vector assembler. Note that the original features data are dropped\n# to save memory (since they are duplicated into the resulting feature vector).\n\nfrom pyspark.ml.feature import VectorAssembler\n\nignore \u003d [\u0027label\u0027,]\nassembler \u003d VectorAssembler(inputCols\u003d[x for x in good_67pc.columns if x not in ignore], outputCol\u003d\u0027features\u0027)\n\n# training sets\ngood_training_df \u003d assembler.transform(good_67pc).drop(*astrometric_features)\nbad_training_df \u003d assembler.transform(bad_67pc).drop(*astrometric_features)\n\n# testing sets\ngood_testing_df \u003d assembler.transform(good_33pc).drop(*astrometric_features)\nbad_testing_df \u003d assembler.transform(bad_33pc).drop(*astrometric_features)\n\n# concatenate the training set into a single dataframe\ntraining_df \u003d good_training_df.union(bad_training_df)\n#testing_df \u003d good_testing_df.union(bad_testing_df) don\u0027t think we\u0027ll need this\ntraining_df.show()\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-24 08:52:43.376",
+      "dateUpdated": "2020-11-24 14:10:13.535",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -282,7 +246,6 @@
         "colWidth": 12.0,
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
-        "editorHide": true,
         "results": {},
         "enabled": true
       },
@@ -295,22 +258,23 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "Good training set has 18857 rows\nGood  testing set has 9274 rows\nBad training set has 18903 rows\nBad  testing set has 9228 rows\n"
+            "data": "+-----+--------------------+\n|label|            features|\n+-----+--------------------+\n|    1|[0.12936188481547...|\n|    1|[0.19667172151530...|\n|    1|[0.28470458945536...|\n|    1|[0.04833759460017...|\n|    1|[0.05108758605500...|\n|    1|[0.22672425437280...|\n|    1|[0.15928884963019...|\n|    1|[0.03805804722440...|\n|    1|[0.07089359195444...|\n|    1|[0.07702059958666...|\n|    1|[0.12805144459129...|\n|    1|[0.16164008812941...|\n|    1|[0.16297641048431...|\n|    1|[0.22544404753514...|\n|    1|[0.23138437512004...|\n|    1|[0.34207140805954...|\n|    1|[0.03060897577141...|\n|    1|[0.03991694724840...|\n|    1|[0.05980187269099...|\n|    1|[0.12097591908199...|\n+-----+--------------------+\nonly showing top 20 rows\n\n"
           }
         ]
       },
       "apps": [],
-      "jobName": "paragraph_1606207963375_-1159265009",
-      "id": "20201123-143649_1839146593",
+      "jobName": "paragraph_1606207963375_1659740506",
+      "id": "20201015-161110_18118893",
       "dateCreated": "2020-11-24 08:52:43.375",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "2020-11-24 14:10:13.564",
+      "dateFinished": "2020-11-24 14:10:20.505",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# This cell does the business, given the data and training sets. Follows the example Python code at \n# https://spark.apache.org/docs/latest/api/python/pyspark.mllib.html#pyspark.mllib.tree.RandomForest\n\nfrom pyspark.mllib.tree import RandomForest\n\n# instantiate a trained RF classifier, seeded for repeatability at this stage:\nmodel \u003d RandomForest.trainClassifier(training_rdd, numClasses \u003d 2, categoricalFeaturesInfo \u003d {}, featureSubsetStrategy \u003d \"sqrt\", numTrees \u003d 10, impurity \u003d \"gini\", seed\u003d42)\n# data should be an RDD of LabeledPoint, say 0 \u003d bad/negative, 1 \u003d good/positive: [LabeledPoint(0, [list of features of a bad example]), LabeledPoint(1, [list of features of a good example]), ... ]\n# type(model) \u003d RandomForestModel that can be used for prediction.\n# TODOs:\n# - DPACP-81 example \"The random Forest consists of 5000 decision trees built by selecting amongst three randomly selected predictors at each split.\" \n#   ... need to check that featureSubsetStrategy \u003d sqrt option covers this and is appropriate to the task; IIUC the \"sqrt\" option is actually the default for \"auto\" when numTrees \u003e 1, and corresponds to a (random?) subset of the N available features and in this particular case would be more like 4 than 3 (we have up to ~16 features).\n\n# Some benchmarks:\n# featureSubsetStrategy:                 ALL      SQRT  \n# numTrees \u003d 10; 1% sampling: trains in 7m 09s \n#           100 10          :           9m 24s   3m 26s\n#          5000 100         :\n#           500 10          :                   11m 09s  \n\nprint(\"RF model number of trees: %d\"%(model.numTrees()))\nprint(\"RF model total number of nodes: %d\"%(model.totalNumNodes()))\n\n#print(model)\n\n#print(model.toDebugString())\n\n",
+      "text": "%spark.pyspark\n\n# This cell does the business, given the data and training sets. Follows the example Python code at \n# https://spark.apache.org/docs/2.4.7/api/python/pyspark.ml.html#pyspark.ml.classification.RandomForestClassifier\n\nfrom pyspark.ml.classification import RandomForestClassifier\n\n# instantiate a trained RF classifier, seeded for repeatability at this stage:\nrf \u003d RandomForestClassifier(featureSubsetStrategy \u003d \"sqrt\", featuresCol \u003d \"features\", labelCol \u003d \"label\", numTrees \u003d 100, impurity \u003d \"gini\", seed\u003d42)\nmodel \u003d rf.fit(training_df)\n\n# benchmarks: featureSubsetStrategy \u003d \"sqrt\"\n# 10% sample,  100 trees:  3min 58sec\n\nprint(model.featureImportances)",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-24 08:52:43.376",
+      "dateUpdated": "2020-11-24 14:09:39.053",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -322,7 +286,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -333,7 +298,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "RF model number of trees: 10\nRF model total number of nodes: 148\n"
+            "data": "(11,[0,1,2,3,4,5,6,7,8,9,10],[0.2196092875477124,0.47275792458062516,0.15997220959417033,0.05299667188469191,0.05503155906975699,0.031073313552936455,0.0009937830369446063,0.004787264992573217,0.001104764596763997,0.001122924170537057,0.0005502969732875876])\n"
           }
         ]
       },
@@ -341,14 +306,15 @@
       "jobName": "paragraph_1606207963376_-1848568621",
       "id": "20201013-152110_1282917873",
       "dateCreated": "2020-11-24 08:52:43.376",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "2020-11-24 12:26:47.842",
+      "dateFinished": "2020-11-24 12:30:51.020",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# classify based on the above trained model: the predict method takes an RDD where each row must be a list:\ngood_test_classifications \u003d model.predict(good_33pc.rdd.map(lambda row: [x for x in row])).collect()\nbad_test_classifications \u003d model.predict(bad_33pc.rdd.map(lambda row: [x for x in row])).collect()\n\n",
+      "text": "%spark.pyspark\n\n# classify based on the above trained model\ngood_test_results \u003d model.transform(good_testing_df)\ngood_test_results.show()\n\nbad_test_results \u003d model.transform(bad_testing_df)\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-24 08:52:43.376",
+      "dateUpdated": "2020-11-24 14:15:08.989",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -360,40 +326,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "jobName": "paragraph_1606207963376_-1116057798",
-      "id": "20201015-131823_1744793710",
-      "dateCreated": "2020-11-24 08:52:43.376",
-      "status": "READY",
-      "errorMessage": "",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "%spark.pyspark\n\n# test results numerical output\n\n# count up\nfrom collections import Counter\npositives \u003d Counter(good_test_classifications)\nnegatives \u003d Counter(bad_test_classifications)\n\n# Confusion matrix (after GCNS paper, Table 1):\ntrue_positives \u003d positives[1.0]\nfalse_positives \u003d positives[0.0]\ntrue_negatives \u003d negatives[0.0]\nfalse_negatives \u003d negatives[1.0]\nprint(\"   |%7d%7d\"%(1,2))\nprint(\"------------------------------\")\nprint(\" 1 |%7d%7d\"%(true_positives, false_positives))\nprint(\" 2 |%7d%7d\"%(false_negatives, true_negatives))\nprint()\nnum_misclassified \u003d false_positives + false_negatives\ntotal_num_in_test \u003d true_positives + true_negatives + num_misclassified\nmisclassified_pc \u003d 100.0 * float(num_misclassified) / float(total_num_in_test)\nprint(\"Misclassifications for the test set: %.2f %%\"%(misclassified_pc))\n",
-      "user": "gaiauser",
-      "dateUpdated": "2020-11-24 08:52:43.377",
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9.0,
-        "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -404,7 +338,47 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "   |      1      2\n------------------------------\n 1 |  18644    213\n 2 |      0  18903\n\nMisclassifications for the test set: 0.56 %\n"
+            "data": "+-----+--------------------+--------------------+--------------------+----------+\n|label|            features|       rawPrediction|         probability|prediction|\n+-----+--------------------+--------------------+--------------------+----------+\n|    1|[0.04241742089849...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.04458200521956...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.06257972786679...|[0.01707822664267...|[1.70782266426791...|       1.0|\n|    1|[0.15425745372809...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.06171052402960...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.03981481859467...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.07581741598196...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.06120732230798...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.12482008427878...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.39470222500124...|[0.26780218048099...|[0.00267802180480...|       1.0|\n|    1|[0.06293674441728...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.09818011650368...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.04896486250375...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.07760939981474...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.27585461300767...|[0.06357504607848...|[6.35750460784832...|       1.0|\n|    1|[0.04956991533423...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.05574660129519...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.04208826220873...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.02384353440183...|[0.01837228629266...|[1.83722862926668...|       1.0|\n|    1|[0.04453389191889...|[0.01837228629266...|[1.83722862926668...|       1.0|\n+-----+--------------------+--------------------+--------------------+----------+\nonly showing top 20 rows\n\nException ignored in: \u003cfunction JavaWrapper.__del__ at 0x7fee47baa560\u003e\nTraceback (most recent call last):\n  File \"/opt/spark/python/lib/pyspark.zip/pyspark/ml/wrapper.py\", line 40, in __del__\nAttributeError: \u0027RandomForestClassifier\u0027 object has no attribute \u0027_java_obj\u0027\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1606207963376_-1116057798",
+      "id": "20201015-131823_1744793710",
+      "dateCreated": "2020-11-24 08:52:43.376",
+      "dateStarted": "2020-11-24 14:15:09.015",
+      "dateFinished": "2020-11-24 14:15:18.196",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# test results numerical output\n\n# count up\nfrom collections import Counter\npositives \u003d Counter(list(good_test_results.select(\u0027prediction\u0027).toPandas()[\u0027prediction\u0027]))\nnegatives \u003d Counter(list(bad_test_results.select(\u0027prediction\u0027).toPandas()[\u0027prediction\u0027]))\n\n# Confusion matrix (after GCNS paper, Table 1):\ntrue_positives \u003d positives[1.0]\nfalse_positives \u003d positives[0.0]\ntrue_negatives \u003d negatives[0.0]\nfalse_negatives \u003d negatives[1.0]\nprint(\"   |%7d%7d\"%(1,2))\nprint(\"------------------------------\")\nprint(\" 1 |%7d%7d\"%(true_positives, false_positives))\nprint(\" 2 |%7d%7d\"%(false_negatives, true_negatives))\nprint()\nnum_misclassified \u003d false_positives + false_negatives\ntotal_num_in_test \u003d true_positives + true_negatives + num_misclassified\nmisclassified_pc \u003d 100.0 * float(num_misclassified) / float(total_num_in_test)\nprint(\"Misclassifications for the test set: %.2f %%\"%(misclassified_pc))\n\n# ... perfect score for false negatives since parallax_over_error is always +ve for good and -ve for bad ...?! Check.\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-11-24 14:26:29.722",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "   |      1      2\n------------------------------\n 1 |   9203     71\n 2 |      0   9228\n\nMisclassifications for the test set: 0.38 %\n"
           }
         ]
       },
@@ -412,14 +386,15 @@
       "jobName": "paragraph_1606207963376_1479126773",
       "id": "20201016-154755_24366630",
       "dateCreated": "2020-11-24 08:52:43.376",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "2020-11-24 14:26:29.743",
+      "dateFinished": "2020-11-24 14:26:41.284",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n\n# examine relative importance of features wrt Appendix A.1 of the GCNS paper\n\n#print(model.featureImportances)\n\ntype(model)\n\n#import inspect\n#inspect.getmembers(RandomForest, predicate\u003dinspect.ismethod)",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-24 08:52:43.377",
+      "dateUpdated": "2020-11-24 10:35:51.815",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -431,20 +406,12 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
         "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "pyspark.mllib.tree.RandomForestModel"
-          }
-        ]
       },
       "apps": [],
       "jobName": "paragraph_1606207963377_-954351192",
@@ -457,7 +424,7 @@
     {
       "text": "%spark.pyspark\n\n# cleaned up CAMD (observational HRD) employing the classifications: TODO\nunclassified_sample_df \u003d spark.sql(\"SELECT * FROM raw_sources WHERE parallax \u003e +8.0\")\n\n# required RDD for the model classifier\nrdd_to_classify \u003d unclassified_sample_df.",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-24 08:52:43.377",
+      "dateUpdated": "2020-11-24 10:35:39.552",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -469,7 +436,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -486,7 +454,7 @@
     {
       "text": "%spark.pyspark\n\n# sky projection to see the spatial distribution of good and bad classes: TODO",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-24 08:52:43.378",
+      "dateUpdated": "2020-11-24 10:35:38.343",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -498,7 +466,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -513,20 +482,170 @@
       "progressUpdateIntervalMs": 500
     },
     {
+      "text": "%spark.pyspark\n\n# Rich API example: does not work because the example data is not available (at least on the path specified)\n\nfrom pyspark.ml import Pipeline\nfrom pyspark.ml.classification import RandomForestClassifier\nfrom pyspark.ml.feature import IndexToString, StringIndexer, VectorIndexer\nfrom pyspark.ml.evaluation import MulticlassClassificationEvaluator\n\n# Load and parse the data file, converting it to a DataFrame.\ndata \u003d spark.read.format(\"libsvm\").load(\"data/mllib/sample_libsvm_data.txt\")\n\n# Index labels, adding metadata to the label column.\n# Fit on whole dataset to include all labels in index.\nlabelIndexer \u003d StringIndexer(inputCol\u003d\"label\", outputCol\u003d\"indexedLabel\").fit(data)\n\n# Automatically identify categorical features, and index them.\n# Set maxCategories so features with \u003e 4 distinct values are treated as continuous.\nfeatureIndexer \u003d\\\n    VectorIndexer(inputCol\u003d\"features\", outputCol\u003d\"indexedFeatures\", maxCategories\u003d4).fit(data)\n\n# Split the data into training and test sets (30% held out for testing)\n(trainingData, testData) \u003d data.randomSplit([0.7, 0.3])\n\n# Train a RandomForest model.\nrf \u003d RandomForestClassifier(labelCol\u003d\"indexedLabel\", featuresCol\u003d\"indexedFeatures\", numTrees\u003d10)\n\n# Convert indexed labels back to original labels.\nlabelConverter \u003d IndexToString(inputCol\u003d\"prediction\", outputCol\u003d\"predictedLabel\",\n                               labels\u003dlabelIndexer.labels)\n\n# Chain indexers and forest in a Pipeline\npipeline \u003d Pipeline(stages\u003d[labelIndexer, featureIndexer, rf, labelConverter])\n\n# Train model.  This also runs the indexers.\nmodel \u003d pipeline.fit(trainingData)\n\n# Make predictions.\npredictions \u003d model.transform(testData)\n\n# Select example rows to display.\npredictions.select(\"predictedLabel\", \"label\", \"features\").show(5)\n\n# Select (prediction, true label) and compute test error\nevaluator \u003d MulticlassClassificationEvaluator(\n    labelCol\u003d\"indexedLabel\", predictionCol\u003d\"prediction\", metricName\u003d\"accuracy\")\naccuracy \u003d evaluator.evaluate(predictions)\nprint(\"Test Error \u003d %g\" % (1.0 - accuracy))\n\nrfModel \u003d model.stages[2]\nprint(rfModel)  # summary only",
+      "user": "gaiauser",
+      "dateUpdated": "2020-11-24 10:35:11.984",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1606212791363_-2099449137",
+      "id": "20201124-101311_2097074903",
+      "dateCreated": "2020-11-24 10:13:11.363",
+      "dateStarted": "2020-11-24 10:13:22.223",
+      "dateFinished": "2020-11-24 10:13:22.296",
+      "status": "ERROR",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nimport numpy\nfrom numpy import allclose\nfrom pyspark.ml.linalg import Vectors\nfrom pyspark.ml.feature import StringIndexer\nfrom pyspark.ml.classification import RandomForestClassifier\n\n#RandomForestClassifier.__version__\n#type(RandomForestClassifier)\n\nsc.version\n\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-11-24 10:43:59.987",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u00272.4.7\u0027"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1606207963378_-1896007039",
+      "id": "20201117-145251_855809116",
+      "dateCreated": "2020-11-24 08:52:43.378",
+      "dateStarted": "2020-11-24 09:55:29.192",
+      "dateFinished": "2020-11-24 09:55:29.251",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\ndf \u003d spark.createDataFrame([\n    (1.0, Vectors.dense(1.0)),\n    (0.0, Vectors.sparse(1, [], []))], [\"label\", \"features\"])\n    \ndf.show()\n\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-11-24 10:50:56.937",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-----+---------+\n|label| features|\n+-----+---------+\n|  1.0|    [1.0]|\n|  0.0|(1,[],[])|\n+-----+---------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1606210938697_-1183354241",
+      "id": "20201124-094218_1648797902",
+      "dateCreated": "2020-11-24 09:42:18.697",
+      "dateStarted": "2020-11-24 10:50:56.958",
+      "dateFinished": "2020-11-24 10:50:57.262",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nstringIndexer \u003d StringIndexer(inputCol\u003d\"label\", outputCol\u003d\"indexed\")\nsi_model \u003d stringIndexer.fit(df)\ntd \u003d si_model.transform(df)\nrf \u003d RandomForestClassifier(numTrees\u003d3, maxDepth\u003d2, labelCol\u003d\"indexed\", seed\u003d42)\n\nmodel \u003d rf.fit(td)\nprint(model.featureImportances)\n#SparseVector(1, {0: 1.0})\n\nprint(allclose(model.treeWeights, [1.0, 1.0, 1.0]))\n#True\n\ntest0 \u003d spark.createDataFrame([(Vectors.dense(-1.0),)], [\"features\"])\nresult \u003d model.transform(test0).head()\n\nprint(result.prediction)\n#0.0\n\nprint(numpy.argmax(result.probability))\n#0\n\nprint(numpy.argmax(result.rawPrediction))\n#0\n\ntest1 \u003d spark.createDataFrame([(Vectors.sparse(1, [0], [1.0]),)], [\"features\"])\nprint(model.transform(test1).head().prediction)\n#1.0\n\nprint(model.trees)",
+      "user": "gaiauser",
+      "dateUpdated": "2020-11-24 10:32:33.289",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "(1,[0],[1.0])\nTrue\n0.0\n0\n0\n1.0\n[DecisionTreeClassificationModel (uid\u003ddtc_855003dba9da) of depth 1 with 3 nodes, DecisionTreeClassificationModel (uid\u003ddtc_11c84c28e3d3) of depth 0 with 1 nodes, DecisionTreeClassificationModel (uid\u003ddtc_76b69f146071) of depth 1 with 3 nodes]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1606211765102_139603964",
+      "id": "20201124-095605_1119940663",
+      "dateCreated": "2020-11-24 09:56:05.102",
+      "dateStarted": "2020-11-24 10:32:33.312",
+      "dateFinished": "2020-11-24 10:32:35.050",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
       "text": "%spark.pyspark\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-24 08:52:43.378",
+      "dateUpdated": "2020-11-24 10:05:12.382",
       "config": {},
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1606207963378_-1896007039",
-      "id": "20201117-145251_855809116",
-      "dateCreated": "2020-11-24 08:52:43.378",
+      "jobName": "paragraph_1606212312380_2125797250",
+      "id": "20201124-100512_110153564",
+      "dateCreated": "2020-11-24 10:05:12.381",
       "status": "READY",
-      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     }
   ],
