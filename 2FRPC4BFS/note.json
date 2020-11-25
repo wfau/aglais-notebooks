@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "%md\n\n# Using ML to define an astrometrically clean sample of stars\n\n   Follows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\n   via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\n\n   https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\n\n   (DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \"GCNS Generation\"\n   (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\n\n   Presently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0027s in the paper.\n\n   \u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e\n   \n   \u003cb\u003eIMPORTANT NOTE: \u003c/b\u003e current deployment has Spark 2.4.7 installed. That specific version\u0027s API is documented here:\n   \n   https://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\n   \n   Beware of following thrid-party message board posts for help and examples as they more often than not point to different versions, and the API is evolving \u003ci\u003eall the time\u003c/i\u003e.\n   \n   ",
+      "text": "%md\n\n# Using ML to define an astrometrically clean sample of stars\n\n   Follows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\n   via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\n\n   https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\n\n   (DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \"GCNS Generation\"\n   (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\n\n   Presently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0027s in the paper.\n\n   \u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e\n   \n   \u003cb\u003eIMPORTANT NOTE: \u003c/b\u003e current deployment has Spark 2.4.7 installed. That specific version\u0027s API is documented here:\n   \n   https://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\n   \n   Beware of following on-line message board and other fora posts for help and examples as they more often than not described and link to different versions, and the API is evolving \u003ci\u003eall the time\u003c/i\u003e.\n   \n   ",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-24 10:17:15.991",
+      "dateUpdated": "2020-11-25 16:47:30.449",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -28,7 +28,7 @@
         "msg": [
           {
             "type": "HTML",
-            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eUsing ML to define an astrometrically clean sample of stars\u003c/h1\u003e\n\u003cp\u003eFollows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\u003cbr/\u003e via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\"\u003ehttps://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e(DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \u0026ldquo;GCNS Generation\u0026rdquo;\u003cbr/\u003e (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\u003c/p\u003e\n\u003cp\u003ePresently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0026rsquo;s in the paper.\u003c/p\u003e\n\u003cp\u003e\u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e\u003c/p\u003e\n\u003cp\u003e\u003cb\u003eIMPORTANT NOTE: \u003c/b\u003e current deployment has Spark 2.4.7 installed. That specific version\u0026rsquo;s API is documented here:\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\"\u003ehttps://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003eBeware of following thrid-party message board posts for help and examples as they more often than not point to different versions, and the API is evolving \u003ci\u003eall the time\u003c/i\u003e.\u003c/p\u003e\n\u003c/div\u003e"
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eUsing ML to define an astrometrically clean sample of stars\u003c/h1\u003e\n\u003cp\u003eFollows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\u003cbr/\u003e via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\"\u003ehttps://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e(DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \u0026ldquo;GCNS Generation\u0026rdquo;\u003cbr/\u003e (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\u003c/p\u003e\n\u003cp\u003ePresently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0026rsquo;s in the paper.\u003c/p\u003e\n\u003cp\u003e\u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e\u003c/p\u003e\n\u003cp\u003e\u003cb\u003eIMPORTANT NOTE: \u003c/b\u003e current deployment has Spark 2.4.7 installed. That specific version\u0026rsquo;s API is documented here:\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\"\u003ehttps://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003eBeware of following on-line message board and other fora posts for help and examples as they more often than not described and link to different versions, and the API is evolving \u003ci\u003eall the time\u003c/i\u003e.\u003c/p\u003e\n\u003c/div\u003e"
           }
         ]
       },
@@ -36,8 +36,8 @@
       "jobName": "paragraph_1606207963366_2005713725",
       "id": "20201013-131059_546082898",
       "dateCreated": "2020-11-24 08:52:43.366",
-      "dateStarted": "2020-11-24 10:17:15.957",
-      "dateFinished": "2020-11-24 10:17:15.967",
+      "dateStarted": "2020-11-25 16:47:30.449",
+      "dateFinished": "2020-11-25 16:47:30.456",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -596,7 +596,7 @@
     {
       "text": "%spark.pyspark\nprint(\"No. of good sources: \",good_sources_df.count())\nprint(\"No. of bad sources:  \",bad_sources_df.count())\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-25 15:53:44.102",
+      "dateUpdated": "2020-11-25 16:44:32.060",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -608,7 +608,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -633,76 +634,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# sky projection to see the spatial distribution of good and bad classes: counts in cells\n\n# plot up the sky counts\nimport numpy as np\nimport healpy as hp\n\n# healpy constants\nNSIDE \u003d 32\nNPIX \u003d hp.nside2npix(NSIDE)\n\n# aggregate in SQL (as convenient as anything else...)\nsql_df \u003d spark.sql(\"SELECT FLOOR(source_id / 562949953421312) AS hpx5, COUNT(*) AS n FROM classified_sources WHERE prediction\u003d0.0 GROUP BY hpx5\")\n#sql_df \u003d spark.sql(\"SELECT FLOOR(source_id / 562949953421312) AS hpx5, COUNT(*) AS n FROM raw_sources GROUP BY hpx5\")\n#sql_df.show()\n\n\n",
-      "user": "gaiauser",
-      "dateUpdated": "2020-11-25 10:30:35.000",
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9.0,
-        "results": {},
-        "enabled": true,
-        "editorHide": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "jobName": "paragraph_1606207963377_-1395414805",
-      "id": "20201123-162846_1748850102",
-      "dateCreated": "2020-11-24 08:52:43.377",
-      "dateStarted": "2020-11-25 10:29:44.830",
-      "dateFinished": "2020-11-25 10:29:44.859",
-      "status": "FINISHED",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "%spark.pyspark\n\n# do the visualisation: counts in cells\narray_data \u003d np.zeros(NPIX)\nfor item in sql_df.rdd.collect():  array_data[item[0]] \u003d item[1]\nhp.mollview(array_data, nest\u003dTrue, title\u003d\u0027Gaia DR2 good astrometric solution source counts at HEALPix level 5\u0027, cmap\u003d\u0027viridis\u0027)#, norm \u003d \u0027log\u0027)\nhp.graticule(coord\u003d\u0027E\u0027, color\u003d\u0027white\u0027)\n",
-      "user": "gaiauser",
-      "dateUpdated": "2020-11-25 10:30:14.967",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/python",
-        "editorHide": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "apps": [],
-      "jobName": "paragraph_1606239666301_-2050248404",
-      "id": "20201124-174106_1791655057",
-      "dateCreated": "2020-11-24 17:41:06.301",
-      "dateStarted": "2020-11-25 10:29:50.333",
-      "dateFinished": "2020-11-25 10:30:00.760",
-      "status": "FINISHED",
-      "errorMessage": "",
-      "progressUpdateIntervalMs": 500
-    },
-    {
       "text": "%spark.pyspark\n\n# histogram of distribution of parallax_over_error\nimport matplotlib.pyplot as plot\nplot.figure(1, figsize \u003d (9.7, 6.0))\nplot.yscale(\"log\")\nx \u003d list(good_67pc.select(\"parallax_over_error\").toPandas()[\"parallax_over_error\"])\ny \u003d list(bad_67pc.select(\"parallax_over_error\").toPandas()[\"parallax_over_error\"])\nplot.hist(x, bins\u003d25, label\u003d\u0027good\u0027)\nplot.hist(y, bins\u003d25, label\u003d\u0027bad\u0027)\nplot.xlabel(\"parallax_over_error\")\nplot.ylabel(\"Frequency\")\nplot.legend(loc\u003d\u0027upper right\u0027)",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-25 14:39:40.891",
+      "dateUpdated": "2020-11-25 16:45:18.961",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
