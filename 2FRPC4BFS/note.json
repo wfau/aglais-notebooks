@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "%md\n\n# Using ML to define an astrometrically clean sample of stars\n\n   Follows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\n   via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\n\n   https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\n\n   (DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \"GCNS Generation\"\n   (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\n\n   Presently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0027s in the paper.\n\n   \u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e\n   \n   \u003cb\u003eIMPORTANT NOTE: \u003c/b\u003e current deployment has Spark 2.4.7 installed. That specific version\u0027s API is documented here:\n   \n   https://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\n   \n   Beware of following on-line message board and other fora posts for help and examples as they more often than not described and link to different versions, and the API is evolving \u003ci\u003eall the time\u003c/i\u003e.\n   \n   ",
+      "text": "%md\n\n# Using ML to define an astrometrically clean sample of stars\n\n   Follows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\n   via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\n\n   https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\n\n   (DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \"GCNS Generation\"\n   (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\n\n   Presently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0027s in the paper.\n\n   \u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e\n   \n   \u003cb\u003eIMPORTANT NOTE: \u003c/b\u003e current deployment has Spark 2.4.7 installed. That specific version\u0027s API is documented here:\n   \n   https://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\n   \n   Beware of following on-line message board and other fora posts for help and examples as they more often than not describe and link to different versions, and the API is evolving \u003ci\u003eall the time\u003c/i\u003e.\n   \n   ",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-25 16:47:30.449",
+      "dateUpdated": "2020-11-26 10:06:07.852",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -28,7 +28,7 @@
         "msg": [
           {
             "type": "HTML",
-            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eUsing ML to define an astrometrically clean sample of stars\u003c/h1\u003e\n\u003cp\u003eFollows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\u003cbr/\u003e via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\"\u003ehttps://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e(DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \u0026ldquo;GCNS Generation\u0026rdquo;\u003cbr/\u003e (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\u003c/p\u003e\n\u003cp\u003ePresently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0026rsquo;s in the paper.\u003c/p\u003e\n\u003cp\u003e\u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e\u003c/p\u003e\n\u003cp\u003e\u003cb\u003eIMPORTANT NOTE: \u003c/b\u003e current deployment has Spark 2.4.7 installed. That specific version\u0026rsquo;s API is documented here:\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\"\u003ehttps://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003eBeware of following on-line message board and other fora posts for help and examples as they more often than not described and link to different versions, and the API is evolving \u003ci\u003eall the time\u003c/i\u003e.\u003c/p\u003e\n\u003c/div\u003e"
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eUsing ML to define an astrometrically clean sample of stars\u003c/h1\u003e\n\u003cp\u003eFollows Gaia EDR3 performance verification paper DPACP-81 (Smart et al.) in classifying astrometric solutions as good or bad\u003cbr/\u003e via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\"\u003ehttps://gaia.esac.esa.int/dpacsvn/DPAC/docs/DpacPublications/DR3PerformanceVerification/DPACP-81/main_submitted2308.pdf\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e(DPAC password protected) for further details. The work flow implemented here follows closely that described in Section 2, \u0026ldquo;GCNS Generation\u0026rdquo;\u003cbr/\u003e (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\u003c/p\u003e\n\u003cp\u003ePresently implemented for Gaia DR2; deploy and check this implementation against GEDR3 when released - it should reproduce what\u0026rsquo;s in the paper.\u003c/p\u003e\n\u003cp\u003e\u003ci\u003eVersion employing newer, richer dataframe API in pyspark ML\u003c/i\u003e\u003c/p\u003e\n\u003cp\u003e\u003cb\u003eIMPORTANT NOTE: \u003c/b\u003e current deployment has Spark 2.4.7 installed. That specific version\u0026rsquo;s API is documented here:\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\"\u003ehttps://spark.apache.org/docs/2.4.7/ml-classification-regression.html#random-forest-classifier\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003eBeware of following on-line message board and other fora posts for help and examples as they more often than not describe and link to different versions, and the API is evolving \u003ci\u003eall the time\u003c/i\u003e.\u003c/p\u003e\n\u003c/div\u003e"
           }
         ]
       },
@@ -36,15 +36,15 @@
       "jobName": "paragraph_1606207963366_2005713725",
       "id": "20201013-131059_546082898",
       "dateCreated": "2020-11-24 08:52:43.366",
-      "dateStarted": "2020-11-25 16:47:30.449",
-      "dateFinished": "2020-11-25 16:47:30.456",
+      "dateStarted": "2020-11-26 10:06:07.853",
+      "dateFinished": "2020-11-26 10:06:07.867",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# this is the set of astrometric features to be used. In reality several iterations of this workflow might be required with an expanded set, and some figure-of-merit,\n# e.g. Gini index, would be used to select those most important to the RF classification - cf. Table A.1 in the GCNS paper.\nastrometric_features \u003d [\n    \u0027parallax_error\u0027, \n    \u0027parallax_over_error\u0027,\n    \u0027astrometric_sigma5d_max\u0027,\n    \u0027pmra_error\u0027,\n    \u0027pmdec_error\u0027,\n    \u0027astrometric_excess_noise\u0027,\n    #\u0027ipd_gof_harmonic_amplitude\u0027,\n    #\u0027ruwe\u0027,                             TODO: reinstate all at GEDR3 !!!\n    \u0027visibility_periods_used\u0027,\n    \u0027pmdec\u0027,\n    \u0027pmra\u0027,\n    #\u0027ipd_frac_odd_win\u0027,\n    #\u0027ipd_frac_multi_peak\u0027,\n    \u0027astrometric_gof_al\u0027,\n    #\u0027scan_direction_strength_k2\u0027,\n    \u0027parallax_pmdec_corr\u0027\n]\n# ... the last two are included to cross check against the Gini index results presented in the paper.\n\n# quick mode: set an additional predicate filter on random_index here to limit to 1% or 0.1% sampling etc:\nquick_filter \u003d \u0027 AND MOD(random_index, 10) \u003d 0\u0027\n# ... to switch this off, simply specify an empty string. But to avoid overloading matplotlib when visualising results, keep this one:\nquick_plot_filter \u003d \u0027 AND MOD(random_index, 10) \u003d 0\u0027\n\n# reformat the above attribute list into an SQL comma-separated select string\nfeatures_select_string \u003d (\u0027%s, \u0027*(len(astrometric_features) - 1) + \u0027%s \u0027)%tuple(astrometric_features)\n#print (features_select_string)\n\n# Confirmed by Luis Sarro, personal communication: actually we train on ABS(parallax_over_error), see e.g. GCNS paper Figure A.5\nfeatures_select_string \u003d features_select_string.replace(\u0027parallax_over_error\u0027,\u0027ABS(parallax_over_error) AS parallax_over_error\u0027)\n\n# photometric consistency predicate - e.g. Evans et al. (2018), Babusiaux et al. (2018) for DR2:\nphotometric_consistency_filter \u003d \u0027 AND phot_bp_rp_excess_factor BETWEEN 1.0 + (0.03 * POW(bp_rp, 2.0)) AND 1.3 + (0.06 * POW(bp_rp, 2.0))\u0027\n\n# define the data source\ngs_df \u003d sqlContext.read.parquet(\u0027/data/gaia/*.parquet\u0027)\n\n# register as SQL-queryable \ngs_df.createOrReplaceTempView(\u0027gaia_source\u0027)\n\n",
+      "text": "%spark.pyspark\n\n# this is the set of astrometric features to be used. In reality several iterations of this workflow might be required with an expanded set, and some figure-of-merit,\n# e.g. Gini index, would be used to select those most important to the RF classification - cf. Table A.1 in the GCNS paper.\nastrometric_features \u003d [\n    \u0027parallax_error\u0027, \n    \u0027parallax_over_error\u0027,\n    \u0027astrometric_sigma5d_max\u0027,\n    \u0027pmra_error\u0027,\n    \u0027pmdec_error\u0027,\n    \u0027astrometric_excess_noise\u0027,\n    #\u0027ipd_gof_harmonic_amplitude\u0027,\n    #\u0027ruwe\u0027,                             TODO: reinstate all at GEDR3 !!!\n    \u0027visibility_periods_used\u0027,\n    \u0027pmdec\u0027,\n    \u0027pmra\u0027,\n    #\u0027ipd_frac_odd_win\u0027,\n    #\u0027ipd_frac_multi_peak\u0027,\n    \u0027astrometric_gof_al\u0027,\n    #\u0027scan_direction_strength_k2\u0027,\n    \u0027parallax_pmdec_corr\u0027\n]\n# ... the last two are included to cross check against the Gini index results presented in the paper.\n\n# quick mode: set an additional predicate filter on random_index here to limit to 1% or 0.1% sampling etc:\nquick_filter \u003d \u0027\u0027# AND MOD(random_index, 10) \u003d 0\u0027\n# ... to switch this off, simply specify an empty string. But to avoid overloading matplotlib when visualising results, keep this one:\nquick_plot_filter \u003d \u0027 AND MOD(random_index, 10) \u003d 0\u0027\n\n# Default Spark worker configuration cannot atm handle the full dataset - maybe this is (at least part of) the problem:\n# https://stackoverflow.com/questions/25707784/why-does-a-job-fail-with-no-space-left-on-device-but-df-says-otherwise\n\n# reformat the above attribute list into an SQL comma-separated select string\nfeatures_select_string \u003d (\u0027%s, \u0027*(len(astrometric_features) - 1) + \u0027%s \u0027)%tuple(astrometric_features)\n#print (features_select_string)\n\n# Confirmed by Luis Sarro, personal communication: actually we train on ABS(parallax_over_error), see e.g. GCNS paper Figure A.5\nfeatures_select_string \u003d features_select_string.replace(\u0027parallax_over_error\u0027,\u0027ABS(parallax_over_error) AS parallax_over_error\u0027)\n\n# photometric consistency predicate - e.g. Evans et al. (2018), Babusiaux et al. (2018) for DR2:\nphotometric_consistency_filter \u003d \u0027 AND phot_bp_rp_excess_factor BETWEEN 1.0 + (0.03 * POW(bp_rp, 2.0)) AND 1.3 + (0.06 * POW(bp_rp, 2.0))\u0027\n\n# define the data source\ngs_df \u003d sqlContext.read.parquet(\u0027/data/gaia/*.parquet\u0027)\n\n# register as SQL-queryable \ngs_df.createOrReplaceTempView(\u0027gaia_source\u0027)\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-25 14:45:49.737",
+      "dateUpdated": "2020-11-26 10:02:42.412",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -71,15 +71,15 @@
       "jobName": "paragraph_1606207963368_-1981729652",
       "id": "20201013-131649_1734629667",
       "dateCreated": "2020-11-24 08:52:43.368",
-      "dateStarted": "2020-11-25 14:16:40.646",
-      "dateFinished": "2020-11-25 14:16:45.924",
+      "dateStarted": "2020-11-25 16:56:55.869",
+      "dateFinished": "2020-11-25 16:57:01.880",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n\n# clear any previously cached data in the context (cells may be executed in any order, and out-dated by changes from here onwards)\nsqlContext.clearCache()\n\n# a conservative selection of everything that COULD be within 100pc, including things with measured \n# distances putting them outside the 100pc horizon when their true distances are within, and also including \n# loads of spurious chaff with the wheat of course, plus bad things with significant, unphysical parallaxes:\nraw_sources_df \u003d spark.sql(\u0027SELECT source_id, random_index, phot_g_mean_mag, phot_bp_rp_excess_factor, bp_rp, g_rp, parallax, ra, dec, b, \u0027 + features_select_string + \u0027FROM gaia_source WHERE ABS(parallax) \u003e 8.0\u0027)\n\n# cache it for speedy access below (all subsequent samples are derived from this):\nraw_sources_df.cache()\n\n# register as SQL-queryable\nraw_sources_df.createOrReplaceTempView(\u0027raw_sources\u0027)\n\nraw_sources_df.count()\n# (cf. GEDR3: 1,211,740 sources) ",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-25 14:36:55.393",
+      "dateUpdated": "2020-11-26 10:02:47.249",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -111,15 +111,15 @@
       "jobName": "paragraph_1606207963370_2129974015",
       "id": "20201013-132418_278702125",
       "dateCreated": "2020-11-24 08:52:43.370",
-      "dateStarted": "2020-11-25 14:17:18.385",
-      "dateFinished": "2020-11-25 14:28:03.626",
+      "dateStarted": "2020-11-25 16:57:33.389",
+      "dateFinished": "2020-11-25 16:59:10.856",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n\n# plot an observational Hertzsprung-Russell diagram (aka colour / absolute magnitude diagram) for the unclassified sample to show the problem,\n# include the photometric consistency filter to show the problem is astrometric in addition to photometric\nunclassified_camd_df \u003d spark.sql(\u0027SELECT phot_g_mean_mag + 5.0*LOG10(parallax/100.0) AS m_g, g_rp FROM raw_sources WHERE parallax \u003e +8.0\u0027 + quick_plot_filter)# + photometric_consistency_filter)\n\nimport matplotlib.pyplot as plot\nplot.figure(0, figsize \u003d (6.0, 9.7))\nx \u003d list(unclassified_camd_df.select(\u0027g_rp\u0027).toPandas()[\u0027g_rp\u0027])\ny \u003d list(unclassified_camd_df.select(\u0027m_g\u0027).toPandas()[\u0027m_g\u0027])\nplot.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1)\nplot.ylim(21.0, -3.0)\nplot.ylabel(\u0027Stellar brightness (absolute G magnitude) --\u003e\u0027, fontsize \u003d 16)\nplot.xlabel(\u0027\u003c-- Stellar temperature (G - RP magnitude)\u0027, fontsize \u003d 16)\nplot.show()\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-25 14:37:17.882",
+      "dateUpdated": "2020-11-25 16:59:31.011",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -155,8 +155,8 @@
       "jobName": "paragraph_1606207963370_-937914806",
       "id": "20201120-094650_221463065",
       "dateCreated": "2020-11-24 08:52:43.370",
-      "dateStarted": "2020-11-25 14:37:02.408",
-      "dateFinished": "2020-11-25 14:37:09.990",
+      "dateStarted": "2020-11-25 16:59:31.049",
+      "dateFinished": "2020-11-25 17:05:03.391",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -203,42 +203,7 @@
     {
       "text": "%spark.pyspark\n\n# good training data: first define rough positional cuts to exclude crowded regions at low Gaialctic latitude, and inside the Large and Small Magellanic Clouds (Luri et al. 2020):\nlow_galactic_latitude_filter \u003d \u0027 AND ABS(b) \u003e 25.0\u0027\nsmc_filter \u003d \u0027 AND (dec \u003c -80.0 OR dec \u003e -65.0 OR (ra \u003c 350.0 AND ra \u003e +40.0))\u0027\nlmc_filter \u003d \u0027 AND (dec \u003c -80.0 OR dec \u003e -55.0 OR ra \u003c 40.0 OR ra \u003e 120.0)\u0027\nall_good_training_df \u003d spark.sql(\u0027SELECT 1 AS label, \u0027 + features_select_string + \u0027 FROM raw_sources WHERE parallax \u003e + 8.0 AND ABS(b) \u003e 25.0\u0027 + photometric_consistency_filter + quick_filter + low_galactic_latitude_filter + smc_filter + lmc_filter)\ngood_training_rows \u003d all_good_training_df.count()\n#print(\u0027Good training data size: %d rows\u0027%(good_training_rows))\n\n# bad training data: negative parallaxes: N.B. make a selection exactly the same size as the good training set based on size of smaller (good) data set and count of all available bads\nmaximal_bad_ast_count \u003d spark.sql(\u0027SELECT source_id FROM raw_sources WHERE parallax \u003c -8.0\u0027).count()\nfilter_factor \u003d int(maximal_bad_ast_count / good_training_rows)\nall_bad_training_df \u003d spark.sql(\u0027SELECT 0 AS label, \u0027 + features_select_string + \u0027 FROM raw_sources WHERE  parallax \u003c -8.0 AND MOD(random_index, %d) \u003d 0\u0027%(filter_factor) + \u0027 ORDER BY random_index LIMIT %d\u0027%(good_training_rows))\n#all_bad_training_data_count \u003d all_bad_training_df.count()\n#print (\u0027Bad  training data size: %d rows\u0027%(all_bad_training_data_count))\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-25 16:38:11.683",
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9.0,
-        "results": {},
-        "enabled": true,
-        "editorHide": false
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "jobName": "paragraph_1606207963373_98475139",
-      "id": "20201123-105445_95907042",
-      "dateCreated": "2020-11-24 08:52:43.373",
-      "dateStarted": "2020-11-25 14:37:29.308",
-      "dateFinished": "2020-11-25 14:37:39.940",
-      "status": "FINISHED",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "%spark.pyspark\n\n# define training (67%) and test (33%) sample splits (seeded randomness for repeatability)\ngood_67pc, good_33pc \u003d all_good_training_df.randomSplit([0.67, 0.33], 42)\nbad_67pc, bad_33pc \u003d all_bad_training_df.randomSplit([0.67, 0.33], 42)\n\n# transform to labelled feature vectors (0.0 \u003d bad, 1.0 \u003d good, as conveniently already defined in previous projections above)\n\n# Annotate and transform appropriate to the input required by the classifier\u0027s API.\n# Need a dataframe with labels and features: use vector assembler. \nfrom pyspark.ml.feature import VectorAssembler\nignore \u003d [\u0027label\u0027,]\nassembler \u003d VectorAssembler(inputCols\u003d[x for x in good_67pc.columns if x not in ignore], outputCol\u003d\u0027features\u0027)\n\n# training sets\ngood_training_df \u003d assembler.transform(good_67pc).drop(*astrometric_features)\nbad_training_df \u003d assembler.transform(bad_67pc).drop(*astrometric_features)\n# ... N.B. the original individual feature columns are dropped to save memory (since they are duplicated into the resulting feature vector).\n\n# testing sets\ngood_testing_df \u003d assembler.transform(good_33pc).drop(*astrometric_features)\nbad_testing_df \u003d assembler.transform(bad_33pc).drop(*astrometric_features)\n\n# concatenate the training set into a single dataframe\ntraining_df \u003d good_training_df.union(bad_training_df)\ntraining_df.show()\n",
-      "user": "gaiauser",
-      "dateUpdated": "2020-11-25 14:38:04.919",
+      "dateUpdated": "2020-11-26 10:02:53.639",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -257,20 +222,58 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1606207963373_98475139",
+      "id": "20201123-105445_95907042",
+      "dateCreated": "2020-11-24 08:52:43.373",
+      "dateStarted": "2020-11-25 17:05:35.900",
+      "dateFinished": "2020-11-25 17:10:52.721",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# define training (67%) and test (33%) sample splits (seeded randomness for repeatability)\ngood_67pc, good_33pc \u003d all_good_training_df.randomSplit([0.67, 0.33], 42)\nbad_67pc, bad_33pc \u003d all_bad_training_df.randomSplit([0.67, 0.33], 42)\n\n# transform to labelled feature vectors (0.0 \u003d bad, 1.0 \u003d good, as conveniently already defined in previous projections above)\n\n# Annotate and transform appropriate to the input required by the classifier\u0027s API.\n# Need a dataframe with labels and features: use vector assembler. \nfrom pyspark.ml.feature import VectorAssembler\nignore \u003d [\u0027label\u0027,]\nassembler \u003d VectorAssembler(inputCols\u003d[x for x in good_67pc.columns if x not in ignore], outputCol\u003d\u0027features\u0027)\n\n# training sets\ngood_training_df \u003d assembler.transform(good_67pc).drop(*astrometric_features)\nbad_training_df \u003d assembler.transform(bad_67pc).drop(*astrometric_features)\n# ... N.B. the original individual feature columns are dropped to save memory (since they are duplicated into the resulting feature vector).\n\n# testing sets\ngood_testing_df \u003d assembler.transform(good_33pc).drop(*astrometric_features)\nbad_testing_df \u003d assembler.transform(bad_33pc).drop(*astrometric_features)\n\n# concatenate the training set into a single dataframe\ntraining_df \u003d good_training_df.union(bad_training_df)\n#training_df.show()\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-11-26 10:02:57.017",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true,
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
       "apps": [],
       "jobName": "paragraph_1606207963375_1659740506",
       "id": "20201015-161110_18118893",
       "dateCreated": "2020-11-24 08:52:43.375",
-      "dateStarted": "2020-11-25 14:37:49.317",
-      "dateFinished": "2020-11-25 14:37:56.854",
+      "dateStarted": "2020-11-25 17:11:43.003",
+      "dateFinished": "2020-11-25 17:11:43.100",
       "status": "FINISHED",
-      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# This cell does the business, given the data and training sets. Follows the example Python code at \n# https://spark.apache.org/docs/2.4.7/api/python/pyspark.ml.html#pyspark.ml.classification.RandomForestClassifier\n\nfrom pyspark.ml.classification import RandomForestClassifier\n\n# instantiate a trained RF classifier, seeded for repeatability at this stage:\nrf \u003d RandomForestClassifier(featureSubsetStrategy \u003d \u0027sqrt\u0027, featuresCol \u003d \u0027features\u0027, labelCol \u003d \u0027label\u0027, numTrees \u003d 100, impurity \u003d \u0027gini\u0027, seed\u003d42)\nmodel \u003d rf.fit(training_df)\n\n# benchmarks: featureSubsetStrategy \u003d \"sqrt\"\n# 10% sample,  100 trees:  3min 58sec (Tues) 7min 57sec (Wed) ...!\n",
+      "text": "%spark.pyspark\n\n# This cell does the business, given the data and training sets. Follows the example Python code at \n# https://spark.apache.org/docs/2.4.7/api/python/pyspark.ml.html#pyspark.ml.classification.RandomForestClassifier\n\nfrom pyspark.ml.classification import RandomForestClassifier\n\n# instantiate a trained RF classifier, seeded for repeatability at this stage:\nrf \u003d RandomForestClassifier(featureSubsetStrategy \u003d \u0027sqrt\u0027, featuresCol \u003d \u0027features\u0027, labelCol \u003d \u0027label\u0027, numTrees \u003d 5000, impurity \u003d \u0027gini\u0027, seed\u003d42)\nmodel \u003d rf.fit(training_df)\n\n# benchmarks: featureSubsetStrategy \u003d \"sqrt\"\n# 10% sample,  100 trees:  3min 58sec (Tues) 7min 57sec (Wed) ...!\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-25 16:37:57.645",
+      "dateUpdated": "2020-11-25 17:12:12.044",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -290,16 +293,21 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
-        "msg": []
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m\n\u001b[0;31mPy4JJavaError\u001b[0m                             Traceback (most recent call last)\n\u001b[0;32m\u003cipython-input-604-7b53333a808c\u003e\u001b[0m in \u001b[0;36m\u003cmodule\u003e\u001b[0;34m\u001b[0m\n\u001b[1;32m      6\u001b[0m \u001b[0;31m# instantiate a trained RF classifier, seeded for repeatability at this stage:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      7\u001b[0m \u001b[0mrf\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mRandomForestClassifier\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfeatureSubsetStrategy\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;34m\u0027sqrt\u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfeaturesCol\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;34m\u0027features\u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mlabelCol\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;34m\u0027label\u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnumTrees\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;36m5000\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mimpurity\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;34m\u0027gini\u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mseed\u001b[0m\u001b[0;34m\u003d\u001b[0m\u001b[0;36m42\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----\u003e 8\u001b[0;31m \u001b[0mmodel\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mrf\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfit\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtraining_df\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      9\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     10\u001b[0m \u001b[0;31m# benchmarks: featureSubsetStrategy \u003d \"sqrt\"\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/pyspark.zip/pyspark/ml/base.py\u001b[0m in \u001b[0;36mfit\u001b[0;34m(self, dataset, params)\u001b[0m\n\u001b[1;32m    130\u001b[0m                 \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcopy\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mparams\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_fit\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mdataset\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    131\u001b[0m             \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 132\u001b[0;31m                 \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_fit\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mdataset\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    133\u001b[0m         \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    134\u001b[0m             raise ValueError(\"Params must be either a param map or a list/tuple of param maps, \"\n\n\u001b[0;32m/opt/spark/python/lib/pyspark.zip/pyspark/ml/wrapper.py\u001b[0m in \u001b[0;36m_fit\u001b[0;34m(self, dataset)\u001b[0m\n\u001b[1;32m    293\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    294\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0m_fit\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdataset\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 295\u001b[0;31m         \u001b[0mjava_model\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_fit_java\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mdataset\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    296\u001b[0m         \u001b[0mmodel\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_create_model\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mjava_model\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    297\u001b[0m         \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_copyValues\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mmodel\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/pyspark.zip/pyspark/ml/wrapper.py\u001b[0m in \u001b[0;36m_fit_java\u001b[0;34m(self, dataset)\u001b[0m\n\u001b[1;32m    290\u001b[0m         \"\"\"\n\u001b[1;32m    291\u001b[0m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_transfer_params_to_java\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 292\u001b[0;31m         \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_java_obj\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfit\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mdataset\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_jdf\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    293\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    294\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0m_fit\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdataset\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py\u001b[0m in \u001b[0;36m__call__\u001b[0;34m(self, *args)\u001b[0m\n\u001b[1;32m   1255\u001b[0m         \u001b[0manswer\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mgateway_client\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msend_command\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcommand\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1256\u001b[0m         return_value \u003d get_return_value(\n\u001b[0;32m-\u003e 1257\u001b[0;31m             answer, self.gateway_client, self.target_id, self.name)\n\u001b[0m\u001b[1;32m   1258\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1259\u001b[0m         \u001b[0;32mfor\u001b[0m \u001b[0mtemp_arg\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mtemp_args\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/pyspark.zip/pyspark/sql/utils.py\u001b[0m in \u001b[0;36mdeco\u001b[0;34m(*a, **kw)\u001b[0m\n\u001b[1;32m     61\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mdeco\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0ma\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkw\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     62\u001b[0m         \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---\u003e 63\u001b[0;31m             \u001b[0;32mreturn\u001b[0m \u001b[0mf\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0ma\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkw\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     64\u001b[0m         \u001b[0;32mexcept\u001b[0m \u001b[0mpy4j\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mprotocol\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mPy4JJavaError\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     65\u001b[0m             \u001b[0ms\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mjava_exception\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtoString\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/py4j-0.10.7-src.zip/py4j/protocol.py\u001b[0m in \u001b[0;36mget_return_value\u001b[0;34m(answer, gateway_client, target_id, name)\u001b[0m\n\u001b[1;32m    326\u001b[0m                 raise Py4JJavaError(\n\u001b[1;32m    327\u001b[0m                     \u001b[0;34m\"An error occurred while calling {0}{1}{2}.\\n\"\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 328\u001b[0;31m                     format(target_id, \".\", name), value)\n\u001b[0m\u001b[1;32m    329\u001b[0m             \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    330\u001b[0m                 raise Py4JError(\n\n\u001b[0;31mPy4JJavaError\u001b[0m: An error occurred while calling o6123.fit.\n: org.apache.spark.SparkException: Job aborted due to stage failure: Task 4209 in stage 848.0 failed 4 times, most recent failure: Lost task 4209.3 in stage 848.0 (TID 1870542, worker03, executor 2): java.io.IOException: No space left on device\n\tat java.io.FileOutputStream.writeBytes(Native Method)\n\tat java.io.FileOutputStream.write(FileOutputStream.java:326)\n\tat org.apache.spark.storage.TimeTrackingOutputStream.write(TimeTrackingOutputStream.java:58)\n\tat java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)\n\tat java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)\n\tat net.jpountz.lz4.LZ4BlockOutputStream.finish(LZ4BlockOutputStream.java:260)\n\tat net.jpountz.lz4.LZ4BlockOutputStream.close(LZ4BlockOutputStream.java:190)\n\tat java.io.ObjectOutputStream$BlockDataOutputStream.close(ObjectOutputStream.java:1828)\n\tat java.io.ObjectOutputStream.close(ObjectOutputStream.java:742)\n\tat org.apache.spark.serializer.JavaSerializationStream.close(JavaSerializer.scala:57)\n\tat org.apache.spark.storage.DiskBlockObjectWriter.commitAndGet(DiskBlockObjectWriter.scala:173)\n\tat org.apache.spark.util.collection.ExternalSorter.writePartitionedFile(ExternalSorter.scala:701)\n\tat org.apache.spark.shuffle.sort.SortShuffleWriter.write(SortShuffleWriter.scala:71)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:99)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:55)\n\tat org.apache.spark.scheduler.Task.run(Task.scala:123)\n\tat org.apache.spark.executor.Executor$TaskRunner$$anonfun$10.apply(Executor.scala:408)\n\tat org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1360)\n\tat org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:414)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n\nDriver stacktrace:\n\tat org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1925)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1913)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1912)\n\tat scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)\n\tat scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)\n\tat org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1912)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:948)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:948)\n\tat scala.Option.foreach(Option.scala:257)\n\tat org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:948)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2146)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2095)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2084)\n\tat org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)\n\tat org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:759)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2061)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2082)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2101)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2126)\n\tat org.apache.spark.rdd.RDD$$anonfun$collect$1.apply(RDD.scala:990)\n\tat org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n\tat org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n\tat org.apache.spark.rdd.RDD.withScope(RDD.scala:385)\n\tat org.apache.spark.rdd.RDD.collect(RDD.scala:989)\n\tat org.apache.spark.rdd.PairRDDFunctions$$anonfun$collectAsMap$1.apply(PairRDDFunctions.scala:743)\n\tat org.apache.spark.rdd.PairRDDFunctions$$anonfun$collectAsMap$1.apply(PairRDDFunctions.scala:742)\n\tat org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n\tat org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n\tat org.apache.spark.rdd.RDD.withScope(RDD.scala:385)\n\tat org.apache.spark.rdd.PairRDDFunctions.collectAsMap(PairRDDFunctions.scala:742)\n\tat org.apache.spark.ml.tree.impl.RandomForest$.findBestSplits(RandomForest.scala:567)\n\tat org.apache.spark.ml.tree.impl.RandomForest$.run(RandomForest.scala:201)\n\tat org.apache.spark.ml.classification.RandomForestClassifier$$anonfun$train$1.apply(RandomForestClassifier.scala:142)\n\tat org.apache.spark.ml.classification.RandomForestClassifier$$anonfun$train$1.apply(RandomForestClassifier.scala:120)\n\tat org.apache.spark.ml.util.Instrumentation$$anonfun$11.apply(Instrumentation.scala:185)\n\tat scala.util.Try$.apply(Try.scala:192)\n\tat org.apache.spark.ml.util.Instrumentation$.instrumented(Instrumentation.scala:185)\n\tat org.apache.spark.ml.classification.RandomForestClassifier.train(RandomForestClassifier.scala:120)\n\tat org.apache.spark.ml.classification.RandomForestClassifier.train(RandomForestClassifier.scala:46)\n\tat org.apache.spark.ml.Predictor.fit(Predictor.scala:118)\n\tat org.apache.spark.ml.Predictor.fit(Predictor.scala:82)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\n\tat py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\n\tat py4j.Gateway.invoke(Gateway.java:282)\n\tat py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\n\tat py4j.commands.CallCommand.execute(CallCommand.java:79)\n\tat py4j.GatewayConnection.run(GatewayConnection.java:238)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: java.io.IOException: No space left on device\n\tat java.io.FileOutputStream.writeBytes(Native Method)\n\tat java.io.FileOutputStream.write(FileOutputStream.java:326)\n\tat org.apache.spark.storage.TimeTrackingOutputStream.write(TimeTrackingOutputStream.java:58)\n\tat java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)\n\tat java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)\n\tat net.jpountz.lz4.LZ4BlockOutputStream.finish(LZ4BlockOutputStream.java:260)\n\tat net.jpountz.lz4.LZ4BlockOutputStream.close(LZ4BlockOutputStream.java:190)\n\tat java.io.ObjectOutputStream$BlockDataOutputStream.close(ObjectOutputStream.java:1828)\n\tat java.io.ObjectOutputStream.close(ObjectOutputStream.java:742)\n\tat org.apache.spark.serializer.JavaSerializationStream.close(JavaSerializer.scala:57)\n\tat org.apache.spark.storage.DiskBlockObjectWriter.commitAndGet(DiskBlockObjectWriter.scala:173)\n\tat org.apache.spark.util.collection.ExternalSorter.writePartitionedFile(ExternalSorter.scala:701)\n\tat org.apache.spark.shuffle.sort.SortShuffleWriter.write(SortShuffleWriter.scala:71)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:99)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:55)\n\tat org.apache.spark.scheduler.Task.run(Task.scala:123)\n\tat org.apache.spark.executor.Executor$TaskRunner$$anonfun$10.apply(Executor.scala:408)\n\tat org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1360)\n\tat org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:414)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\t... 1 more\n"
+          }
+        ]
       },
       "apps": [],
       "jobName": "paragraph_1606207963376_-1848568621",
       "id": "20201013-152110_1282917873",
       "dateCreated": "2020-11-24 08:52:43.376",
-      "dateStarted": "2020-11-25 14:38:14.150",
-      "dateFinished": "2020-11-25 14:46:11.901",
-      "status": "FINISHED",
+      "dateStarted": "2020-11-25 17:12:12.071",
+      "dateFinished": "2020-11-25 18:01:29.403",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
