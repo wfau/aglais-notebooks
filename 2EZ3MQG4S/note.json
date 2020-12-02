@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "%pyspark\n\n# define the data frame source on the given column selection only (we don\u0027t want to read the whole thing!)\ndf \u003d sqlContext.read.parquet(\"/hadoop/gaia/parquet/gdr2/gaia_source/*.parquet\").select(\"source_id\",\"parallax_error\").where(\"parallax_error is not null\")\n# note also we have to exclude the null values resulting from 2-paramater astrometric solutions (this wasn\u0027t necessary in TGAS by definition)\n\n# debug: physical execution plan and resulting schema\ndf.explain()\ndf.show()\ndf.schema\n",
-      "user": "admin",
-      "dateUpdated": "2020-04-08 11:17:36.371",
+      "text": "%pyspark\n\n# here\u0027s a new comment.\n\n\n# define the data frame source on the given column selection only (we don\u0027t want to read the whole thing!)\ndf \u003d spark.read.parquet(\"file:///data/gaia/dr2/*.parquet\").select(\"source_id\",\"parallax_error\").where(\"parallax_error is not null\")\n# note also we have to exclude the null values resulting from 2-paramater astrometric solutions (this wasn\u0027t necessary in TGAS by definition)\n\n# debug: physical execution plan and resulting schema\ndf.explain()\ndf.show()\ndf.schema\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-12-02 09:35:04.562",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -26,7 +26,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u003d\u003d Physical Plan \u003d\u003d\n*(1) Project [source_id#2L, parallax_error#10]\n+- *(1) Filter isnotnull(parallax_error#10)\n   +- *(1) FileScan parquet [source_id#2L,parallax_error#10] Batched: true, Format: Parquet, Location: InMemoryFileIndex[hdfs://stv-dev-master:9000/hadoop/gaia/parquet/gdr2/gaia_source/part-00000-84c9..., PartitionFilters: [], PushedFilters: [IsNotNull(parallax_error)], ReadSchema: struct\u003csource_id:bigint,parallax_error:double\u003e\n+-------------------+-------------------+\n|          source_id|     parallax_error|\n+-------------------+-------------------+\n|4039678872339871744| 0.7696924805050609|\n|4039662384016337024| 0.5435004501205588|\n|4039671626792835968|0.42596571385844906|\n|4039666026147249152|0.28351409607368766|\n|4039675986122456576| 0.2856491691557616|\n|4039677463587633664| 0.1194583081060792|\n|4039662899409694464|  0.460774649076223|\n|4039679323380141184| 0.6884603733194365|\n|4039676952559930112| 0.3854673772956747|\n|4039676952559916672|  0.315567173944316|\n|4039680457251890560| 0.6221087296111599|\n|4039677772856676352|0.13208728089973668|\n|4039676299721936640| 1.2124705333714896|\n|4039673447860957696|0.19878253982481253|\n|4039668087737434112| 0.6357761361934624|\n|4039679976215193472| 0.4531290506724932|\n|4039678116454307840| 0.2819068892283278|\n|4039672520149353344| 0.6809758956081103|\n|4039677193075390336| 0.4763092999145325|\n|4039669633925417728| 1.0548033436017816|\n+-------------------+-------------------+\nonly showing top 20 rows\n\nStructType(List(StructField(source_id,LongType,true),StructField(parallax_error,DoubleType,true)))\n"
+            "data": "\u003d\u003d Physical Plan \u003d\u003d\n*(1) Project [source_id#488L, parallax_error#496]\n+- *(1) Filter isnotnull(parallax_error#496)\n   +- *(1) FileScan parquet [source_id#488L,parallax_error#496] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/data/gaia/dr2/part-03446-70392076-8b82-4457-8828-22069e7626e9-c000.snappy..., PartitionFilters: [], PushedFilters: [IsNotNull(parallax_error)], ReadSchema: struct\u003csource_id:bigint,parallax_error:double\u003e\n+-------------------+-------------------+\n|          source_id|     parallax_error|\n+-------------------+-------------------+\n|4039678872339871744| 0.7696924805050609|\n|4039662384016337024| 0.5435004501205588|\n|4039671626792835968|0.42596571385844906|\n|4039666026147249152|0.28351409607368766|\n|4039675986122456576| 0.2856491691557616|\n|4039677463587633664| 0.1194583081060792|\n|4039662899409694464|  0.460774649076223|\n|4039679323380141184| 0.6884603733194365|\n|4039676952559930112| 0.3854673772956747|\n|4039676952559916672|  0.315567173944316|\n|4039680457251890560| 0.6221087296111599|\n|4039677772856676352|0.13208728089973668|\n|4039676299721936640| 1.2124705333714896|\n|4039673447860957696|0.19878253982481253|\n|4039668087737434112| 0.6357761361934624|\n|4039679976215193472| 0.4531290506724932|\n|4039678116454307840| 0.2819068892283278|\n|4039672520149353344| 0.6809758956081103|\n|4039677193075390336| 0.4763092999145325|\n|4039669633925417728| 1.0548033436017816|\n+-------------------+-------------------+\nonly showing top 20 rows\n\nStructType(List(StructField(source_id,LongType,true),StructField(parallax_error,DoubleType,true)))"
           }
         ]
       },
@@ -34,15 +34,15 @@
       "jobName": "paragraph_1578306395697_1540957115",
       "id": "20200106-102635_1536489154",
       "dateCreated": "2020-01-06 10:26:35.697",
-      "dateStarted": "2020-04-08 11:17:36.418",
-      "dateFinished": "2020-04-08 11:17:48.287",
+      "dateStarted": "2020-12-02 09:35:04.585",
+      "dateFinished": "2020-12-02 09:35:11.311",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%pyspark\n# column schema check:\n#dfbig \u003d sqlContext.read.parquet(\"/hadoop/gaia/parquet/gdr2/gaia_source/*.parquet\")\n#dfbig.printSchema()\n",
-      "user": "gaiauser",
-      "dateUpdated": "2020-01-14 10:10:43.238",
+      "user": "admin",
+      "dateUpdated": "2020-11-30 21:23:42.792",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -62,26 +62,21 @@
       },
       "results": {
         "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "root\n |-- solution_id: long (nullable \u003d true)\n |-- designation: string (nullable \u003d true)\n |-- source_id: long (nullable \u003d true)\n |-- random_index: long (nullable \u003d true)\n |-- ref_epoch: double (nullable \u003d true)\n |-- ra: double (nullable \u003d true)\n |-- ra_error: double (nullable \u003d true)\n |-- dec: double (nullable \u003d true)\n |-- dec_error: double (nullable \u003d true)\n |-- parallax: double (nullable \u003d true)\n |-- parallax_error: double (nullable \u003d true)\n |-- parallax_over_error: float (nullable \u003d true)\n |-- pmra: double (nullable \u003d true)\n |-- pmra_error: double (nullable \u003d true)\n |-- pmdec: double (nullable \u003d true)\n |-- pmdec_error: double (nullable \u003d true)\n |-- ra_dec_corr: float (nullable \u003d true)\n |-- ra_parallax_corr: float (nullable \u003d true)\n |-- ra_pmra_corr: float (nullable \u003d true)\n |-- ra_pmdec_corr: float (nullable \u003d true)\n |-- dec_parallax_corr: float (nullable \u003d true)\n |-- dec_pmra_corr: float (nullable \u003d true)\n |-- dec_pmdec_corr: float (nullable \u003d true)\n |-- parallax_pmra_corr: float (nullable \u003d true)\n |-- parallax_pmdec_corr: float (nullable \u003d true)\n |-- pmra_pmdec_corr: float (nullable \u003d true)\n |-- astrometric_n_obs_al: integer (nullable \u003d true)\n |-- astrometric_n_obs_ac: integer (nullable \u003d true)\n |-- astrometric_n_good_obs_al: integer (nullable \u003d true)\n |-- astrometric_n_bad_obs_al: integer (nullable \u003d true)\n |-- astrometric_gof_al: float (nullable \u003d true)\n |-- astrometric_chi2_al: float (nullable \u003d true)\n |-- astrometric_excess_noise: double (nullable \u003d true)\n |-- astrometric_excess_noise_sig: double (nullable \u003d true)\n |-- astrometric_params_solved: short (nullable \u003d true)\n |-- astrometric_primary_flag: boolean (nullable \u003d true)\n |-- astrometric_weight_al: float (nullable \u003d true)\n |-- astrometric_pseudo_colour: double (nullable \u003d true)\n |-- astrometric_pseudo_colour_error: double (nullable \u003d true)\n |-- mean_varpi_factor_al: float (nullable \u003d true)\n |-- astrometric_matched_observations: double (nullable \u003d true)\n |-- visibility_periods_used: short (nullable \u003d true)\n |-- astrometric_sigma5d_max: float (nullable \u003d true)\n |-- frame_rotator_object_type: integer (nullable \u003d true)\n |-- matched_observations: short (nullable \u003d true)\n |-- duplicated_source: boolean (nullable \u003d true)\n |-- phot_g_n_obs: integer (nullable \u003d true)\n |-- phot_g_mean_flux: double (nullable \u003d true)\n |-- phot_g_mean_flux_error: double (nullable \u003d true)\n |-- phot_g_mean_flux_over_error: float (nullable \u003d true)\n |-- phot_g_mean_mag: float (nullable \u003d true)\n |-- phot_bp_n_obs: integer (nullable \u003d true)\n |-- phot_bp_mean_flux: double (nullable \u003d true)\n |-- phot_bp_mean_flux_error: double (nullable \u003d true)\n |-- phot_bp_mean_flux_over_error: float (nullable \u003d true)\n |-- phot_bp_mean_mag: float (nullable \u003d true)\n |-- phot_rp_n_obs: integer (nullable \u003d true)\n |-- phot_rp_mean_flux: double (nullable \u003d true)\n |-- phot_rp_mean_flux_error: double (nullable \u003d true)\n |-- phot_rp_mean_flux_over_error: float (nullable \u003d true)\n |-- phot_rp_mean_mag: float (nullable \u003d true)\n |-- phot_bp_rp_excess_factor: float (nullable \u003d true)\n |-- phot_proc_mode: short (nullable \u003d true)\n |-- bp_rp: float (nullable \u003d true)\n |-- bp_g: float (nullable \u003d true)\n |-- g_rp: float (nullable \u003d true)\n |-- radial_velocity: double (nullable \u003d true)\n |-- radial_velocity_error: double (nullable \u003d true)\n |-- rv_nb_transits: integer (nullable \u003d true)\n |-- rv_template_teff: float (nullable \u003d true)\n |-- rv_template_logg: float (nullable \u003d true)\n |-- rv_template_fe_h: float (nullable \u003d true)\n |-- phot_variable_flag: string (nullable \u003d true)\n |-- l: double (nullable \u003d true)\n |-- b: double (nullable \u003d true)\n |-- ecl_lon: double (nullable \u003d true)\n |-- ecl_lat: double (nullable \u003d true)\n |-- priam_flags: long (nullable \u003d true)\n |-- teff_val: float (nullable \u003d true)\n |-- teff_percentile_lower: float (nullable \u003d true)\n |-- teff_percentile_upper: float (nullable \u003d true)\n |-- a_g_val: float (nullable \u003d true)\n |-- a_g_percentile_lower: float (nullable \u003d true)\n |-- a_g_percentile_upper: float (nullable \u003d true)\n |-- e_bp_min_rp_val: float (nullable \u003d true)\n |-- e_bp_min_rp_percentile_lower: float (nullable \u003d true)\n |-- e_bp_min_rp_percentile_upper: float (nullable \u003d true)\n |-- flame_flags: long (nullable \u003d true)\n |-- radius_val: float (nullable \u003d true)\n |-- radius_percentile_lower: float (nullable \u003d true)\n |-- radius_percentile_upper: float (nullable \u003d true)\n |-- lum_val: float (nullable \u003d true)\n |-- lum_percentile_lower: float (nullable \u003d true)\n |-- lum_percentile_upper: float (nullable \u003d true)\n\n"
-          }
-        ]
+        "msg": []
       },
       "apps": [],
       "jobName": "paragraph_1578394442435_37060320",
       "id": "20200107-105402_580824641",
       "dateCreated": "2020-01-07 10:54:02.435",
-      "dateStarted": "2020-01-13 20:51:05.159",
-      "dateFinished": "2020-01-13 20:51:08.215",
+      "dateStarted": "2020-11-30 21:23:42.824",
+      "dateFinished": "2020-11-30 21:23:42.884",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%pyspark\n\n# create an RDD from the data frame\nrdd \u003d df.rdd\nprint (\u0027RDD created from Data Frame has %d partitions by default\u0027 % (rdd.getNumPartitions()))\n\n# map at HEALPix level 5\nhealpix_level_5 \u003d rdd.map(lambda x: (x[0] \u003e\u003e 49, x[1])) \n\n# repartition the data (no partitioning function \u003d default hash partitioner) - we cannot assume that all occurences of a given key are confined to one partition\n# (this step would not be necessary if the data were partitioned by HEALPix at this level or higher)\nrepartitioned_rdd \u003d healpix_level_5.partitionBy(64)\n# for now match the number of partitions to the number of cores ... note that in Jan 2020 deployment this step takes 15 to 20 mins.\n\n# debug:\nvalues_per_key \u003d repartitioned_rdd.map(lambda x: (x[0], 1)).reduceByKey(lambda a,b: a+b)\nprint(\"Number of unique keys in repartitioned RDD: \",values_per_key.count())\nprint(\"Number of partitions: \", repartitioned_rdd.getNumPartitions())\nprint(values_per_key.sample(False, 0.001).collect())",
-      "user": "gaiauser",
-      "dateUpdated": "2020-01-14 09:26:44.943",
+      "user": "admin",
+      "dateUpdated": "2020-11-30 21:23:50.781",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -104,7 +99,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "RDD created from Data Frame has 5985 partitions by default\nNumber of unique keys in repartitioned RDD:  12288\nNumber of partitions:  64\n[(6595, 10445), (4312, 8111), (6883, 7515), (10979, 32839), (7338, 108736), (7731, 50838)]\n"
+            "data": "RDD created from Data Frame has 5985 partitions by default\nNumber of unique keys in repartitioned RDD:  12288\nNumber of partitions:  64\n[(11328, 25117), (1623, 11239), (3227, 248389), (2204, 9719), (989, 29367), (1190, 27329), (9833, 210723), (11564, 16266), (4013, 27814), (11567, 16254), (4019, 30429), (10549, 685373), (10623, 1151347)]\n"
           }
         ]
       },
@@ -112,8 +107,8 @@
       "jobName": "paragraph_1578307258662_-1270368671",
       "id": "20200106-104058_55829391",
       "dateCreated": "2020-01-06 10:40:58.662",
-      "dateStarted": "2020-01-14 09:26:44.953",
-      "dateFinished": "2020-01-14 09:39:35.274",
+      "dateStarted": "2020-11-30 21:23:50.825",
+      "dateFinished": "2020-11-30 21:47:29.851",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -269,18 +264,174 @@
       "progressUpdateIntervalMs": 500
     },
     {
+      "text": "%pyspark\n\n# Some Apache Spark 101 stuff\n\nrdd \u003d df.rdd\nprint (\u0027RDD created from Data Frame has %d partitions by default\u0027 % (rdd.getNumPartitions()))\n\n# by default spark creates one partition per (default) block size of file storage. If this default is 128Mbyte, then 5985 partitions means a total data size of 766GB here.\n# Jobs are then distributed across the available worker nodes in parallel, one partition per worker at a time, concurrently across the workers to achieve parallelism, \n# until the job has run over all the partitions",
+      "user": "gaiauser",
+      "dateUpdated": "2020-12-02 10:00:41.997",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "RDD created from Data Frame has 5985 partitions by default\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1578995556129_-1487713109",
+      "id": "20200114-095236_1821744358",
+      "dateCreated": "2020-01-14 09:52:36.129",
+      "dateStarted": "2020-12-02 09:37:48.405",
+      "dateFinished": "2020-12-02 09:37:48.556",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n\n# row counts by partition:\n\nfrom pyspark.sql.functions  import spark_partition_id\npartition_info \u003d df.withColumn(\"partitionId\", spark_partition_id()).groupBy(\"partitionId\").count()\n\n# cache it in memory to make the subsequent cells speedy\npartition_info.cache()\n\n\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-12-02 10:26:36.692",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "DataFrame[partitionId: int, count: bigint]"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1606901868385_418617943",
+      "id": "20201202-093748_331923564",
+      "dateCreated": "2020-12-02 09:37:48.385",
+      "dateStarted": "2020-12-02 10:26:36.711",
+      "dateFinished": "2020-12-02 10:26:36.901",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n\npartition_info.show()\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-12-02 10:26:51.957",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-----------+------+\n|partitionId| count|\n+-----------+------+\n|       1580|224262|\n|       2659|210769|\n|       2866|224886|\n|       3175|227553|\n|       3918|213162|\n|       4101|211013|\n|       4519|202641|\n|       5156|190808|\n|       1238|232644|\n|       1342|242455|\n|        148|243177|\n|        471|240519|\n|       1829|236900|\n|        463|265063|\n|        496|222445|\n|       3794|215360|\n|       1088|219515|\n|        833|212793|\n|       3997|214004|\n|       5803|237644|\n+-----------+------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1606902166183_744094817",
+      "id": "20201202-094246_1448038526",
+      "dateCreated": "2020-12-02 09:42:46.183",
+      "dateStarted": "2020-12-02 10:26:51.978",
+      "dateFinished": "2020-12-02 10:34:42.595",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n\n# check data skew\n# type(partition_info)\n\ncounts \u003d list(partition_info.select(\u0027count\u0027).toPandas()[\u0027count\u0027])\n\ntotal \u003d 0\nfor i in range(len(counts)): total \u003d total + counts[i]\nprint(\u0027Total rows across all partitions is %d\u0027%(total))\n",
+      "user": "gaiauser",
+      "dateUpdated": "2020-12-02 11:50:55.923",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Total rows across all partitions is 1331909727\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1606903344203_1385944682",
+      "id": "20201202-100224_1137524053",
+      "dateCreated": "2020-12-02 10:02:24.203",
+      "dateStarted": "2020-12-02 11:50:55.939",
+      "dateFinished": "2020-12-02 11:50:56.228",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
       "text": "%pyspark\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-01-14 09:52:36.129",
+      "dateUpdated": "2020-12-02 10:11:57.410",
       "config": {},
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1578995556129_-1487713109",
-      "id": "20200114-095236_1821744358",
-      "dateCreated": "2020-01-14 09:52:36.129",
+      "jobName": "paragraph_1606903917409_-1486933681",
+      "id": "20201202-101157_492000031",
+      "dateCreated": "2020-12-02 10:11:57.409",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }
@@ -293,7 +444,8 @@
     "spark:shared_process": []
   },
   "config": {
-    "isZeppelinNotebookCronEnable": false
+    "isZeppelinNotebookCronEnable": false,
+    "personalizedMode": "false"
   },
   "info": {}
 }
