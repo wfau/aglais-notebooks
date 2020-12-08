@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "%pyspark\n\n# here\u0027s a new comment.\n\n\n# define the data frame source on the given column selection only (we don\u0027t want to read the whole thing!)\ndf \u003d spark.read.parquet(\"file:///data/gaia/dr2/*.parquet\").select(\"source_id\",\"parallax_error\").where(\"parallax_error is not null\")\n# note also we have to exclude the null values resulting from 2-paramater astrometric solutions (this wasn\u0027t necessary in TGAS by definition)\n\n# debug: physical execution plan and resulting schema\ndf.explain()\ndf.show()\ndf.schema\n",
+      "text": "%pyspark\n\n# define the data frame source on the given column selection only (we don\u0027t want to read the whole thing!)\ndf \u003d spark.read.parquet(\"file:///data/gaia/dr2/*.parquet\").select(\"source_id\",\"parallax_error\").where(\"parallax_error is not null\")\n# note also we have to exclude the null values resulting from 2-paramater astrometric solutions (this wasn\u0027t necessary in TGAS by definition)\n\n# debug: physical execution plan and resulting schema\ndf.explain()\ndf.show()\ndf.schema\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-12-02 15:24:46.829",
+      "dateUpdated": "2020-12-08 16:33:49.099",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -441,6 +441,9 @@
   "noteParams": {},
   "noteForms": {},
   "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
     "spark:shared_process": []
   },
   "config": {
