@@ -3,7 +3,7 @@
     {
       "text": "%pyspark\n\n# here\u0027s a new comment.\n\n\n# define the data frame source on the given column selection only (we don\u0027t want to read the whole thing!)\ndf \u003d spark.read.parquet(\"file:///data/gaia/dr2/*.parquet\").select(\"source_id\",\"parallax_error\").where(\"parallax_error is not null\")\n# note also we have to exclude the null values resulting from 2-paramater astrometric solutions (this wasn\u0027t necessary in TGAS by definition)\n\n# debug: physical execution plan and resulting schema\ndf.explain()\ndf.show()\ndf.schema\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-12-02 09:35:04.562",
+      "dateUpdated": "2020-12-02 15:24:46.829",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -26,7 +26,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u003d\u003d Physical Plan \u003d\u003d\n*(1) Project [source_id#488L, parallax_error#496]\n+- *(1) Filter isnotnull(parallax_error#496)\n   +- *(1) FileScan parquet [source_id#488L,parallax_error#496] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/data/gaia/dr2/part-03446-70392076-8b82-4457-8828-22069e7626e9-c000.snappy..., PartitionFilters: [], PushedFilters: [IsNotNull(parallax_error)], ReadSchema: struct\u003csource_id:bigint,parallax_error:double\u003e\n+-------------------+-------------------+\n|          source_id|     parallax_error|\n+-------------------+-------------------+\n|4039678872339871744| 0.7696924805050609|\n|4039662384016337024| 0.5435004501205588|\n|4039671626792835968|0.42596571385844906|\n|4039666026147249152|0.28351409607368766|\n|4039675986122456576| 0.2856491691557616|\n|4039677463587633664| 0.1194583081060792|\n|4039662899409694464|  0.460774649076223|\n|4039679323380141184| 0.6884603733194365|\n|4039676952559930112| 0.3854673772956747|\n|4039676952559916672|  0.315567173944316|\n|4039680457251890560| 0.6221087296111599|\n|4039677772856676352|0.13208728089973668|\n|4039676299721936640| 1.2124705333714896|\n|4039673447860957696|0.19878253982481253|\n|4039668087737434112| 0.6357761361934624|\n|4039679976215193472| 0.4531290506724932|\n|4039678116454307840| 0.2819068892283278|\n|4039672520149353344| 0.6809758956081103|\n|4039677193075390336| 0.4763092999145325|\n|4039669633925417728| 1.0548033436017816|\n+-------------------+-------------------+\nonly showing top 20 rows\n\nStructType(List(StructField(source_id,LongType,true),StructField(parallax_error,DoubleType,true)))"
+            "data": "\u003d\u003d Physical Plan \u003d\u003d\n*(1) Project [source_id#1781L, parallax_error#1789]\n+- *(1) Filter isnotnull(parallax_error#1789)\n   +- *(1) FileScan parquet [source_id#1781L,parallax_error#1789] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/data/gaia/dr2/part-03446-70392076-8b82-4457-8828-22069e7626e9-c000.snappy..., PartitionFilters: [], PushedFilters: [IsNotNull(parallax_error)], ReadSchema: struct\u003csource_id:bigint,parallax_error:double\u003e\n+-------------------+-------------------+\n|          source_id|     parallax_error|\n+-------------------+-------------------+\n|4039678872339871744| 0.7696924805050609|\n|4039662384016337024| 0.5435004501205588|\n|4039671626792835968|0.42596571385844906|\n|4039666026147249152|0.28351409607368766|\n|4039675986122456576| 0.2856491691557616|\n|4039677463587633664| 0.1194583081060792|\n|4039662899409694464|  0.460774649076223|\n|4039679323380141184| 0.6884603733194365|\n|4039676952559930112| 0.3854673772956747|\n|4039676952559916672|  0.315567173944316|\n|4039680457251890560| 0.6221087296111599|\n|4039677772856676352|0.13208728089973668|\n|4039676299721936640| 1.2124705333714896|\n|4039673447860957696|0.19878253982481253|\n|4039668087737434112| 0.6357761361934624|\n|4039679976215193472| 0.4531290506724932|\n|4039678116454307840| 0.2819068892283278|\n|4039672520149353344| 0.6809758956081103|\n|4039677193075390336| 0.4763092999145325|\n|4039669633925417728| 1.0548033436017816|\n+-------------------+-------------------+\nonly showing top 20 rows\n\nStructType(List(StructField(source_id,LongType,true),StructField(parallax_error,DoubleType,true)))"
           }
         ]
       },
@@ -34,8 +34,8 @@
       "jobName": "paragraph_1578306395697_1540957115",
       "id": "20200106-102635_1536489154",
       "dateCreated": "2020-01-06 10:26:35.697",
-      "dateStarted": "2020-12-02 09:35:04.585",
-      "dateFinished": "2020-12-02 09:35:11.311",
+      "dateStarted": "2020-12-02 15:24:46.849",
+      "dateFinished": "2020-12-02 15:24:53.358",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
