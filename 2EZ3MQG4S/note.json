@@ -3,7 +3,7 @@
     {
       "text": "%pyspark\n\n# define the data frame source on the given column selection only (we don\u0027t want to read the whole thing!)\ndf \u003d spark.read.parquet(\"file:///data/gaia/dr2/*.parquet\").select(\"source_id\",\"parallax_error\").where(\"parallax_error is not null\")\n# note also we have to exclude the null values resulting from 2-paramater astrometric solutions (this wasn\u0027t necessary in TGAS by definition)\n\n# debug: physical execution plan and resulting schema\ndf.explain()\ndf.show()\ndf.schema\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-12-08 16:33:49.099",
+      "dateUpdated": "2020-12-08 16:34:00.207",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
