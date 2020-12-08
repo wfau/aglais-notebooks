@@ -605,14 +605,10 @@
   "id": "2FQ9BR1YM",
   "noteParams": {},
   "noteForms": {},
-  "angularObjects": {
-    "md:shared_process": [],
-    "python:shared_process": [],
-    "angular:shared_process": [],
-    "spark:shared_process": []
-  },
+  "angularObjects": {},
   "config": {
-    "isZeppelinNotebookCronEnable": false
+    "isZeppelinNotebookCronEnable": false,
+    "personalizedMode": "false"
   },
   "info": {}
 }

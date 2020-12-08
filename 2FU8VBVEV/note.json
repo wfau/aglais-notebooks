@@ -1,0 +1,86 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\n",
+      "user": "admin",
+      "dateUpdated": "2020-12-01 20:01:56.020",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1606852916019_234365371",
+      "id": "20201201-200156_1907222786",
+      "dateCreated": "2020-12-01 20:01:56.019",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nimport random \nNUM_SAMPLES \u003d 200000\n\ndef inside(p):\n    x, y \u003d random.random(), random.random()\n    return x*x + y*y \u003c 1\n\ncount \u003d sc.parallelize(range(0, NUM_SAMPLES)) \\\n             .filter(inside).count()\nprint (\"Pi is roughly %f\" % (4.0 * count / NUM_SAMPLES))\n",
+      "user": "admin",
+      "dateUpdated": "2020-11-30 22:28:47.218",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Pi is roughly 3.143420\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1606771338123_1404766110",
+      "id": "20201130-212218_1175789535",
+      "dateCreated": "2020-11-30 21:22:18.123",
+      "dateStarted": "2020-11-30 22:28:47.270",
+      "dateFinished": "2020-11-30 22:29:12.720",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "admin",
+      "dateUpdated": "2020-11-30 21:22:22.873",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1606771342872_-262171637",
+      "id": "20201130-212222_542120935",
+      "dateCreated": "2020-11-30 21:22:22.872",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "experiments/stv/Untitled Note 1",
+  "id": "2FU8VBVEV",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

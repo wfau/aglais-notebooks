@@ -203,7 +203,7 @@
     {
       "text": "%spark.pyspark\n\n# good training data: first define rough positional cuts to exclude crowded regions at low Gaialctic latitude, and inside the Large and Small Magellanic Clouds (Luri et al. 2020):\nlow_galactic_latitude_filter \u003d \u0027 AND ABS(b) \u003e 25.0\u0027\nsmc_filter \u003d \u0027 AND (dec \u003c -80.0 OR dec \u003e -65.0 OR (ra \u003c 350.0 AND ra \u003e +40.0))\u0027\nlmc_filter \u003d \u0027 AND (dec \u003c -80.0 OR dec \u003e -55.0 OR ra \u003c 40.0 OR ra \u003e 120.0)\u0027\nall_good_training_df \u003d spark.sql(\u0027SELECT 1 AS label, \u0027 + features_select_string + \u0027 FROM raw_sources WHERE parallax \u003e + 8.0 AND ABS(b) \u003e 25.0\u0027 + photometric_consistency_filter + quick_filter + low_galactic_latitude_filter + smc_filter + lmc_filter)\ngood_training_rows \u003d all_good_training_df.count()\n#print(\u0027Good training data size: %d rows\u0027%(good_training_rows))\n\n# bad training data: negative parallaxes: N.B. make a selection exactly the same size as the good training set based on size of smaller (good) data set and count of all available bads\nmaximal_bad_ast_count \u003d spark.sql(\u0027SELECT source_id FROM raw_sources WHERE parallax \u003c -8.0\u0027).count()\nfilter_factor \u003d int(maximal_bad_ast_count / good_training_rows)\nall_bad_training_df \u003d spark.sql(\u0027SELECT 0 AS label, \u0027 + features_select_string + \u0027 FROM raw_sources WHERE  parallax \u003c -8.0 AND MOD(random_index, %d) \u003d 0\u0027%(filter_factor) + \u0027 ORDER BY random_index LIMIT %d\u0027%(good_training_rows))\n#all_bad_training_data_count \u003d all_bad_training_df.count()\n#print (\u0027Bad  training data size: %d rows\u0027%(all_bad_training_data_count))\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-26 10:02:53.639",
+      "dateUpdated": "2020-12-07 16:59:31.904",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -216,7 +216,7 @@
         "fontSize": 9.0,
         "results": {},
         "enabled": true,
-        "editorHide": true
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -238,7 +238,7 @@
     {
       "text": "%spark.pyspark\n\n# define training (67%) and test (33%) sample splits (seeded randomness for repeatability)\ngood_67pc, good_33pc \u003d all_good_training_df.randomSplit([0.67, 0.33], 42)\nbad_67pc, bad_33pc \u003d all_bad_training_df.randomSplit([0.67, 0.33], 42)\n\n# transform to labelled feature vectors (0.0 \u003d bad, 1.0 \u003d good, as conveniently already defined in previous projections above)\n\n# Annotate and transform appropriate to the input required by the classifier\u0027s API.\n# Need a dataframe with labels and features: use vector assembler. \nfrom pyspark.ml.feature import VectorAssembler\nignore \u003d [\u0027label\u0027,]\nassembler \u003d VectorAssembler(inputCols\u003d[x for x in good_67pc.columns if x not in ignore], outputCol\u003d\u0027features\u0027)\n\n# training sets\ngood_training_df \u003d assembler.transform(good_67pc).drop(*astrometric_features)\nbad_training_df \u003d assembler.transform(bad_67pc).drop(*astrometric_features)\n# ... N.B. the original individual feature columns are dropped to save memory (since they are duplicated into the resulting feature vector).\n\n# testing sets\ngood_testing_df \u003d assembler.transform(good_33pc).drop(*astrometric_features)\nbad_testing_df \u003d assembler.transform(bad_33pc).drop(*astrometric_features)\n\n# concatenate the training set into a single dataframe\ntraining_df \u003d good_training_df.union(bad_training_df)\n#training_df.show()\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-26 10:02:57.017",
+      "dateUpdated": "2020-12-07 16:59:29.323",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -251,7 +251,7 @@
         "fontSize": 9.0,
         "results": {},
         "enabled": true,
-        "editorHide": true
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -472,7 +472,7 @@
     {
       "text": "%spark.pyspark\n\n# histogram of the classification probabilities: cf. GCNS paper Figure 3\n\n#all_classifications.show()\n\nimport matplotlib.pyplot as plot\nplot.figure(1, figsize \u003d (9.7, 6.0))\nplot.yscale(\u0027log\u0027)\nx \u003d list(all_classifications.select(\u0027probability\u0027).toPandas()[\u0027probability\u0027])\nplot.hist(x, bins\u003d25, color\u003d\u0027black\u0027)\nplot.xlabel(\u0027Random Forest Probability\u0027)\nplot.ylabel(\u0027N\u0027)\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-11-25 16:37:33.022",
+      "dateUpdated": "2020-12-02 10:14:08.943",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -485,7 +485,7 @@
           "completionSupport": true
         },
         "editorMode": "ace/mode/python",
-        "editorHide": true
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -696,8 +696,6 @@
   "noteForms": {},
   "angularObjects": {
     "md:shared_process": [],
-    "python:shared_process": [],
-    "angular:shared_process": [],
     "spark:shared_process": []
   },
   "config": {
