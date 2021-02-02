@@ -3,7 +3,7 @@
     {
       "text": "%spark.pyspark\ngs_df \u003d sqlContext.read.parquet(\"/hadoop/gaia/parquet/gdr2/gaia_source/*.parquet\")\n\n# following https://spark.apache.org/docs/latest/sql-data-sources-parquet.html\ngs_df.createOrReplaceTempView(\"gaia_source\")\nsql_df \u003d spark.sql(\"SELECT floor(source_id / 562949953421312) AS hpx5, COUNT(*) AS n, AVG(pmra) AS avgPmRa, AVG(pmdec) AS avgPmDec FROM gaia_source GROUP BY hpx5\")\nprint (sql_df.take(10))\n\n\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-10-28 15:08:25.724",
+      "dateUpdated": "2021-02-01 12:50:34.600",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -15,7 +15,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -131,8 +132,7 @@
   "noteParams": {},
   "noteForms": {},
   "angularObjects": {
-    "md:shared_process": [],
-    "spark::2FF2VTAAM": []
+    "md:shared_process": []
   },
   "config": {
     "isZeppelinNotebookCronEnable": false
