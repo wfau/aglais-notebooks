@@ -3,7 +3,7 @@
     {
       "text": "%md\n\nScript for loading up data sets from csv into parquet format.\n",
       "user": "gaiauser",
-      "dateUpdated": "2021-01-31 16:46:58.683",
+      "dateUpdated": "2021-02-02 16:58:32.229",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -16,7 +16,7 @@
           "completionSupport": false
         },
         "editorMode": "ace/mode/markdown",
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": false
       },
       "settings": {
@@ -78,9 +78,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%pyspark\n\n# useful definitions\n\n# number of buckets for our platform\nNUM_BUCKETS \u003d 2048\n\n# the following kindly supplied by Enrique Utrilla:\nfrom pyspark.sql.functions import udf\nfrom pyspark.sql.types import IntegerType\n\n# get Healpix index encoded in a sourceId\ndef getHealpixFromSourceId(sourceId, healpixLevel):\n    return (sourceId \u003e\u003e (35 + 2*(12-healpixLevel)))\n\n# Python UDF to add a healpix index column to a DataFrame\nhealpix_udf \u003d udf(lambda sourceId, level: getHealpixFromSourceId(sourceId, level), IntegerType())\nhpx12_udf \u003d udf(lambda sourceId: (sourceId \u003e\u003e 35), IntegerType())\n\n# Save a dataframe to a set of bucketed parquet files, repartitioning beforehand and sorting by source UID within the buckets:\ndef saveToBinnedParquet(dataFrame, outputParquetPath, name, mode \u003d \"error\", nBuckets \u003d NUM_BUCKETS):\n    df \u003d dataFrame.withColumn(\"hpx12\", hpx12_udf(\"source_id\"))# healpix_udf(\"source_id\", 12))\n    df \u003d df.repartition(nBuckets, \"hpx12\")\n    df.write.format(\"parquet\") \\\n            .mode(mode) \\\n            .bucketBy(nBuckets, \"hpx12\") \\\n            .sortBy(\"source_id\") \\\n            .option(\"path\", outputParquetPath) \\\n            .saveAsTable(name)\n",
+      "text": "%pyspark\n\n# Useful definitions\n\n# Number of buckets for our platform\nNUM_BUCKETS \u003d 2048\n\n# the following kindly supplied by Enrique Utrilla:\nfrom pyspark.sql.functions import udf\nfrom pyspark.sql.types import IntegerType\n\n# Get Healpix index encoded in a sourceId\ndef getHealpixFromSourceId(sourceId, healpixLevel):\n    return (sourceId \u003e\u003e (35 + 2*(12-healpixLevel)))\n\n# Python UDF to add a healpix index column to a DataFrame\nhealpix_udf \u003d udf(lambda sourceId, level: getHealpixFromSourceId(sourceId, level), IntegerType())\nhpx12_udf \u003d udf(lambda sourceId: (sourceId \u003e\u003e 35), IntegerType())\n\n# Save a dataframe to a set of bucketed parquet files, repartitioning beforehand and sorting by source UID within the buckets:\ndef saveToBinnedParquet(dataFrame, outputParquetPath, name, mode \u003d \"error\", nBuckets \u003d NUM_BUCKETS):\n    df \u003d dataFrame.withColumn(\"hpx12\", hpx12_udf(\"source_id\"))# healpix_udf(\"source_id\", 12))\n    df \u003d df.repartition(nBuckets, \"hpx12\")\n    df.write.format(\"parquet\") \\\n            .mode(mode) \\\n            .bucketBy(nBuckets, \"hpx12\") \\\n            .sortBy(\"source_id\") \\\n            .option(\"path\", outputParquetPath) \\\n            .saveAsTable(name)\n",
       "user": "gaiauser",
-      "dateUpdated": "2021-01-31 16:47:01.428",
+      "dateUpdated": "2021-02-02 16:58:52.852",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -874,6 +874,7 @@
   "noteForms": {},
   "angularObjects": {
     "md:shared_process": [],
+    "python:shared_process": [],
     "spark:shared_process": []
   },
   "config": {
