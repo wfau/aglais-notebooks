@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "%sh\nls\n\n",
+      "text": "%sh\nls\n",
       "user": "gaiauser",
-      "dateUpdated": "2021-03-24 16:59:44.587",
+      "dateUpdated": "2021-03-24 17:03:25.336",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
