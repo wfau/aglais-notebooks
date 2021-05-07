@@ -1,0 +1,163 @@
+{
+  "paragraphs": [
+    {
+      "title": "Introduction",
+      "text": "%md\n\nThis Gaia science exploitation platform is built on [Apache Spark](https://spark.apache.org). The primary user interface is employs [Zeppelin notebooks](https://zeppelin.apache.org/docs/0.9.0/quickstart/explore_ui.html#note-layout) (similar to the possibly more familiar Jupyter notebook system) employing Python code and a suite of third-party packages and libraries for analysis, plotting, etc.\n",
+      "user": "nch",
+      "dateUpdated": "2021-05-07 15:48:09.069",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "title": true,
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThis Gaia science exploitation platform is built on \u003ca href\u003d\"https://spark.apache.org\"\u003eApache Spark\u003c/a\u003e. The primary user interface is employs \u003ca href\u003d\"https://zeppelin.apache.org/docs/0.9.0/quickstart/explore_ui.html#note-layout\"\u003eZeppelin notebooks\u003c/a\u003e (similar to the possibly more familiar Jupyter notebook system) employing Python code and a suite of third-party packages and libraries for analysis, plotting, etc.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1620401157375_-1339142373",
+      "id": "20210507-152557_21014937",
+      "dateCreated": "2021-05-07 15:25:57.375",
+      "dateStarted": "2021-05-07 15:48:09.071",
+      "dateFinished": "2021-05-07 15:48:09.079",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Familiarisation",
+      "text": "%md\n\n\u003cbr\u003e\nThe best way to familiarise yourself with this science exploitation platform is to examine the example notebooks that come bundled with it. These are:\n\n* \"Start here\" (this notebook);\n* Data holdings: a description of the data hosted on the platform;\n* Source counts over the sky: a simple example of querying and plotting;\n* __TODO__ Mean proper motions over the sky: another simple example\n* Good astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\n* __TODO__ XXXX: 5d spatial clustering using HDBSCAN (unsupervised ML)  \n\nTo load a notebook, click on the \"Notebook\" tab (above left) and select. Newcomers are advised to work through the set before attempting to use the system; have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface and see also the \"Zeppelin Tutorial\" folder under the Notebooks tab. ",
+      "user": "nch",
+      "dateUpdated": "2021-05-07 16:00:43.851",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cbr\u003e\n\u003cp\u003eThe best way to familiarise yourself with this science exploitation platform is to examine the example notebooks that come bundled with it. These are:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u0026ldquo;Start here\u0026rdquo; (this notebook);\u003c/li\u003e\n  \u003cli\u003eData holdings: a description of the data hosted on the platform;\u003c/li\u003e\n  \u003cli\u003eSource counts over the sky: a simple example of querying and plotting;\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e Mean proper motions over the sky: another simple example\u003c/li\u003e\n  \u003cli\u003eGood astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e XXXX: 5d spatial clustering using HDBSCAN (unsupervised ML)\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eTo load a notebook, click on the \u0026ldquo;Notebook\u0026rdquo; tab (above left) and select. Newcomers are advised to work through the set before attempting to use the system; have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface and see also the \u0026ldquo;Zeppelin Tutorial\u0026rdquo; folder under the Notebooks tab.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1620401188214_834792538",
+      "id": "20210507-152628_446700578",
+      "dateCreated": "2021-05-07 15:26:28.214",
+      "dateStarted": "2021-05-07 15:59:20.073",
+      "dateFinished": "2021-05-07 15:59:20.084",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Spark quirks",
+      "text": "%md\n",
+      "user": "nch",
+      "dateUpdated": "2021-05-07 16:01:33.544",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1620401266245_-528732432",
+      "id": "20210507-152746_1171284722",
+      "dateCreated": "2021-05-07 15:27:46.246",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "PySpark SQL",
+      "text": "%md\n",
+      "user": "nch",
+      "dateUpdated": "2021-05-07 16:01:54.079",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1620403299098_1986156819",
+      "id": "20210507-160139_1365676170",
+      "dateCreated": "2021-05-07 16:01:39.098",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "AglaisPublicExamples/Start here",
+  "id": "2G6Q2D85X",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "sh:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
