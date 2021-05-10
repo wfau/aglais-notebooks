@@ -2,9 +2,9 @@
   "paragraphs": [
     {
       "title": "Introduction",
-      "text": "%md\n\nThis Gaia science exploitation platform is built on [Apache Spark](https://spark.apache.org). The primary user interface is employs [Zeppelin notebooks](https://zeppelin.apache.org/docs/0.9.0/quickstart/explore_ui.html#note-layout) (similar to the possibly more familiar Jupyter notebook system) employing Python code and a suite of third-party packages and libraries for analysis, plotting, etc.\n",
+      "text": "%md\n\nThis Gaia science exploitation platform is built on [Apache Spark](https://spark.apache.org). The primary user interface uses web-based [Zeppelin notebooks](https://zeppelin.apache.org/docs/0.9.0/quickstart/explore_ui.html#note-layout) (similar to the possibly more familiar Jupyter notebook interface) employing Python code and a suite of third-party packages and libraries for analysis, plotting, etc. A working knowledge of Gaia data releases to-date, Python and Structured Query Language is assumed.\n",
       "user": "nch",
-      "dateUpdated": "2021-05-07 15:48:09.069",
+      "dateUpdated": "2021-05-10 11:07:16.339",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -30,7 +30,7 @@
         "msg": [
           {
             "type": "HTML",
-            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThis Gaia science exploitation platform is built on \u003ca href\u003d\"https://spark.apache.org\"\u003eApache Spark\u003c/a\u003e. The primary user interface is employs \u003ca href\u003d\"https://zeppelin.apache.org/docs/0.9.0/quickstart/explore_ui.html#note-layout\"\u003eZeppelin notebooks\u003c/a\u003e (similar to the possibly more familiar Jupyter notebook system) employing Python code and a suite of third-party packages and libraries for analysis, plotting, etc.\u003c/p\u003e\n\u003c/div\u003e"
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThis Gaia science exploitation platform is built on \u003ca href\u003d\"https://spark.apache.org\"\u003eApache Spark\u003c/a\u003e. The primary user interface uses web-based \u003ca href\u003d\"https://zeppelin.apache.org/docs/0.9.0/quickstart/explore_ui.html#note-layout\"\u003eZeppelin notebooks\u003c/a\u003e (similar to the possibly more familiar Jupyter notebook interface) employing Python code and a suite of third-party packages and libraries for analysis, plotting, etc. A working knowledge of Gaia data releases to-date, Python and Structured Query Language is assumed.\u003c/p\u003e\n\u003c/div\u003e"
           }
         ]
       },
@@ -38,30 +38,31 @@
       "jobName": "paragraph_1620401157375_-1339142373",
       "id": "20210507-152557_21014937",
       "dateCreated": "2021-05-07 15:25:57.375",
-      "dateStarted": "2021-05-07 15:48:09.071",
-      "dateFinished": "2021-05-07 15:48:09.079",
+      "dateStarted": "2021-05-10 11:07:16.340",
+      "dateFinished": "2021-05-10 11:07:16.355",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Familiarisation",
-      "text": "%md\n\n\u003cbr\u003e\nThe best way to familiarise yourself with this science exploitation platform is to examine the example notebooks that come bundled with it. These are:\n\n* \"Start here\" (this notebook);\n* Data holdings: a description of the data hosted on the platform;\n* Source counts over the sky: a simple example of querying and plotting;\n* __TODO__ Mean proper motions over the sky: another simple example\n* Good astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\n* __TODO__ XXXX: 5d spatial clustering using HDBSCAN (unsupervised ML)  \n\nTo load a notebook, click on the \"Notebook\" tab (above left) and select. Newcomers are advised to work through the set before attempting to use the system; have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface and see also the \"Zeppelin Tutorial\" folder under the Notebooks tab. ",
+      "text": "%md\n\n\u003cbr\u003e\nThe best way to familiarise yourself with the platform is to examine the example notebooks that come bundled with it. These are:\n\n* \"Start here\" (this notebook);\n* Data holdings: a description of the data hosted on the platform;\n* Source counts over the sky: a simple example of querying and plotting;\n* __TODO__ Mean proper motions over the sky: another simple example\n* __TODO__ Further technical aspects of the platform\n* Good astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\n* __TODO__ XXXX: 5d spatial clustering using HDBSCAN (unsupervised ML)  \n\nTo load a notebook, click on the \"Notebook\" tab (above left) and select. Newcomers are advised to work through at least the first four notebooks before attempting to use the system. Also have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface and see also the \"Zeppelin Tutorial\" folder under the Notebooks tab. ",
       "user": "nch",
-      "dateUpdated": "2021-05-07 16:00:43.851",
+      "dateUpdated": "2021-05-10 09:47:39.102",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "scala",
-          "editOnDblClick": false,
+          "language": "markdown",
+          "editOnDblClick": true,
           "completionKey": "TAB",
-          "completionSupport": true
+          "completionSupport": false
         },
-        "editorMode": "ace/mode/scala",
-        "editorHide": false,
-        "title": true
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "title": true,
+        "tableHide": false
       },
       "settings": {
         "params": {},
@@ -72,7 +73,7 @@
         "msg": [
           {
             "type": "HTML",
-            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cbr\u003e\n\u003cp\u003eThe best way to familiarise yourself with this science exploitation platform is to examine the example notebooks that come bundled with it. These are:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u0026ldquo;Start here\u0026rdquo; (this notebook);\u003c/li\u003e\n  \u003cli\u003eData holdings: a description of the data hosted on the platform;\u003c/li\u003e\n  \u003cli\u003eSource counts over the sky: a simple example of querying and plotting;\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e Mean proper motions over the sky: another simple example\u003c/li\u003e\n  \u003cli\u003eGood astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e XXXX: 5d spatial clustering using HDBSCAN (unsupervised ML)\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eTo load a notebook, click on the \u0026ldquo;Notebook\u0026rdquo; tab (above left) and select. Newcomers are advised to work through the set before attempting to use the system; have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface and see also the \u0026ldquo;Zeppelin Tutorial\u0026rdquo; folder under the Notebooks tab.\u003c/p\u003e\n\u003c/div\u003e"
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cbr\u003e\n\u003cp\u003eThe best way to familiarise yourself with the platform is to examine the example notebooks that come bundled with it. These are:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u0026ldquo;Start here\u0026rdquo; (this notebook);\u003c/li\u003e\n  \u003cli\u003eData holdings: a description of the data hosted on the platform;\u003c/li\u003e\n  \u003cli\u003eSource counts over the sky: a simple example of querying and plotting;\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e Mean proper motions over the sky: another simple example\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e Further technical aspects of the platform\u003c/li\u003e\n  \u003cli\u003eGood astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e XXXX: 5d spatial clustering using HDBSCAN (unsupervised ML)\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eTo load a notebook, click on the \u0026ldquo;Notebook\u0026rdquo; tab (above left) and select. Newcomers are advised to work through at least the first four notebooks before attempting to use the system. Also have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface and see also the \u0026ldquo;Zeppelin Tutorial\u0026rdquo; folder under the Notebooks tab.\u003c/p\u003e\n\u003c/div\u003e"
           }
         ]
       },
@@ -80,47 +81,187 @@
       "jobName": "paragraph_1620401188214_834792538",
       "id": "20210507-152628_446700578",
       "dateCreated": "2021-05-07 15:26:28.214",
-      "dateStarted": "2021-05-07 15:59:20.073",
-      "dateFinished": "2021-05-07 15:59:20.084",
+      "dateStarted": "2021-05-10 09:47:39.102",
+      "dateFinished": "2021-05-10 09:47:39.117",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "title": "Spark quirks",
-      "text": "%md\n",
+      "title": "Zeppelin notebooks",
+      "text": "%md\n\nThis and all the other example notebooks itemised above are [Zeppelin notebooks](). Text, code (in different languages) and plots can be freely mixed in the notebook in paragraphs, or cells. For example, to see the [mark-down code](https://sourceforge.net/p/zeppelin/wiki/markdown_syntax/) for this cell simply click on the outward-pointing arrows icon in the top right of the cell; click again to hide the code leaving only the output. Output is created by executing the cell: press the \"play\" icon in the top right. Other functionality is provided under the cog icon while buttons at the top of the web interface provide further management functions. To save a notebook locally, click on the \"Export this note\" icon at the top: doing so will create a local file with extension \".json\" (\u003d JavaScript Object Notation format, which is not amenable to viewing/editing outside of the UI). To import a previously saved note (or indeed one provisioned externally) click on the Zeppelin icon in the top left of the UI and then click \"Import note\".\n\n__TODO__\n\n* Integration with github?\n* Sharing with others ...\n* ...\n",
       "user": "nch",
-      "dateUpdated": "2021-05-07 16:01:33.544",
+      "dateUpdated": "2021-05-10 10:42:00.428",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "scala",
-          "editOnDblClick": false,
+          "language": "markdown",
+          "editOnDblClick": true,
           "completionKey": "TAB",
-          "completionSupport": true
+          "completionSupport": false
         },
-        "editorMode": "ace/mode/scala",
-        "editorHide": false,
-        "title": true
+        "editorMode": "ace/mode/markdown",
+        "title": true,
+        "editorHide": true,
+        "tableHide": false
       },
       "settings": {
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThis and all the other example notebooks itemised above are \u003ca href\u003d\"\"\u003eZeppelin notebooks\u003c/a\u003e. Text, code (in different languages) and plots can be freely mixed in the notebook in paragraphs, or cells. For example, to see the \u003ca href\u003d\"https://sourceforge.net/p/zeppelin/wiki/markdown_syntax/\"\u003emark-down code\u003c/a\u003e for this cell simply click on the outward-pointing arrows icon in the top right of the cell; click again to hide the code leaving only the output. Output is created by executing the cell: press the \u0026ldquo;play\u0026rdquo; icon in the top right. Other functionality is provided under the cog icon while buttons at the top of the web interface provide further management functions. To save a notebook locally, click on the \u0026ldquo;Export this note\u0026rdquo; icon at the top: doing so will create a local file with extension \u0026ldquo;.json\u0026rdquo; (\u003d JavaScript Object Notation format, which is not amenable to viewing/editing outside of the UI). To import a previously saved note (or indeed one provisioned externally) click on the Zeppelin icon in the top left of the UI and then click \u0026ldquo;Import note\u0026rdquo;.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eTODO\u003c/strong\u003e\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eIntegration with github?\u003c/li\u003e\n  \u003cli\u003eSharing with others \u0026hellip;\u003c/li\u003e\n  \u003cli\u003e\u0026hellip;\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
       "apps": [],
-      "jobName": "paragraph_1620401266245_-528732432",
-      "id": "20210507-152746_1171284722",
-      "dateCreated": "2021-05-07 15:27:46.246",
-      "status": "READY",
+      "jobName": "paragraph_1620636135112_421077577",
+      "id": "20210510-084215_1445060106",
+      "dateCreated": "2021-05-10 08:42:15.113",
+      "dateStarted": "2021-05-10 10:42:00.428",
+      "dateFinished": "2021-05-10 10:42:00.437",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "PySpark SQL",
-      "text": "%md\n",
+      "text": "%md\n\nThe platform environment employs [Spark (version 2.4.7)](https://spark.apache.org/docs/2.4.7/) for distributed processing and scalability to high-volume data releases. For convenience a high-level application programming interface (API) is available through Python to access and analyse large data sets. The primary data transport type is known as a [\"data frame\"](https://spark.apache.org/docs/2.4.7/sql-programming-guide.html), a richly structured object encapsulating data, descriptions and methods that is _not_ limited to simple tables with primitive column types in contrast to systems built on relational data base technology (RDBMS). For ease of use the [API features Structured Query Language](https://spark.apache.org/docs/2.4.7/api/python/pyspark.sql.html) as a familiar way to create and manipulate data objects as the initial steps in work flows. Note that this is not Astronomy Data Query Language (ADQL): astronomy-specific aspects, in particular geometric functions for spatial queries, are not available in this flavour of SQL. However PySpark SQL offers a much greater degree of end-user programmability than ADQL interfaces built in front of RDBMS, for example [User Defined Functions](https://spark.apache.org/docs/2.4.7/api/python/pyspark.sql.html#pyspark.sql.UDFRegistration) that can be integrated into SQL statements. The fact that SQL features prominently in the API should not be taken to mean that this platform aims to replicate the functionality of existing relational systems. Obviously, usage scenarios best served by such systems should be targetted there. This platform is designed to facilitate scale-out usage scenarios, e.g. large-scale statistical analyses, that cannot be achieved through relational systems built on TAP/ADQL. (In fact on this platform you can mix-and-match both by calling out to any IVOA TAP/ADQL service as part of a larger work flow.)\n\nOn start-up and by default, notebooks come set up in a Spark and Gaia EDR3 context by default, e.g.\n\n    %pyspark\n    for line in spark.catalog.listTables(): print (line)\n\n... see the next code cell. The notebook interpreter can be set for individual cells as is done here and in the next: \"%md\" for mark-down, \"%pyspark\" for the PySpark python code etc.\n",
       "user": "nch",
-      "dateUpdated": "2021-05-07 16:01:54.079",
+      "dateUpdated": "2021-05-10 11:05:10.956",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "title": true,
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThe platform environment employs \u003ca href\u003d\"https://spark.apache.org/docs/2.4.7/\"\u003eSpark (version 2.4.7)\u003c/a\u003e for distributed processing and scalability to high-volume data releases. For convenience a high-level application programming interface (API) is available through Python to access and analyse large data sets. The primary data transport type is known as a \u003ca href\u003d\"https://spark.apache.org/docs/2.4.7/sql-programming-guide.html\"\u003e\u0026ldquo;data frame\u0026rdquo;\u003c/a\u003e, a richly structured object encapsulating data, descriptions and methods that is \u003cem\u003enot\u003c/em\u003e limited to simple tables with primitive column types in contrast to systems built on relational data base technology (RDBMS). For ease of use the \u003ca href\u003d\"https://spark.apache.org/docs/2.4.7/api/python/pyspark.sql.html\"\u003eAPI features Structured Query Language\u003c/a\u003e as a familiar way to create and manipulate data objects as the initial steps in work flows. Note that this is not Astronomy Data Query Language (ADQL): astronomy-specific aspects, in particular geometric functions for spatial queries, are not available in this flavour of SQL. However PySpark SQL offers a much greater degree of end-user programmability than ADQL interfaces built in front of RDBMS, for example \u003ca href\u003d\"https://spark.apache.org/docs/2.4.7/api/python/pyspark.sql.html#pyspark.sql.UDFRegistration\"\u003eUser Defined Functions\u003c/a\u003e that can be integrated into SQL statements. The fact that SQL features prominently in the API should not be taken to mean that this platform aims to replicate the functionality of existing relational systems. Obviously, usage scenarios best served by such systems should be targetted there. This platform is designed to facilitate scale-out usage scenarios, e.g. large-scale statistical analyses, that cannot be achieved through relational systems built on TAP/ADQL. (In fact on this platform you can mix-and-match both by calling out to any IVOA TAP/ADQL service as part of a larger work flow.)\u003c/p\u003e\n\u003cp\u003eOn start-up and by default, notebooks come set up in a Spark and Gaia EDR3 context by default, e.g.\u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003e%pyspark\nfor line in spark.catalog.listTables(): print (line)\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u0026hellip; see the next code cell. The notebook interpreter can be set for individual cells as is done here and in the next: \u0026ldquo;%md\u0026rdquo; for mark-down, \u0026ldquo;%pyspark\u0026rdquo; for the PySpark python code etc.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1620403299098_1986156819",
+      "id": "20210507-160139_1365676170",
+      "dateCreated": "2021-05-07 16:01:39.098",
+      "dateStarted": "2021-05-10 11:05:10.956",
+      "dateFinished": "2021-05-10 11:05:10.967",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Example code from previous cell",
+      "text": "%pyspark\nfor line in spark.catalog.listTables(): print (line)\n",
+      "user": "nch",
+      "dateUpdated": "2021-05-10 11:11:32.071",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "title": true,
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table(name\u003d\u0027gaia_source\u0027, database\u003d\u0027gaiaedr3\u0027, description\u003dNone, tableType\u003d\u0027EXTERNAL\u0027, isTemporary\u003dFalse)\nTable(name\u003d\u0027gaia_source_allwise_best_neighbours\u0027, database\u003d\u0027gaiaedr3\u0027, description\u003dNone, tableType\u003d\u0027EXTERNAL\u0027, isTemporary\u003dFalse)\nTable(name\u003d\u0027gaia_source_ps1_best_neighbours\u0027, database\u003d\u0027gaiaedr3\u0027, description\u003dNone, tableType\u003d\u0027EXTERNAL\u0027, isTemporary\u003dFalse)\nTable(name\u003d\u0027gaia_source_tmasspsc_best_neighbours\u0027, database\u003d\u0027gaiaedr3\u0027, description\u003dNone, tableType\u003d\u0027EXTERNAL\u0027, isTemporary\u003dFalse)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1620644304280_-1959556411",
+      "id": "20210510-105824_1166659944",
+      "dateCreated": "2021-05-10 10:58:24.280",
+      "dateStarted": "2021-05-10 10:59:45.415",
+      "dateFinished": "2021-05-10 10:59:45.655",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Spark aspects",
+      "text": "%md\n\nThe operating model of Spark as actioned via a workflow expressed in a notebook will be unfamiliar to many. Users should be aware of the following basic facts from the outset:\n\n__Lazy Evaluation:__ Spark employs \"lazy evaluation\" of jobs: nothing happens until the last possible point in the workflow. For example, a notebook cell may contain a data frame defined by a query \n\n    df \u003d spark.sql(\"select * from gaia_source\")\n\nbut as far as Spark is concerned this is simply a definiton, or \"transformation\", of a data resource. If nothing is done with the data frame defined by that query in the cell, then the cell will appear to run instantaneously. Only if an \"action\" is made on the data frame subsequently will physical execution take place. This means, for example, that if a cell contains a run-time error this may not show up until a later cell is executed with the exception trace explaining the error appearing in that later cell\u0027s output (as opposed to any output associated with the cell containing the source of the error). Note also that the statement above, on it\u0027s own, will not result in the entire billon+ row, ~100 column, tera-byte scale data set being loaded into memory. Whatever is expressed in subsequent transformations (e.g. SQL \"where\" clauses) and actions (e.g. aggregations) will result is \"filter push-down\" optimisations that result in only those data needed to action the process being read into memory and processed.  \n\n__Caching:__ Actions expressed in a cell may need to be re-executed if needed as part of the execution plan for actions in a subsequent cell. This may result in expensive operations being repeatedly executed when developing notebook workflows and working on cells in isolation. You can tell Spark to cache a data frame explicitly to avoid this and speed-up significantly subsequent cell operations\n\n    df \u003d spark.sql(\"select column_1, column_2, ... from gaia_source where ...\").cache()\n    \nbut obviously this should only be done within reason and with due regard to the amount of local memory/disk required by the worker nodes: make sure you only cache what you really need. For further details see [this useful article on best practice with Spark caching](https://towardsdatascience.com/best-practices-for-caching-in-spark-sql-b22fb0f02d34). Some of the example notebooks provided use caching to expedite the execution of cells that re-use data frames.\n\n__Indexing:__ The data hosted on this platform are arranged by gaia_source.source_id as the primary unique identifier in Gaia Data Releases. This key should be employed when joining distinct data sets, e.g. pre-computed best neighbours from external survey catalogues - see the \"Data holdings\" notebook. It can also be used to pull out specific records quickly:\n\n    spark.sql(\"select * from gaia_source where source_id \u003d ...\").show()\n   \nOtherwise, the general RDBMS paradigm employing SQL indexes to optimise execution plans of queries predicated on certain columns has no equivalent on here. It is worth noting however that the combination of \"filter push-down\" and the underlying storage format ([Parquet](http://parquet.apache.org/documentation/latest/)) result in only those data that are needed being read from disk on this patform. This is in contrast to RDBMS where columns are generally read from pages within disk files regardless of need unless covered by an index employed as part of an optimised execution plan. This is one of the ways in which Spark achieves much faster performance in \"big data\" analysis.\n\n__Distributed processing model:__ Fast performance in handling very large data sets is achieved via cluster parallelism with actions split up and optimised for execution on concurrent workers... anything to be said here? \n\n",
+      "user": "nch",
+      "dateUpdated": "2021-05-10 10:44:40.710",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "title": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThe operating model of Spark as actioned via a workflow expressed in a notebook will be unfamiliar to many. Users should be aware of the following basic facts from the outset:\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eLazy Evaluation:\u003c/strong\u003e Spark employs \u0026ldquo;lazy evaluation\u0026rdquo; of jobs: nothing happens until the last possible point in the workflow. For example, a notebook cell may contain a data frame defined by a query \u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003edf \u003d spark.sql(\u0026quot;select * from gaia_source\u0026quot;)\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003ebut as far as Spark is concerned this is simply a definiton, or \u0026ldquo;transformation\u0026rdquo;, of a data resource. If nothing is done with the data frame defined by that query in the cell, then the cell will appear to run instantaneously. Only if an \u0026ldquo;action\u0026rdquo; is made on the data frame subsequently will physical execution take place. This means, for example, that if a cell contains a run-time error this may not show up until a later cell is executed with the exception trace explaining the error appearing in that later cell\u0026rsquo;s output (as opposed to any output associated with the cell containing the source of the error). Note also that the statement above, on it\u0026rsquo;s own, will not result in the entire billon+ row, ~100 column, tera-byte scale data set being loaded into memory. Whatever is expressed in subsequent transformations (e.g. SQL \u0026ldquo;where\u0026rdquo; clauses) and actions (e.g. aggregations) will result is \u0026ldquo;filter push-down\u0026rdquo; optimisations that result in only those data needed to action the process being read into memory and processed. \u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eCaching:\u003c/strong\u003e Actions expressed in a cell may need to be re-executed if needed as part of the execution plan for actions in a subsequent cell. This may result in expensive operations being repeatedly executed when developing notebook workflows and working on cells in isolation. You can tell Spark to cache a data frame explicitly to avoid this and speed-up significantly subsequent cell operations\u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003edf \u003d spark.sql(\u0026quot;select column_1, column_2, ... from gaia_source where ...\u0026quot;).cache()\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003ebut obviously this should only be done within reason and with due regard to the amount of local memory/disk required by the worker nodes: make sure you only cache what you really need. For further details see \u003ca href\u003d\"https://towardsdatascience.com/best-practices-for-caching-in-spark-sql-b22fb0f02d34\"\u003ethis useful article on best practice with Spark caching\u003c/a\u003e. Some of the example notebooks provided use caching to expedite the execution of cells that re-use data frames.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eIndexing:\u003c/strong\u003e The data hosted on this platform are arranged by gaia_source.source_id as the primary unique identifier in Gaia Data Releases. This key should be employed when joining distinct data sets, e.g. pre-computed best neighbours from external survey catalogues - see the \u0026ldquo;Data holdings\u0026rdquo; notebook. It can also be used to pull out specific records quickly:\u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003espark.sql(\u0026quot;select * from gaia_source where source_id \u003d ...\u0026quot;).show()\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eOtherwise, the general RDBMS paradigm employing SQL indexes to optimise execution plans of queries predicated on certain columns has no equivalent on here. It is worth noting however that the combination of \u0026ldquo;filter push-down\u0026rdquo; and the underlying storage format (\u003ca href\u003d\"http://parquet.apache.org/documentation/latest/\"\u003eParquet\u003c/a\u003e) result in only those data that are needed being read from disk on this patform. This is in contrast to RDBMS where columns are generally read from pages within disk files regardless of need unless covered by an index employed as part of an optimised execution plan. This is one of the ways in which Spark achieves much faster performance in \u0026ldquo;big data\u0026rdquo; analysis.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eDistributed processing model:\u003c/strong\u003e Fast performance in handling very large data sets is achieved via cluster parallelism with actions split up and optimised for execution on concurrent workers\u0026hellip; anything to be said here?\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1620401266245_-528732432",
+      "id": "20210507-152746_1171284722",
+      "dateCreated": "2021-05-07 15:27:46.246",
+      "dateStarted": "2021-05-10 10:44:40.711",
+      "dateFinished": "2021-05-10 10:44:40.730",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Further reading and resources",
+      "text": "%md\n\nIn addition to the example notebooks provided here and the linked resources therein see the following for further information:\n\n* ...\n* \n\n",
+      "user": "nch",
+      "dateUpdated": "2021-05-10 09:11:09.458",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -140,9 +281,9 @@
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1620403299098_1986156819",
-      "id": "20210507-160139_1365676170",
-      "dateCreated": "2021-05-07 16:01:39.098",
+      "jobName": "paragraph_1620637543038_887777253",
+      "id": "20210510-090543_1039599855",
+      "dateCreated": "2021-05-10 09:05:43.038",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }
