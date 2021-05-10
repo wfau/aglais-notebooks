@@ -45,9 +45,9 @@
     },
     {
       "title": "Familiarisation",
-      "text": "%md\n\n\u003cbr\u003e\nThe best way to familiarise yourself with the platform is to examine the example notebooks that come bundled with it. These are:\n\n* \"Start here\" (this notebook);\n* Data holdings: a description of the data hosted on the platform;\n* Source counts over the sky: a simple example of querying and plotting;\n* __TODO__ Mean proper motions over the sky: another simple example\n* __TODO__ Further technical aspects of the platform\n* Good astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\n* __TODO__ XXXX: 5d spatial clustering using HDBSCAN (unsupervised ML)  \n\nTo load a notebook, click on the \"Notebook\" tab (above left) and select. Newcomers are advised to work through at least the first four notebooks before attempting to use the system. Also have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface and see also the \"Zeppelin Tutorial\" folder under the Notebooks tab. ",
+      "text": "%md\n\n\u003cbr\u003e\nThe best way to familiarise yourself with the platform is to examine the example notebooks that come bundled with it. These are:\n\n* \"Start here\" (this notebook);\n* Data holdings: a description of the data hosted on the platform;\n* Source counts over the sky: a simple example of querying and plotting;\n* Mean proper motions over the sky: another simple example\n* __TODO__ Further technical aspects of the platform\n* Good astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\n* __TODO__ XXXX: 5d spatial clustering using HDBSCAN (unsupervised ML)  \n\nTo load a notebook, click on the \"Notebook\" tab (above left) and select. Newcomers are advised to work through at least the first four notebooks before attempting to use the system. Also have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface and see also the \"Zeppelin Tutorial\" folder under the Notebooks tab. ",
       "user": "nch",
-      "dateUpdated": "2021-05-10 09:47:39.102",
+      "dateUpdated": "2021-05-10 14:07:34.368",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -73,7 +73,7 @@
         "msg": [
           {
             "type": "HTML",
-            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cbr\u003e\n\u003cp\u003eThe best way to familiarise yourself with the platform is to examine the example notebooks that come bundled with it. These are:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u0026ldquo;Start here\u0026rdquo; (this notebook);\u003c/li\u003e\n  \u003cli\u003eData holdings: a description of the data hosted on the platform;\u003c/li\u003e\n  \u003cli\u003eSource counts over the sky: a simple example of querying and plotting;\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e Mean proper motions over the sky: another simple example\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e Further technical aspects of the platform\u003c/li\u003e\n  \u003cli\u003eGood astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e XXXX: 5d spatial clustering using HDBSCAN (unsupervised ML)\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eTo load a notebook, click on the \u0026ldquo;Notebook\u0026rdquo; tab (above left) and select. Newcomers are advised to work through at least the first four notebooks before attempting to use the system. Also have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface and see also the \u0026ldquo;Zeppelin Tutorial\u0026rdquo; folder under the Notebooks tab.\u003c/p\u003e\n\u003c/div\u003e"
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cbr\u003e\n\u003cp\u003eThe best way to familiarise yourself with the platform is to examine the example notebooks that come bundled with it. These are:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u0026ldquo;Start here\u0026rdquo; (this notebook);\u003c/li\u003e\n  \u003cli\u003eData holdings: a description of the data hosted on the platform;\u003c/li\u003e\n  \u003cli\u003eSource counts over the sky: a simple example of querying and plotting;\u003c/li\u003e\n  \u003cli\u003eMean proper motions over the sky: another simple example\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e Further technical aspects of the platform\u003c/li\u003e\n  \u003cli\u003eGood astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTODO\u003c/strong\u003e XXXX: 5d spatial clustering using HDBSCAN (unsupervised ML)\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eTo load a notebook, click on the \u0026ldquo;Notebook\u0026rdquo; tab (above left) and select. Newcomers are advised to work through at least the first four notebooks before attempting to use the system. Also have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface and see also the \u0026ldquo;Zeppelin Tutorial\u0026rdquo; folder under the Notebooks tab.\u003c/p\u003e\n\u003c/div\u003e"
           }
         ]
       },
@@ -81,8 +81,8 @@
       "jobName": "paragraph_1620401188214_834792538",
       "id": "20210507-152628_446700578",
       "dateCreated": "2021-05-07 15:26:28.214",
-      "dateStarted": "2021-05-10 09:47:39.102",
-      "dateFinished": "2021-05-10 09:47:39.117",
+      "dateStarted": "2021-05-10 14:07:34.369",
+      "dateFinished": "2021-05-10 14:07:34.381",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
