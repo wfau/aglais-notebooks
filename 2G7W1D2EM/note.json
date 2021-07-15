@@ -47,7 +47,7 @@
       "title": "Database and table details",
       "text": "%pyspark\n\n# show the database(s) available within the context\nspark.sql(\"show databases\").show()\n\n# show the contents of the catalogue store that has been set up\nprint(\"Tables available:\")\nfor line in spark.catalog.listTables(): print (line)\n\n# show the first 20 records from the Gaia source catalogue\nprint(\"\\nFirst 20 entries in gaia_source:\")\nspark.sql(\"select * from gaia_source\").show()\n",
       "user": "nch",
-      "dateUpdated": "2021-05-07 14:29:24.604",
+      "dateUpdated": "2021-06-28 12:28:34.345",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -61,7 +61,8 @@
         },
         "editorMode": "ace/mode/python",
         "editorHide": true,
-        "title": true
+        "title": true,
+        "tableHide": false
       },
       "settings": {
         "params": {},
@@ -86,9 +87,10 @@
       "progressUpdateIntervalMs": 500
     },
     {
+      "title": "Description and links",
       "text": "%md\n\n\u003cbr\u003e\nThe database context is presently gaiaedr3 at start-up, so all that is needed to identify a table is the name (the first item in each record above) in queries. The column description for gaia_source is browsable within the Gaia archive ADQL search tree-view, and also [online](https://gea.esac.esa.int/archive/documentation/GEDR3/Gaia_archive/chap_datamodel/sec_dm_main_tables/ssec_dm_gaia_source.html), as are the [best neighbour table columns](https://gea.esac.esa.int/archive/documentation/GEDR3/Gaia_archive/chap_datamodel/sec_dm_crossmatches/). For the \"external\" catalogues the column sets can be browsed as follows (click on each to follow the links):\n\n* [2MASS PSC](https://old.ipac.caltech.edu/2mass/releases/allsky/doc/sec2_2a.html \"2MASS point-source catalogue column details\");\n* [ALLWISE](https://wise2.ipac.caltech.edu/docs/release/allwise/expsup/sec2_1a.html \"ALLWISE catalogue column details\");\n* [PS1 OTMO](https://outerspace.stsci.edu/display/PANSTARRS/PS1+MeanObjectView+table+fields \"PS1 DR1 object-thin object-mean catalogue column details\") (note that column names follow the Gaia archive convention of all lower-case with underscore separators rather than the original CamelCase).\n\nIt is important to note that the best neighbour tables should not be used as a proxy for the original external survey datasets: only those records that are the best neighbour to one or more Gaia sources are included here. If you wish to query and analyse one or other of those catalogues in isolation, this is not the facility to use! The phrase \"one or more\" is also noteworthy: because of the way the Gaia cross-matches have been derived any one external catalogue source can be the best neighbour to more than one Gaia source. Please consult the [Gaia cross-match documentation on-line](https://gea.esac.esa.int/archive/documentation/GEDR3/Catalogue_consolidation/chap_crossmatch/) to familiarise yourself with the details.\n\nNote also the syntax in the last query above. At first sight this might look insanely profligate, especially if you are familiar with existing relational systems serving Gaia data via ADQL/TAP. On this Spark platform the execution engine works rather differently: a \"lazy\" execution plan is assembled from the workflow as notebook statements and cells are \"played\" through this interface - nothing actually happens until absolutely necessary. So the select statement is not executed: rather an optimised plan is created from the combination of the query as couched in SQL here, and the \".show()\" action. The latter is short-hand for displaying the first 20 entries only, and this is factored into the execution resulting in fast turn-around and a quick look at the underlying data resource. In general, all filters and other optimisations are \"pushed down\" through the execution plan at the last possible moment (when data are required to be collected from the distributed workers to the master executor in order to action an operation). This is discussed further in other example notebooks.\n\nColumn details can also be examined within the notebook by defining a data frame object against any table then echoing the schema; subsequent cells demonstrate some simple queries: \n",
       "user": "nch",
-      "dateUpdated": "2021-05-07 15:10:22.765",
+      "dateUpdated": "2021-06-28 12:24:15.574",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -102,7 +104,8 @@
         },
         "editorMode": "ace/mode/markdown",
         "editorHide": true,
-        "tableHide": false
+        "tableHide": false,
+        "title": true
       },
       "settings": {
         "params": {},
@@ -130,7 +133,7 @@
       "title": "Column listing for a table",
       "text": "%pyspark\n\n# define a data frame object on a table:\ndf \u003d spark.sql(\"select * from gaia_source_ps1_best_neighbours\")\n\n# display the schema with a touch of friendly formatting:\nprint(\"Column details of gaia_source_ps1_best_neighbours:\\n\")\nfor field in df.schema: print(\"%30s : %10s\"%(field.name, field.dataType.simpleString()))\n",
       "user": "nch",
-      "dateUpdated": "2021-05-07 15:12:09.546",
+      "dateUpdated": "2021-06-28 12:29:04.148",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -172,19 +175,19 @@
       "title": "Querying the main catalogue",
       "text": "%pyspark\n\n# querying the main catalogue table is as simple as forming an SQL query:\ndf \u003d spark.sql(\"select source_id, ra, dec, phot_g_mean_mag AS G from gaia_source\")\n\ndf.show()\n\n",
       "user": "nch",
-      "dateUpdated": "2021-05-07 15:12:28.967",
+      "dateUpdated": "2021-06-28 12:29:14.556",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "scala",
+          "language": "python",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/scala",
+        "editorMode": "ace/mode/python",
         "title": true,
         "editorHide": true
       },
@@ -212,9 +215,9 @@
     },
     {
       "title": "Querying with cross-matched data",
-      "text": "%pyspark\n\n# a simple SQL join on Gaia source_id can be used to pull in external catalogue data with Gaia data via the pre-computed best-neighbour joins:\nquery \u003d \"SELECT g.source_id, ra, dec, phot_g_mean_mag AS G, g_mean_psf_mag AS g_ps1, r_mean_psf_mag AS r_ps1\" + \\\n    \" FROM gaia_source AS g INNER JOIN gaia_source_ps1_best_neighbours AS p ON g.source_id \u003d p.source_id\"\n\n# define a data frame object on this query\ndf \u003d spark.sql(query)\n\n# echo first 20 records of the results set\ndf.show()\n",
-      "user": "nch",
-      "dateUpdated": "2021-05-07 14:57:22.598",
+      "text": "%pyspark\n\n# a simple SQL join on Gaia source_id can be used to pull in external catalogue data with Gaia data via the pre-computed best-neighbour joins:\n#query \u003d \"SELECT g.source_id, ra, dec, phot_g_mean_mag AS G, g_mean_psf_mag AS g_ps1, r_mean_psf_mag AS r_ps1\" + \\\n    #\" FROM gaia_source AS g INNER JOIN gaia_source_ps1_best_neighbours AS p ON g.source_id \u003d p.source_id\"\n\nquery\u003d \"SELECT gaia.source_id, gaia.ra, gaia.dec, gaia.phot_g_mean_mag AS gaia_g, ps1.g_mean_psf_mag AS ps1_g, ps1.r_mean_psf_mag AS ps1_r FROM gaia_source AS gaia INNER JOIN gaia_source_ps1_best_neighbours AS ps1 ON gaia.source_id \u003d ps1.source_id\"\n\n# define a data frame object on this query\ndf \u003d spark.sql(query)\n\n# echo first 20 records of the results set\ndf.show()\n",
+      "user": "zrq",
+      "dateUpdated": "2021-07-14 06:17:51.448",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -238,7 +241,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "+----------------+------------------+-------------------+---------+-------+-------+\n|       source_id|                ra|                dec|        G|  g_ps1|  r_ps1|\n+----------------+------------------+-------------------+---------+-------+-------+\n|   6975027056128|44.976206974203215|0.19597223687938073|21.247803|20.8992|19.7456|\n|  69410967253632| 45.33365180640389| 0.8065718615590686|16.937292|18.3138|17.0573|\n| 225949639778432| 45.44124688351276| 1.1954836699775477|15.183385|15.8463|15.1432|\n| 312643555148800| 44.19331490047449| 1.0141376381509917| 20.36981|20.6292|20.3524|\n| 442897027616128| 44.91264312888683|  1.492601852016502|20.322088|20.4575|20.1683|\n| 474301831162240| 45.48856296035135| 1.8741327094367917| 20.83472|21.5876|20.8279|\n| 503129650290944| 44.82557241329517| 1.7467209989897743|     null|22.1183|21.5088|\n| 648265184276864| 46.15329115883016| 1.8187255026806104|19.259766|21.1136|19.6957|\n| 853633342492160|45.887170370964405| 1.9883446636479867|21.079979|  22.13|21.2637|\n| 863460225866368| 45.45010424853958| 2.0228507314198554|19.692091| 21.194|19.9263|\n|1280793609641728| 44.43124938681589|  2.100706635709667|20.628544|22.0913|  20.98|\n|1393218671780096|44.187676857318436| 2.6694704253082144|19.574331|21.8862|  20.63|\n|1428059446105344|42.816607265146295| 2.0886145542579504|17.997023|19.3967|18.1068|\n|1674835382563840| 43.44455576953005| 3.2773066677599725| 20.83849|20.5093|19.3258|\n|1855288436653952| 45.47653260521487| 3.3701162952663966|20.267406|21.8331|20.7476|\n|2016951004457088| 44.91770710226973| 3.5664154263442804|20.959341| -999.0|22.0158|\n|2088934654473728|44.560611955234315|  3.937445649369211|16.952032|17.4507|16.9365|\n|2358486801948416|47.787928879606234|  3.041189850119304|19.899597|21.4396|20.3401|\n|2358800334580352| 47.73775437161764|  3.060588469149176|15.646799|16.1171|15.6355|\n|2669236275538432| 47.23182395824929|  4.068078201830116| 20.04851|20.7575|20.0098|\n+----------------+------------------+-------------------+---------+-------+-------+\nonly showing top 20 rows\n\n"
+            "data": "+----------------+------------------+-------------------+---------+-------+-------+\n|       source_id|                ra|                dec|   gaia_g|  ps1_g|  ps1_r|\n+----------------+------------------+-------------------+---------+-------+-------+\n|   6975027056128|44.976206974203215|0.19597223687938073|21.247803|20.8992|19.7456|\n|  69410967253632| 45.33365180640389| 0.8065718615590686|16.937292|18.3138|17.0573|\n| 225949639778432| 45.44124688351276| 1.1954836699775477|15.183385|15.8463|15.1432|\n| 312643555148800| 44.19331490047449| 1.0141376381509917| 20.36981|20.6292|20.3524|\n| 442897027616128| 44.91264312888683|  1.492601852016502|20.322088|20.4575|20.1683|\n| 474301831162240| 45.48856296035135| 1.8741327094367917| 20.83472|21.5876|20.8279|\n| 503129650290944| 44.82557241329517| 1.7467209989897743|     null|22.1183|21.5088|\n| 648265184276864| 46.15329115883016| 1.8187255026806104|19.259766|21.1136|19.6957|\n| 853633342492160|45.887170370964405| 1.9883446636479867|21.079979|  22.13|21.2637|\n| 863460225866368| 45.45010424853958| 2.0228507314198554|19.692091| 21.194|19.9263|\n|1280793609641728| 44.43124938681589|  2.100706635709667|20.628544|22.0913|  20.98|\n|1393218671780096|44.187676857318436| 2.6694704253082144|19.574331|21.8862|  20.63|\n|1428059446105344|42.816607265146295| 2.0886145542579504|17.997023|19.3967|18.1068|\n|1674835382563840| 43.44455576953005| 3.2773066677599725| 20.83849|20.5093|19.3258|\n|1855288436653952| 45.47653260521487| 3.3701162952663966|20.267406|21.8331|20.7476|\n|2016951004457088| 44.91770710226973| 3.5664154263442804|20.959341| -999.0|22.0158|\n|2088934654473728|44.560611955234315|  3.937445649369211|16.952032|17.4507|16.9365|\n|2358486801948416|47.787928879606234|  3.041189850119304|19.899597|21.4396|20.3401|\n|2358800334580352| 47.73775437161764|  3.060588469149176|15.646799|16.1171|15.6355|\n|2669236275538432| 47.23182395824929|  4.068078201830116| 20.04851|20.7575|20.0098|\n+----------------+------------------+-------------------+---------+-------+-------+\nonly showing top 20 rows\n\n"
           }
         ]
       },
@@ -246,8 +249,8 @@
       "jobName": "paragraph_1620398577884_-934769791",
       "id": "20210507-144257_1004220319",
       "dateCreated": "2021-05-07 14:42:57.884",
-      "dateStarted": "2021-05-07 14:57:22.607",
-      "dateFinished": "2021-05-07 14:57:23.714",
+      "dateStarted": "2021-07-14 06:17:51.463",
+      "dateFinished": "2021-07-14 06:17:54.863",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },

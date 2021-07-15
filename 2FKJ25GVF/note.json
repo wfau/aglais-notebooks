@@ -2,8 +2,8 @@
   "paragraphs": [
     {
       "text": "%md\n\nThis simple example shows how to use the PySpark SQL API to execute a simple query on the main source catalogue and plot the results.\n\nNotes:\n\n* The cell containing the query below finishes instantly since it merely defines a \"transformation\" (in the language of Spark) without actually actioning it. It is only when something is done with the data selected by this transform (i.e. it is explicitly actioned as in the following cell) that execution occurs\n* Visualisation takes advantage of HEALPix pixelisation encoded in the Gaia source IDs, and the healpy Python package in conjunction with matplotlib\n* Links are provided in the final cell to the documentation for the packages used, along with other relevant resources.\n\n",
-      "user": "nch",
-      "dateUpdated": "2021-05-10 13:55:48.023",
+      "user": "zrq",
+      "dateUpdated": "2021-07-14 09:02:18.062",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -24,11 +24,11 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
+        "code": "ERROR",
         "msg": [
           {
-            "type": "HTML",
-            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThis simple example shows how to use the PySpark SQL API to execute a simple query on the main source catalogue and plot the results.\u003c/p\u003e\n\u003cp\u003eNotes:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eThe cell containing the query below finishes instantly since it merely defines a \u0026ldquo;transformation\u0026rdquo; (in the language of Spark) without actually actioning it. It is only when something is done with the data selected by this transform (i.e. it is explicitly actioned as in the following cell) that execution occurs\u003c/li\u003e\n  \u003cli\u003eVisualisation takes advantage of HEALPix pixelisation encoded in the Gaia source IDs, and the healpy Python package in conjunction with matplotlib\u003c/li\u003e\n  \u003cli\u003eLinks are provided in the final cell to the documentation for the packages used, along with other relevant resources.\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/div\u003e"
+            "type": "TEXT",
+            "data": "org.apache.zeppelin.interpreter.InterpreterNotFoundException: No interpreter is binded to this note: 2FKJ25GVF"
           }
         ]
       },
@@ -38,14 +38,15 @@
       "dateCreated": "2021-05-07 08:46:13.732",
       "dateStarted": "2021-05-10 13:55:48.038",
       "dateFinished": "2021-05-10 13:55:48.052",
-      "status": "FINISHED",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.InterpreterNotFoundException: No interpreter is binded to this note: 2FKJ25GVF\n\tat org.apache.zeppelin.interpreter.InterpreterFactory.getInterpreter(InterpreterFactory.java:60)\n\tat org.apache.zeppelin.notebook.Paragraph.getBindedInterpreter(Paragraph.java:243)\n\tat org.apache.zeppelin.notebook.Paragraph.execute(Paragraph.java:351)\n\tat org.apache.zeppelin.notebook.Note.run(Note.java:683)\n\tat org.apache.zeppelin.socket.NotebookServer.persistAndExecuteSingleParagraph(NotebookServer.java:1881)\n\tat org.apache.zeppelin.socket.NotebookServer.runParagraph(NotebookServer.java:1840)\n\tat org.apache.zeppelin.socket.NotebookServer.onMessage(NotebookServer.java:262)\n\tat org.apache.zeppelin.socket.NotebookSocket.onWebSocketText(NotebookSocket.java:59)\n\tat org.eclipse.jetty.websocket.common.events.JettyListenerEventDriver.onTextMessage(JettyListenerEventDriver.java:189)\n\tat org.eclipse.jetty.websocket.common.message.SimpleTextMessage.messageComplete(SimpleTextMessage.java:69)\n\tat org.eclipse.jetty.websocket.common.events.AbstractEventDriver.appendMessage(AbstractEventDriver.java:66)\n\tat org.eclipse.jetty.websocket.common.events.JettyListenerEventDriver.onTextFrame(JettyListenerEventDriver.java:158)\n\tat org.eclipse.jetty.websocket.common.events.AbstractEventDriver.incomingFrame(AbstractEventDriver.java:162)\n\tat org.eclipse.jetty.websocket.common.WebSocketSession.incomingFrame(WebSocketSession.java:459)\n\tat org.eclipse.jetty.websocket.common.extensions.AbstractExtension.nextIncomingFrame(AbstractExtension.java:182)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension.nextIncomingFrame(PerMessageDeflateExtension.java:105)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.CompressExtension.forwardIncoming(CompressExtension.java:142)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension.incomingFrame(PerMessageDeflateExtension.java:85)\n\tat org.eclipse.jetty.websocket.common.extensions.ExtensionStack.incomingFrame(ExtensionStack.java:220)\n\tat org.eclipse.jetty.websocket.common.Parser.notifyFrame(Parser.java:219)\n\tat org.eclipse.jetty.websocket.common.Parser.parse(Parser.java:244)\n\tat org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection.readParse(AbstractWebSocketConnection.java:559)\n\tat org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection.onFillable(AbstractWebSocketConnection.java:390)\n\tat org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)\n\tat org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)\n\tat org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:118)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)\n\tat org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:765)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)\n\tat java.lang.Thread.run(Thread.java:748)\n",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Set the resolution level and define the query",
-      "text": "%pyspark\n\nimport math\n\n# set the resolution of the counts\nhealpix_level \u003d 6\n# HEALPix level : no. of pixels\n# 4 : 3072\n# 5 : 12288\n# 6 : 49152 ~ 1 square degree pixels\n# 7 : 196608\n\n# Note: the most significant four-byte word of the 8-byte Gaia source ID contains a HEALPix level 12 index from bit 35 and higher\nnside \u003d int(math.pow(2, healpix_level))\npowers_of_2 \u003d 35 + (12 - healpix_level)*2\ndivisor \u003d int(math.pow(2, powers_of_2))\n\n# make the query: integer division via the PySpark SQL FLOOR function is used to create bin UIDs by which to group the count\ndf \u003d spark.sql(\"SELECT FLOOR(source_id / %d\"%(divisor) + \") AS hpx_id, COUNT(*) AS n FROM gaia_source GROUP BY hpx_id\")\n\n",
-      "user": "nch",
-      "dateUpdated": "2021-05-10 14:06:26.466",
+      "text": "%pyspark\n\nimport math\n\n# set the resolution of the counts\nhealpix_level \u003d 6\n# HEALPix level : no. of pixels\n# 4 : 3072\n# 5 : 12288\n# 6 : 49152 ~ 1 square degree pixels\n# 7 : 196608\n\n# Note: the most significant four-byte word of the 8-byte Gaia source ID contains a HEALPix level 12 index from bit 35 and higher\nnside \u003d int(math.pow(2, healpix_level))\npowers_of_2 \u003d 35 + (12 - healpix_level)*2\ndivisor \u003d int(math.pow(2, powers_of_2))\n\ndivisor\n\n# make the query: integer division via the PySpark SQL FLOOR function is used to create bin UIDs by which to group the count\ndf \u003d spark.sql(\"SELECT FLOOR(source_id / %d\"%(divisor) + \") AS hpx_id, COUNT(*) AS n FROM gaia_source GROUP BY hpx_id\")\n\n",
+      "user": "zrq",
+      "dateUpdated": "2021-07-14 09:02:51.016",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -59,15 +60,20 @@
         },
         "editorMode": "ace/mode/python",
         "title": true,
-        "editorHide": true
+        "editorHide": false
       },
       "settings": {
         "params": {},
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
-        "msg": []
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "org.apache.zeppelin.interpreter.InterpreterNotFoundException: No interpreter is binded to this note: 2FKJ25GVF"
+          }
+        ]
       },
       "apps": [],
       "jobName": "paragraph_1598439438242_-1396466604",
@@ -75,14 +81,15 @@
       "dateCreated": "2020-08-26 10:57:18.242",
       "dateStarted": "2021-05-10 14:04:59.279",
       "dateFinished": "2021-05-10 14:04:59.403",
-      "status": "FINISHED",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.InterpreterNotFoundException: No interpreter is binded to this note: 2FKJ25GVF\n\tat org.apache.zeppelin.interpreter.InterpreterFactory.getInterpreter(InterpreterFactory.java:60)\n\tat org.apache.zeppelin.notebook.Paragraph.getBindedInterpreter(Paragraph.java:243)\n\tat org.apache.zeppelin.notebook.Paragraph.execute(Paragraph.java:351)\n\tat org.apache.zeppelin.notebook.Note.run(Note.java:683)\n\tat org.apache.zeppelin.socket.NotebookServer.persistAndExecuteSingleParagraph(NotebookServer.java:1881)\n\tat org.apache.zeppelin.socket.NotebookServer.runParagraph(NotebookServer.java:1840)\n\tat org.apache.zeppelin.socket.NotebookServer.onMessage(NotebookServer.java:262)\n\tat org.apache.zeppelin.socket.NotebookSocket.onWebSocketText(NotebookSocket.java:59)\n\tat org.eclipse.jetty.websocket.common.events.JettyListenerEventDriver.onTextMessage(JettyListenerEventDriver.java:189)\n\tat org.eclipse.jetty.websocket.common.message.SimpleTextMessage.messageComplete(SimpleTextMessage.java:69)\n\tat org.eclipse.jetty.websocket.common.events.AbstractEventDriver.appendMessage(AbstractEventDriver.java:66)\n\tat org.eclipse.jetty.websocket.common.events.JettyListenerEventDriver.onTextFrame(JettyListenerEventDriver.java:158)\n\tat org.eclipse.jetty.websocket.common.events.AbstractEventDriver.incomingFrame(AbstractEventDriver.java:162)\n\tat org.eclipse.jetty.websocket.common.WebSocketSession.incomingFrame(WebSocketSession.java:459)\n\tat org.eclipse.jetty.websocket.common.extensions.AbstractExtension.nextIncomingFrame(AbstractExtension.java:182)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension.nextIncomingFrame(PerMessageDeflateExtension.java:105)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.CompressExtension.forwardIncoming(CompressExtension.java:142)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension.incomingFrame(PerMessageDeflateExtension.java:85)\n\tat org.eclipse.jetty.websocket.common.extensions.ExtensionStack.incomingFrame(ExtensionStack.java:220)\n\tat org.eclipse.jetty.websocket.common.Parser.notifyFrame(Parser.java:219)\n\tat org.eclipse.jetty.websocket.common.Parser.parse(Parser.java:244)\n\tat org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection.readParse(AbstractWebSocketConnection.java:559)\n\tat org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection.onFillable(AbstractWebSocketConnection.java:390)\n\tat org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)\n\tat org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)\n\tat org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:118)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)\n\tat org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:765)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)\n\tat java.lang.Thread.run(Thread.java:748)\n",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Plot up the results",
       "text": "%pyspark\n\n# plot up the sky counts\nimport numpy as np\nimport healpy as hp\nimport matplotlib.pyplot as plot\n\n# set a figure to use along with a plot size (landscape, golden ratio)\nplot.figure(1, figsize \u003d (16.18, 10.0))\n\n# healpy constants appropriate to the HEALPix indexing encoded in Gaia source IDs\nnpix \u003d hp.nside2npix(nside)\n\n# do the visualisation\narray_data \u003d np.empty(npix)\n# access the underlying Spark Resilient Distributed Data object of the data frame to get the relevant data for plotting ...\nfor item in df.rdd.collect():  array_data[item[0]] \u003d item[1]\n# ... this is just one way of several ...\n\n# plot the counts in Mollweide projection ...\nhp.mollview(array_data, fig\u003d1, nest\u003dTrue, coord\u003d\u0027CG\u0027, unit \u003d \u0027Star counts per HEALPixel\u0027, title\u003d\u0027Gaia EDR3 source counts at HEALPix level %d\u0027%(healpix_level), cmap\u003d\u0027viridis\u0027, norm \u003d \u0027log\u0027)\n# ... with an Equatorial graticule\nhp.graticule(coord\u003d\u0027C\u0027, color\u003d\u0027white\u0027)\n",
       "user": "nch",
-      "dateUpdated": "2021-05-10 14:06:28.347",
+      "dateUpdated": "2021-07-14 09:00:40.489",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -95,7 +102,7 @@
           "completionSupport": true
         },
         "editorMode": "ace/mode/python",
-        "editorHide": true,
+        "editorHide": false,
         "title": true
       },
       "settings": {
@@ -200,11 +207,7 @@
   "id": "2FKJ25GVF",
   "noteParams": {},
   "noteForms": {},
-  "angularObjects": {
-    "md:shared_process": [],
-    "sh:shared_process": [],
-    "spark:shared_process": []
-  },
+  "angularObjects": {},
   "config": {
     "isZeppelinNotebookCronEnable": false
   },
