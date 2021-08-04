@@ -3,8 +3,8 @@
     {
       "title": "Set HEALPix resolution",
       "text": "%pyspark\n\n# set the required HEALPixelisation level here:\nhealpix_level \u003d 6\n# HEALPix level : no. of pixels\n# 4 : 3072\n# 5 : 12288\n# 6 : 49152 ~ 1 square degree pixels\n# 7 : 196608\n",
-      "user": "gaiauser",
-      "dateUpdated": "2021-07-14 09:24:40.510",
+      "user": "zrq",
+      "dateUpdated": "2021-07-31 04:29:07.932",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -32,16 +32,16 @@
       "jobName": "paragraph_1620645476558_-1214107099",
       "id": "20210510-111756_391695716",
       "dateCreated": "2021-05-10 11:17:56.558",
-      "dateStarted": "2021-07-29 11:25:08.865",
-      "dateFinished": "2021-07-29 11:25:08.985",
+      "dateStarted": "2021-07-31 04:29:07.968",
+      "dateFinished": "2021-07-31 04:29:08.065",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Define a data frame by SQL query",
       "text": "%pyspark\nimport math\n\n# compute relevant pixelisation quantities\nnside \u003d int(math.pow(2, healpix_level))\npowers_of_2 \u003d 35 + (12 - healpix_level)*2\ndivisor \u003d int(math.pow(2, powers_of_2))\n\n# formulate SQL query\nquery \u003d \"SELECT floor(source_id /  %d\"%(divisor) + \") AS hpx_id, COUNT(*) AS n, AVG(pmra) AS avg_pmra, AVG(pmdec) AS avg_pmdec FROM gaia_source GROUP BY hpx_id\"\n\n# define a data frame aggregation of the relevant quantities (note this is cached for use in two subsequent cells)\ndf \u003d spark.sql(query).cache()\n",
-      "user": "gaiauser",
-      "dateUpdated": "2021-07-14 09:24:40.617",
+      "user": "zrq",
+      "dateUpdated": "2021-07-31 04:29:08.067",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -69,16 +69,16 @@
       "jobName": "paragraph_1620645338466_-1902611713",
       "id": "20210510-111538_106023214",
       "dateCreated": "2021-05-10 11:15:38.466",
-      "dateStarted": "2021-07-29 11:25:09.066",
-      "dateFinished": "2021-07-29 11:25:09.181",
+      "dateStarted": "2021-07-31 04:29:08.124",
+      "dateFinished": "2021-07-31 04:29:10.278",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Mean RA proper motion plot",
       "text": "%pyspark\n\n# plot up the sky counts\nimport matplotlib.pyplot as plot\nimport numpy as np\nimport healpy as hp\n\n# set a figure to use along with a plot size (landscape, golden ratio)\nplot.figure(1, figsize \u003d (16.18, 10.0))\n\n# healpy constants appropriate to the HEALPix indexing encoded in Gaia source IDs\nnpix \u003d hp.nside2npix(nside)\n\n# do the visualisation\narray_data \u003d np.empty(npix)\nfor item in df.rdd.collect():  array_data[item[0]] \u003d item[2]\nhp.mollview(array_data, fig \u003d 1, coord\u003d\u0027C\u0027, unit\u003d\u0027mas/yr\u0027, nest\u003dTrue, title\u003d\u0027Mean RA proper motion at HEALPix level %d\u0027%(healpix_level), cmap\u003d\u0027rainbow\u0027)\nhp.graticule(coord\u003d\u0027C\u0027, color\u003d\u0027white\u0027)",
-      "user": "gaiauser",
-      "dateUpdated": "2021-07-14 09:24:42.325",
+      "user": "zrq",
+      "dateUpdated": "2021-07-31 04:29:10.326",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -103,7 +103,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u003cFigure size 1164.96x720 with 2 Axes\u003e\n"
+            "data": "/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:211: MatplotlibDeprecationWarning: Passing parameters norm and vmin/vmax simultaneously is deprecated since 3.3 and will become an error two minor releases later. Please pass vmin/vmax directly to the norm when creating it.\n  **kwds\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:543: UserWarning: 0.0 180.0 -180.0 180.0\n  pmin / dtor, pmax / dtor, mmin / dtor, mmax / dtor\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:658: UserWarning: The interval between parallels is 30 deg -0.00\u0027.\n  vdeg, varcmin\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:666: UserWarning: The interval between meridians is 30 deg -0.00\u0027.\n  vdeg, varcmin\n\u003cFigure size 1164.96x720 with 2 Axes\u003e\n"
           },
           {
             "type": "IMG",
@@ -115,16 +115,16 @@
       "jobName": "paragraph_1620645579333_-397450822",
       "id": "20210510-111939_1386609632",
       "dateCreated": "2021-05-10 11:19:39.333",
-      "dateStarted": "2021-07-29 11:25:09.267",
-      "dateFinished": "2021-07-29 11:26:38.646",
+      "dateStarted": "2021-07-31 04:29:10.629",
+      "dateFinished": "2021-07-31 04:30:48.196",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Mean Dec proper motion plot",
       "text": "%pyspark\n\nplot.figure(2, figsize \u003d (16.18, 10.0))\n\narray_data \u003d np.empty(npix)\nfor item in df.rdd.collect():  array_data[item[0]] \u003d item[3]\nhp.mollview(array_data, fig\u003d2, coord\u003d\u0027C\u0027, unit\u003d\u0027mas/yr\u0027, nest\u003dTrue, title\u003d\u0027Mean Dec proper motion at HEALPix level %d\u0027%(healpix_level), cmap\u003d\u0027rainbow\u0027)\nhp.graticule(coord\u003d\u0027C\u0027, color\u003d\u0027white\u0027)\n",
-      "user": "gaiauser",
-      "dateUpdated": "2021-07-14 09:26:10.228",
+      "user": "zrq",
+      "dateUpdated": "2021-07-31 04:30:48.240",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -161,16 +161,16 @@
       "jobName": "paragraph_1620645583560_-113720603",
       "id": "20210510-111943_814907111",
       "dateCreated": "2021-05-10 11:19:43.561",
-      "dateStarted": "2021-07-29 11:26:38.678",
-      "dateFinished": "2021-07-29 11:26:39.865",
+      "dateStarted": "2021-07-31 04:30:48.722",
+      "dateFinished": "2021-07-31 04:30:50.088",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Further reading and resources",
       "text": "%md\n\n* [Gaia source ID definition (for HEALPix indexing)](https://dms.cosmos.esa.int/COSMOS/doc_fetch.php?id\u003d2779219)\n* [Python package healpy](https://healpy.readthedocs.io/en/latest/index.html)\n* [Python matplotlib plotting library](https://matplotlib.org)\n* [Handy HEALPixel characteristics for various levels](https://lambda.gsfc.nasa.gov/toolbox/tb_pixelcoords.cfm)\n\n",
-      "user": "gaiauser",
-      "dateUpdated": "2021-07-14 09:26:11.693",
+      "user": "zrq",
+      "dateUpdated": "2021-07-31 04:30:50.123",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -204,15 +204,15 @@
       "jobName": "paragraph_1620645596813_1492318238",
       "id": "20210510-111956_1822284967",
       "dateCreated": "2021-05-10 11:19:56.813",
-      "dateStarted": "2021-07-29 11:26:39.880",
-      "dateFinished": "2021-07-29 11:26:39.897",
+      "dateStarted": "2021-07-31 04:30:50.288",
+      "dateFinished": "2021-07-31 04:30:50.304",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n",
-      "user": "gaiauser",
-      "dateUpdated": "2021-07-14 09:26:12.137",
+      "user": "zrq",
+      "dateUpdated": "2021-07-31 04:30:50.387",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -245,8 +245,7 @@
   "noteForms": {},
   "angularObjects": {
     "md:shared_process": [],
-    "sh:shared_process": [],
-    "spark:gaiauser:": []
+    "spark:zrq:": []
   },
   "config": {
     "isZeppelinNotebookCronEnable": false
