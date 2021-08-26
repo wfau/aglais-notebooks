@@ -3,7 +3,7 @@
     {
       "text": "%md\n\n# Using ML to define an astrometrically clean sample of stars\n\nFollows the Gaia EDR3 performance verification \"The Gaia Catalogue of Nearby Stars\" (Smart et al. 2021) in classifying astrometric solutions as good or bad via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see https://arxiv.org/abs/2012.02061 for further details. The work flow implemented here follows closely that described in Section 2, \"GCNS Generation\" (GCNS \u003d Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (\u003d nearby) sample.\n\n   ",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:02:30.249",
+      "dateUpdated": "2021-08-26 10:03:44.899",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -15,7 +15,7 @@
         "colWidth": 12.0,
         "editorMode": "ace/mode/markdown",
         "fontSize": 9.0,
-        "editorHide": true,
+        "editorHide": false,
         "results": {},
         "enabled": true
       },
@@ -36,8 +36,8 @@
       "jobName": "paragraph_1620139026366_450696587",
       "id": "20201013-131059_546082898",
       "dateCreated": "2021-05-04 14:37:06.366",
-      "dateStarted": "2021-07-31 04:02:30.272",
-      "dateFinished": "2021-07-31 04:02:30.277",
+      "dateStarted": "2021-08-26 10:03:44.930",
+      "dateFinished": "2021-08-26 10:03:44.939",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -45,7 +45,7 @@
       "title": "Basic catalogue query selections and predicates",
       "text": "%spark.pyspark\n\n# this is the set of astrometric features to be used. In reality several iterations of this workflow might be required with an expanded set, and some figure-of-merit,\n# e.g. Gini index, would be used to select those most important to the RF classification - cf. Table A.1 in the GCNS paper.\nastrometric_features \u003d [\n    \u0027parallax_error\u0027, \n    \u0027parallax_over_error\u0027,\n    \u0027astrometric_sigma5d_max\u0027,\n    \u0027pmra_error\u0027,\n    \u0027pmdec_error\u0027,\n    \u0027astrometric_excess_noise\u0027,\n    \u0027ipd_gof_harmonic_amplitude\u0027,\n    \u0027ruwe\u0027, \n    \u0027visibility_periods_used\u0027,\n    \u0027pmdec\u0027,\n    \u0027pmra\u0027,\n    \u0027ipd_frac_odd_win\u0027,\n    \u0027ipd_frac_multi_peak\u0027,\n    \u0027astrometric_gof_al\u0027,\n    \u0027parallax_pmdec_corr\u0027,\n    \u0027astrometric_excess_noise_sig\u0027\n]\n# ... the last two are included to cross check against the Gini index results presented in the paper.\n\n# quick mode: set an additional predicate filter on random_index here to limit to 10% (or 1%: change 10 to 100) sampling etc:\nquick_filter \u003d \u0027\u0027# AND MOD(random_index, 10) \u003d 0\u0027\n# ... to switch this off, simply specify an empty string. But to avoid overloading matplotlib when visualising results, keep this one:\nquick_plot_filter \u003d \u0027 AND MOD(random_index, 25) \u003d 0\u0027\n\n# reformat the above attribute list into an SQL comma-separated select string\nfeatures_select_string \u003d (\u0027%s, \u0027*(len(astrometric_features) - 1) + \u0027%s \u0027)%tuple(astrometric_features)\n#print (features_select_string)\n\n# Confirmed by Luis Sarro, personal communication: actually we train on ABS(parallax_over_error), see e.g. GCNS paper Figure A.5\nfeatures_select_string \u003d features_select_string.replace(\u0027parallax_over_error\u0027,\u0027ABS(parallax_over_error) AS parallax_over_error\u0027)\n\n# photometric consistency predicate - e.g. Evans et al. (2018), Babusiaux et al. (2018) for DR2:\n#photometric_consistency_filter \u003d \u0027 AND phot_bp_rp_excess_factor BETWEEN 1.0 + (0.03 * POW(bp_rp, 2.0)) AND 1.3 + (0.06 * POW(bp_rp, 2.0))\u0027\n# Riello et al. (2020) for EDR3: fgbp_grp defined by Equation 6 and coefficients in Table 2; sig_cstarg defined by Equation 18:\nphotometric_consistency_indicators \u003d \\\n    \u00271.15436 + 0.033772*bp_rp + 0.032277*bp_rp*bp_rp AS fgbp_grp_0p5, \u0027 + \\\n    \u00271.162004 + 0.011464*bp_rp + 0.049255*bp_rp*bp_rp -0.005879*bp_rp*bp_rp*bp_rp AS fgbp_grp_0p5_4p0, \u0027 + \\\n    \u00271.057572 + 0.0140537*bp_rp AS fgbp_grp_4p0, \u0027 + \\\n    \u00270.0059898 + 8.817481e-12*POW(phot_g_mean_mag, 7.618399) AS sig_cstarg, \u0027\nphotometric_consistency_filter \u003d \u0027 AND (\u0027 + \\\n    \u0027(bp_rp \u003c 0.5 AND ABS(phot_bp_rp_excess_factor - fgbp_grp_0p5) \u003c 2.0 * sig_cstarg) OR \u0027 + \\\n    \u0027(bp_rp BETWEEN 0.5 AND 4.0 AND ABS(phot_bp_rp_excess_factor - fgbp_grp_0p5_4p0) \u003c 2.0 * sig_cstarg) OR \u0027 + \\\n    \u0027(bp_rp \u003e\u003d 4.0 AND ABS(phot_bp_rp_excess_factor - fgbp_grp_4p0) \u003c 2.0 * sig_cstarg))\u0027\n# N.B. this \"ultra-clean\" 2-sigma selection loses very faint red objects owing to the GBP photometry issue discussed in Riello et al. (2020), Section 8.1\n# and is done here for simplicity. The GCNS proper uses external (infrared) photometry from 2MASS to define the good training sample.\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:02:30.371",
+      "dateUpdated": "2021-08-26 10:03:45.029",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -73,8 +73,8 @@
       "jobName": "paragraph_1620139026367_887434981",
       "id": "20201013-131649_1734629667",
       "dateCreated": "2021-05-04 14:37:06.367",
-      "dateStarted": "2021-07-31 04:02:30.397",
-      "dateFinished": "2021-07-31 04:02:30.589",
+      "dateStarted": "2021-08-26 10:03:45.056",
+      "dateFinished": "2021-08-26 10:03:45.093",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -82,7 +82,7 @@
       "title": "Raw catalogue with selected columns",
       "text": "%spark.pyspark\n\n# clear any previously cached data in the context (cells may be executed in any order, and out-dated by changes from here onwards)\nsqlContext.clearCache()\n\n# a conservative selection of everything that COULD be within 100pc, including things with measured \n# distances putting them outside the 100pc horizon when their true distances are within, and also including \n# loads of spurious chaff with the wheat of course, plus bad things with significant, unphysical parallaxes:\nraw_sources_df \u003d spark.sql(\u0027SELECT source_id, random_index, phot_g_mean_mag, phot_bp_rp_excess_factor, bp_rp, g_rp, parallax, ra, dec, b, \u0027 + photometric_consistency_indicators + features_select_string + \u0027 FROM gaia_source WHERE ABS(parallax) \u003e 8.0\u0027)\n\n# cache it for speedy access below (all subsequent samples are derived from this):\nraw_sources_cached \u003d raw_sources_df.cache()\n# ... some good advice concerning caching in Spark here: https://towardsdatascience.com/best-practices-for-caching-in-spark-sql-b22fb0f02d34\n\n# register as SQL-queryable\nraw_sources_cached.createOrReplaceTempView(\u0027raw_sources\u0027)\n\nraw_sources_cached.count()\n# EDR3: 1,724,028 sources in 10min 21sec\n# (cf. GCNS: 1,211,740 sources with varpi \u003e 8mas plus 512,288 sources with varpi \u003c -8 \u003d 1,724,028 in total) ",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:02:30.596",
+      "dateUpdated": "2021-08-26 10:03:45.155",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -115,8 +115,8 @@
       "jobName": "paragraph_1620139026367_-1289881782",
       "id": "20201013-132418_278702125",
       "dateCreated": "2021-05-04 14:37:06.367",
-      "dateStarted": "2021-07-31 04:02:30.627",
-      "dateFinished": "2021-07-31 04:08:25.067",
+      "dateStarted": "2021-08-26 10:03:45.179",
+      "dateFinished": "2021-08-26 10:08:11.678",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -124,7 +124,7 @@
       "title": "Visualisation (colour / absolute-magnitue diagram) of the raw catalogue",
       "text": "%spark.pyspark\n\n# plot an observational Hertzsprung-Russell diagram (aka colour / absolute magnitude diagram) for the unclassified sample to show the problem,\n# include the photometric consistency filter to show the problem is astrometric in addition to photometric\nunclassified_camd_df \u003d spark.sql(\u0027SELECT phot_g_mean_mag + 5.0*LOG10(parallax/100.0) AS m_g, g_rp FROM raw_sources WHERE parallax \u003e +8.0\u0027 + quick_plot_filter)# + photometric_consistency_filter)\n\nimport matplotlib.pyplot as plot\nplot.figure(0, figsize \u003d (9.0, 9.0))\nx \u003d list(unclassified_camd_df.select(\u0027g_rp\u0027).toPandas()[\u0027g_rp\u0027])\ny \u003d list(unclassified_camd_df.select(\u0027m_g\u0027).toPandas()[\u0027m_g\u0027])\nplot.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1)\nplot.ylim(21.0, -3.0)\nplot.ylabel(\u0027Stellar brightness (absolute G magnitude) --\u003e\u0027, fontsize \u003d 16)\nplot.xlabel(\u0027\u003c-- Stellar temperature (G - RP magnitude)\u0027, fontsize \u003d 16)\nplot.show()\n\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:08:25.148",
+      "dateUpdated": "2021-08-26 10:08:11.754",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -161,15 +161,15 @@
       "jobName": "paragraph_1620139026368_-1882336277",
       "id": "20201120-094650_221463065",
       "dateCreated": "2021-05-04 14:37:06.368",
-      "dateStarted": "2021-07-31 04:08:25.172",
-      "dateFinished": "2021-07-31 04:08:29.014",
+      "dateStarted": "2021-08-26 10:08:11.781",
+      "dateFinished": "2021-08-26 10:08:15.287",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n\n\u003cbr\u003eThe problem: while we see astrophysically interesting locii in the colour / absolute-magnitude diagram in the previous cell, the lower right (cool, low temperature) regime is dominated by systematic errors (not random uncertainties - the data should be equally precise in all parts of this data space) that create contamination in the raw sample. We wish to clean the sample to obtain high reliability\n\n* without compromising completeness;\n* utilising astrometric quality features in the raw catalogue for a volume-complete sample;\n* and efficiently; \n\ni.e. without endless iterations of manual, subjective, axis-parallel and arbitrary cuts on available catalogue attributes. A neat solution to this is to use supervised ML. In the Gaia EDR3 performance verification paper \"Gaia Catalogue of Nearby Stars\" (Smart, Sarro, Rybicki, et al. 2020) we use a Random Forest of decision trees on selected features having first defined a training set based on the data itself. \n\nAn 8 mas training set of \"good\" examples is \"cleaned\" of highly probable spurious sources using \u003ci\u003eindependent\u003c/i\u003e photometric criteria, i.e. we require consistency of optical colours. The \"bad\" examples are selected having (unphysical) parallax \u003c -8 mas, i.e. using parallax measurements that are formally highly significant, yet obviously spurious. Under the assumption of normally distributed uncertainties on the parallax measurements, this bad sample should be representative of the corresponding spurious measurements having parallax \u003e 8 mas that contaminate the parallax-selected sample and, in particular, create the contamination illustrated in the plot above.\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:08:29.077",
+      "dateUpdated": "2021-08-26 10:08:15.387",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -202,8 +202,8 @@
       "jobName": "paragraph_1620139026369_-1252410027",
       "id": "20201120-110502_1704727157",
       "dateCreated": "2021-05-04 14:37:06.369",
-      "dateStarted": "2021-07-31 04:08:29.103",
-      "dateFinished": "2021-07-31 04:08:29.117",
+      "dateStarted": "2021-08-26 10:08:15.416",
+      "dateFinished": "2021-08-26 10:08:15.429",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -211,7 +211,7 @@
       "title": "Define the training samples",
       "text": "%spark.pyspark\n\n# good training data: first define rough positional cuts to exclude crowded regions at low Galactic latitude, and inside the Large and Small Magellanic Clouds (Luri et al. 2020):\nlow_galactic_latitude_filter \u003d \u0027 AND ABS(b) \u003e 25.0\u0027\nsmc_filter \u003d \u0027 AND (dec \u003c -80.0 OR dec \u003e -65.0 OR (ra \u003c 350.0 AND ra \u003e +40.0))\u0027\nlmc_filter \u003d \u0027 AND (dec \u003c -80.0 OR dec \u003e -55.0 OR ra \u003c 40.0 OR ra \u003e 120.0)\u0027\nall_good_training_df \u003d spark.sql(\u0027SELECT 1 AS label, \u0027 + features_select_string + \u0027 FROM raw_sources WHERE parallax \u003e + 8.0 AND ABS(b) \u003e 25.0\u0027 + photometric_consistency_filter + quick_filter + low_galactic_latitude_filter + smc_filter + lmc_filter)\ngood_training_rows \u003d all_good_training_df.count()\nprint(\u0027Good training data size: %d rows\u0027%(good_training_rows))\n\n# bad training data: negative parallaxes: N.B. make a selection exactly the same size as the good training set based on size of smaller (good) data set and count of all available bads\nmaximal_bad_ast_count \u003d spark.sql(\u0027SELECT source_id FROM raw_sources WHERE parallax \u003c -8.0\u0027).count()\nfilter_factor \u003d int(maximal_bad_ast_count / good_training_rows)\nall_bad_training_df \u003d spark.sql(\u0027SELECT 0 AS label, \u0027 + features_select_string + \u0027 FROM raw_sources WHERE  parallax \u003c -8.0 AND MOD(random_index, %d) \u003d 0\u0027%(filter_factor) + \u0027 ORDER BY random_index LIMIT %d\u0027%(good_training_rows))\nall_bad_training_data_count \u003d all_bad_training_df.count()\nprint (\u0027Bad  training data size: %d rows\u0027%(all_bad_training_data_count))\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:08:29.202",
+      "dateUpdated": "2021-08-26 10:08:15.515",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -244,8 +244,8 @@
       "jobName": "paragraph_1620139026369_-90651619",
       "id": "20201123-105445_95907042",
       "dateCreated": "2021-05-04 14:37:06.369",
-      "dateStarted": "2021-07-31 04:08:29.230",
-      "dateFinished": "2021-07-31 04:08:33.238",
+      "dateStarted": "2021-08-26 10:08:15.547",
+      "dateFinished": "2021-08-26 10:08:19.590",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -253,7 +253,7 @@
       "title": "Assemble training and reserve test sets",
       "text": "%spark.pyspark\n\n# define training (67%) and test (33%) sample splits (seeded randomness for repeatability)\ngood_67pc, good_33pc \u003d all_good_training_df.randomSplit([0.67, 0.33], 42)\nbad_67pc, bad_33pc \u003d all_bad_training_df.randomSplit([0.67, 0.33], 42)\n\n# transform to labelled feature vectors (0.0 \u003d bad, 1.0 \u003d good, as conveniently already defined in previous projections above)\n\n# Annotate and transform appropriate to the input required by the classifier\u0027s API.\n# Need a dataframe with labels and features: use vector assembler. \nfrom pyspark.ml.feature import VectorAssembler\nignore \u003d [\u0027label\u0027,]\nassembler \u003d VectorAssembler(inputCols\u003d[x for x in good_67pc.columns if x not in ignore], outputCol\u003d\u0027features\u0027)\n\n# training sets\ngood_training_df \u003d assembler.transform(good_67pc).drop(*astrometric_features)\nbad_training_df \u003d assembler.transform(bad_67pc).drop(*astrometric_features)\n# ... N.B. the original individual feature columns are dropped to save memory (since they are duplicated into the resulting feature vector).\n\n# testing sets\ngood_testing_df \u003d assembler.transform(good_33pc).drop(*astrometric_features)\nbad_testing_df \u003d assembler.transform(bad_33pc).drop(*astrometric_features)\n\n# concatenate the training set into a single dataframe\ntraining_df \u003d good_training_df.union(bad_training_df)\n#training_df.show()\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:08:33.336",
+      "dateUpdated": "2021-08-26 10:08:19.654",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -281,8 +281,8 @@
       "jobName": "paragraph_1620139026370_217404209",
       "id": "20201015-161110_18118893",
       "dateCreated": "2021-05-04 14:37:06.370",
-      "dateStarted": "2021-07-31 04:08:33.376",
-      "dateFinished": "2021-07-31 04:08:33.936",
+      "dateStarted": "2021-08-26 10:08:19.681",
+      "dateFinished": "2021-08-26 10:08:20.177",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -290,7 +290,7 @@
       "title": "Train up the Random Forrest",
       "text": "%spark.pyspark\n\n# This cell does the business, given the data and training sets. Follows the example Python code at \n# https://spark.apache.org/docs/2.4.7/api/python/pyspark.ml.html#pyspark.ml.classification.RandomForestClassifier\n\nfrom pyspark.ml.classification import RandomForestClassifier\n\n# instantiate a trained RF classifier, seeded for repeatability at this stage:\nrf \u003d RandomForestClassifier(featureSubsetStrategy \u003d \u0027sqrt\u0027, featuresCol \u003d \u0027features\u0027, labelCol \u003d \u0027label\u0027, numTrees \u003d 500, impurity \u003d \u0027gini\u0027, seed\u003d42)\nmodel \u003d rf.fit(training_df)\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:08:33.975",
+      "dateUpdated": "2021-08-26 10:08:20.183",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -318,8 +318,8 @@
       "jobName": "paragraph_1620139026370_-2132349001",
       "id": "20201013-152110_1282917873",
       "dateCreated": "2021-05-04 14:37:06.370",
-      "dateStarted": "2021-07-31 04:08:33.994",
-      "dateFinished": "2021-07-31 04:12:38.376",
+      "dateStarted": "2021-08-26 10:08:20.227",
+      "dateFinished": "2021-08-26 10:10:48.165",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -327,7 +327,7 @@
       "title": "Check feature set for nulls",
       "text": "%spark.pyspark\n\n# in case of any problems in the previous cell, check the features for nulls (there should be none, but if an exception \"Consider removing nulls ...\" is thrown):\n#for feature in astrometric_features: print (spark.sql(\u0027SELECT COUNT(*) AS \u0027 + feature + \u0027_nulls FROM raw_sources WHERE \u0027 + feature + \u0027 IS NULL\u0027).show())",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:12:38.435",
+      "dateUpdated": "2021-08-26 10:10:48.195",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -355,8 +355,8 @@
       "jobName": "paragraph_1620142521329_927929125",
       "id": "20210504-153521_1591875670",
       "dateCreated": "2021-05-04 15:35:21.329",
-      "dateStarted": "2021-07-31 04:12:38.458",
-      "dateFinished": "2021-07-31 04:12:38.633",
+      "dateStarted": "2021-08-26 10:10:48.236",
+      "dateFinished": "2021-08-26 10:10:48.389",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -364,7 +364,7 @@
       "title": "Classify the reserved test sets",
       "text": "%spark.pyspark\n\n# classify based on the above trained model\ngood_test_results \u003d model.transform(good_testing_df)\nbad_test_results \u003d model.transform(bad_testing_df)\n\n#good_test_results.show()\n\n\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:12:38.657",
+      "dateUpdated": "2021-08-26 10:10:48.437",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -392,8 +392,8 @@
       "jobName": "paragraph_1620139026370_1222481228",
       "id": "20201015-131823_1744793710",
       "dateCreated": "2021-05-04 14:37:06.370",
-      "dateStarted": "2021-07-31 04:12:38.691",
-      "dateFinished": "2021-07-31 04:12:38.789",
+      "dateStarted": "2021-08-26 10:10:48.468",
+      "dateFinished": "2021-08-26 10:10:48.584",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -401,7 +401,7 @@
       "title": "Classification confusion matrix",
       "text": "%spark.pyspark\n\n# test results numerical output\n\n# count up\nfrom collections import Counter\npositives \u003d Counter(list(good_test_results.select(\u0027prediction\u0027).toPandas()[\u0027prediction\u0027]))\nnegatives \u003d Counter(list(bad_test_results.select(\u0027prediction\u0027).toPandas()[\u0027prediction\u0027]))\n\n# Confusion matrix (after GCNS paper, Table 1):\ntrue_positives \u003d positives[1.0]\nfalse_positives \u003d positives[0.0]\ntrue_negatives \u003d negatives[0.0]\nfalse_negatives \u003d negatives[1.0]\nprint(\u0027   |%7d%7d\u0027%(1,2))\nprint(\u0027------------------------------\u0027)\nprint(\u0027 1 |%7d%7d\u0027%(true_positives, false_positives))\nprint(\u0027 2 |%7d%7d\u0027%(false_negatives, true_negatives))\nprint()\n\n# Misclassification fraction: cf. GCNS paper which quotes 0.1%\nnum_misclassified \u003d false_positives + false_negatives\ntotal_num_in_test \u003d true_positives + true_negatives + num_misclassified\nmisclassified_pc \u003d 100.0 * float(num_misclassified) / float(total_num_in_test)\nprint(\u0027Misclassifications for the test set: %.2f %%\u0027%(misclassified_pc))\n\n#  10% EDR3 sample, 100 trees: 0.44% misclassifications\n# 100%              500      : 0.38% (in 15min 57sec)",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:12:38.798",
+      "dateUpdated": "2021-08-26 10:10:48.668",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -434,8 +434,8 @@
       "jobName": "paragraph_1620139026370_1042935651",
       "id": "20201016-154755_24366630",
       "dateCreated": "2021-05-04 14:37:06.370",
-      "dateStarted": "2021-07-31 04:12:38.887",
-      "dateFinished": "2021-07-31 04:12:51.547",
+      "dateStarted": "2021-08-26 10:10:48.693",
+      "dateFinished": "2021-08-26 10:10:56.875",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -443,7 +443,7 @@
       "title": "Relative importance of the selected features",
       "text": "%spark.pyspark\n\nimport numpy\n\n# examine relative importance of features wrt Appendix A.1 of the GCNS paper\nfeature_relative_importance \u003d model.featureImportances.toArray()\nsort_order \u003d numpy.argsort(feature_relative_importance)\nfor idx in range(len(astrometric_features) - 1, 0, -1): \n    print(\u0027%30s  :  %f\u0027%(astrometric_features[sort_order[idx]], feature_relative_importance[sort_order[idx]]))\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:12:51.609",
+      "dateUpdated": "2021-08-26 10:10:56.913",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -476,8 +476,8 @@
       "jobName": "paragraph_1620139026371_-1392180757",
       "id": "20201123-163421_1811049882",
       "dateCreated": "2021-05-04 14:37:06.371",
-      "dateStarted": "2021-07-31 04:12:51.634",
-      "dateFinished": "2021-07-31 04:12:51.787",
+      "dateStarted": "2021-08-26 10:10:56.933",
+      "dateFinished": "2021-08-26 10:10:57.017",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -485,7 +485,7 @@
       "title": "Apply the classification model and plot sample results",
       "text": "%spark.pyspark\n\n# cleaned up CAMD (observational HRD) employing the classifications\n\n# get the complete unclassified sample:\nunclassified_sample_df \u003d spark.sql(\u0027SELECT * FROM raw_sources WHERE parallax \u003e +8.0\u0027 + quick_filter)\n\n# required features subset for the classification model\nassembler \u003d VectorAssembler(inputCols\u003d[x for x in unclassified_sample_df.columns if x in astrometric_features], outputCol\u003d\u0027features\u0027)\ndf_to_classify \u003d assembler.transform(unclassified_sample_df)\nall_classifications \u003d model.transform(df_to_classify)\n#all_classifications.show()\n\n# the above are rather expensive operationa so cache the results for all later plotting cells:\nall_classifications_cached \u003d all_classifications.cache()\n\n# register as SQL-queryable:\nall_classifications_cached.createOrReplaceTempView(\u0027classified_sources\u0027)\n\n# select on binary classification for a quick check:\ngood_sources_df \u003d spark.sql(\u0027SELECT phot_g_mean_mag + 5.0*LOG10(parallax/100.0) AS m_g, g_rp, ra, dec FROM classified_sources WHERE prediction\u003d1.0\u0027 + quick_plot_filter)\nbad_sources_df \u003d  spark.sql(\u0027SELECT phot_g_mean_mag + 5.0*LOG10(parallax/100.0) AS m_g, g_rp, ra, dec FROM classified_sources WHERE prediction\u003d0.0\u0027 + quick_plot_filter)\n\nimport matplotlib.pyplot as plot\nplot.figure(1, figsize \u003d (9.0, 9.0))\nx \u003d list(bad_sources_df.select(\u0027g_rp\u0027).toPandas()[\u0027g_rp\u0027])\ny \u003d list(bad_sources_df.select(\u0027m_g\u0027).toPandas()[\u0027m_g\u0027])\nplot.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1, c \u003d \u0027orange\u0027)\nx \u003d list(good_sources_df.select(\u0027g_rp\u0027).toPandas()[\u0027g_rp\u0027])\ny \u003d list(good_sources_df.select(\u0027m_g\u0027).toPandas()[\u0027m_g\u0027])\nplot.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1)\nplot.ylim(21.0, -3.0)\nplot.ylabel(\u0027Stellar brightness (absolute G magnitude) --\u003e\u0027, fontsize \u003d 16)\nplot.xlabel(\u0027\u003c-- Stellar temperature (G - RP magnitude)\u0027, fontsize \u003d 16)\nplot.show()\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:12:51.833",
+      "dateUpdated": "2021-08-26 10:10:57.033",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -522,8 +522,8 @@
       "jobName": "paragraph_1620139026371_-1280475604",
       "id": "20201123-162249_1468741293",
       "dateCreated": "2021-05-04 14:37:06.371",
-      "dateStarted": "2021-07-31 04:12:51.852",
-      "dateFinished": "2021-07-31 04:13:18.117",
+      "dateStarted": "2021-08-26 10:10:57.057",
+      "dateFinished": "2021-08-26 10:11:06.893",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -531,7 +531,7 @@
       "title": "Histogram of classification probability",
       "text": "%spark.pyspark\n\n# histogram of the classification probabilities: cf. GCNS paper Figure 3\n\nimport matplotlib.pyplot as plot\nplot.figure(1, figsize \u003d (9.7, 6.0))\nplot.yscale(\u0027log\u0027)\nx \u003d list(all_classifications_cached.select(\u0027probability\u0027).toPandas()[\u0027probability\u0027])\n# the probability column values are actually rich objects (DenseVector) containing p and 1-p for our two classes\n# so pick one to plot (without the following line, both probabilities are counted up resulting in a symmetrical plot!)\nx \u003d [i.values[1] for i in x]\nplot.hist(x, bins\u003d25, color\u003d\u0027black\u0027)\nplot.xlabel(\u0027Random Forest Probability\u0027)\nplot.ylabel(\u0027N\u0027)\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:13:18.201",
+      "dateUpdated": "2021-08-26 10:11:06.971",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -568,8 +568,8 @@
       "jobName": "paragraph_1620139026373_906603606",
       "id": "20201124-100512_110153564",
       "dateCreated": "2021-05-04 14:37:06.373",
-      "dateStarted": "2021-07-31 04:13:18.236",
-      "dateFinished": "2021-07-31 04:13:48.687",
+      "dateStarted": "2021-08-26 10:11:06.993",
+      "dateFinished": "2021-08-26 10:11:31.657",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -577,7 +577,7 @@
       "title": "Sky distribution of good source sample",
       "text": "%spark.pyspark\n\n# cf. GCNS paper Figure 1 panels, sky distribution of good/bad sources:\n\nimport math\n\nplot.figure(2, figsize \u003d (16.18, 10.0))\nplot.subplot(111, projection\u003d\u0027aitoff\u0027)\nplot.grid(True)\nx \u003d list((good_sources_df.select(\u0027ra\u0027).toPandas()[\u0027ra\u0027] - 180.0) * math.pi / 180.0)\ny \u003d list(good_sources_df.select(\u0027dec\u0027).toPandas()[\u0027dec\u0027] * math.pi / 180.0)\nplot.title(\u0027Good sources\u0027)\nplot.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1)\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:13:48.780",
+      "dateUpdated": "2021-08-26 10:11:31.734",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -602,7 +602,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u003cmatplotlib.collections.PathCollection at 0x7f35f0d2f750\u003e\u003cFigure size 1164.96x720 with 1 Axes\u003e\n"
+            "data": "\u003cmatplotlib.collections.PathCollection at 0x7f27a67e8850\u003e\u003cFigure size 1164.96x720 with 1 Axes\u003e\n"
           },
           {
             "type": "IMG",
@@ -614,8 +614,8 @@
       "jobName": "paragraph_1620139026373_517284250",
       "id": "20201125-103046_1353183691",
       "dateCreated": "2021-05-04 14:37:06.373",
-      "dateStarted": "2021-07-31 04:13:48.821",
-      "dateFinished": "2021-07-31 04:13:55.543",
+      "dateStarted": "2021-08-26 10:11:31.753",
+      "dateFinished": "2021-08-26 10:11:34.580",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -623,7 +623,7 @@
       "title": "Sky distribution of bad source sample",
       "text": "%spark.pyspark\n\nplot.figure(3, figsize \u003d (16.18, 10.0))\nplot.subplot(111, projection\u003d\u0027aitoff\u0027)\nplot.grid(True)\nx \u003d list((bad_sources_df.select(\u0027ra\u0027).toPandas()[\u0027ra\u0027] - 180.0) * math.pi / 180.0)\ny \u003d list(bad_sources_df.select(\u0027dec\u0027).toPandas()[\u0027dec\u0027] * math.pi / 180.0)\nplot.title(\u0027Bad sources\u0027)\nplot.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1)\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:13:55.627",
+      "dateUpdated": "2021-08-26 10:11:34.657",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -648,7 +648,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u003cmatplotlib.collections.PathCollection at 0x7f35cbf000d0\u003e\u003cFigure size 1164.96x720 with 1 Axes\u003e\n"
+            "data": "\u003cmatplotlib.collections.PathCollection at 0x7f27a606ded0\u003e\u003cFigure size 1164.96x720 with 1 Axes\u003e\n"
           },
           {
             "type": "IMG",
@@ -660,8 +660,8 @@
       "jobName": "paragraph_1620139026378_384852405",
       "id": "20201125-163312_728555601",
       "dateCreated": "2021-05-04 14:37:06.378",
-      "dateStarted": "2021-07-31 04:13:55.653",
-      "dateFinished": "2021-07-31 04:14:02.227",
+      "dateStarted": "2021-08-26 10:11:34.803",
+      "dateFinished": "2021-08-26 10:11:37.595",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -669,7 +669,7 @@
       "title": "Further reading and resources",
       "text": "%md\n\n* [Gaia Early Data Release 3: The Gaia Catalogue of Nearby Stars (R.Smart et al. 2021)](https://www.aanda.org/articles/aa/full_html/2021/05/aa39498-20/aa39498-20.html \"Smart et al., A\u0026A, 649 (2021) A6\")\n* [Apache Spark ML API](https://spark.apache.org/docs/2.4.7/ml-statistics.html \"Spark 2.4.7 ML API\")\n* [A classifier for spurious astrometric solutions in Gaia EDR3 (J.Rybizki et al. 2021)](https://arxiv.org/abs/2101.11641 \"astro-ph/2101.11641\")\n* [Python matplotlib plotting library](https://matplotlib.org)\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:14:02.258",
+      "dateUpdated": "2021-08-26 10:11:37.606",
       "config": {
         "editorSetting": {
           "language": "markdown",
@@ -683,7 +683,7 @@
         "results": {},
         "enabled": true,
         "title": true,
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": false
       },
       "settings": {
@@ -703,15 +703,15 @@
       "jobName": "paragraph_1620139026384_-1470794858",
       "id": "20210428-140519_1288739408",
       "dateCreated": "2021-05-04 14:37:06.384",
-      "dateStarted": "2021-07-31 04:14:02.298",
-      "dateFinished": "2021-07-31 04:14:02.307",
+      "dateStarted": "2021-08-26 10:11:37.642",
+      "dateFinished": "2021-08-26 10:11:37.651",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%pyspark\n",
       "user": "zrq",
-      "dateUpdated": "2021-07-31 04:14:02.398",
+      "dateUpdated": "2021-08-26 10:11:37.742",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -744,7 +744,6 @@
   "noteForms": {},
   "angularObjects": {
     "md:shared_process": [],
-    "sh:shared_process": [],
     "spark:zrq:": []
   },
   "config": {

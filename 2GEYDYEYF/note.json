@@ -1,0 +1,688 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n\n# Training a Random Forest to identify White Dwarf Stars\n\nUses the list of White Dwarf stars from https://arxiv.org/abs/1807.03315 - WD catalogue henceforth -  to train a Random Forest.\nThe method is similar to Section 5.8 from https://arxiv.org/abs/2012.02061 - GCNS henceforth. (GCNS \u003d Gaia Catalogue of Nearby Stars)\n",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.007",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eTraining a Random Forest to identify White Dwarf Stars\u003c/h1\u003e\n\u003cp\u003eUses the list of White Dwarf stars from \u003ca href\u003d\"https://arxiv.org/abs/1807.03315\"\u003ehttps://arxiv.org/abs/1807.03315\u003c/a\u003e - WD catalogue henceforth - to train a Random Forest.\u003cbr/\u003eThe method is similar to Section 5.8 from \u003ca href\u003d\"https://arxiv.org/abs/2012.02061\"\u003ehttps://arxiv.org/abs/2012.02061\u003c/a\u003e - GCNS henceforth. (GCNS \u003d Gaia Catalogue of Nearby Stars)\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920006_-774201701",
+      "id": "20210309-150210_1093711567",
+      "dateCreated": "2021-08-10 10:22:00.006",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Import_modules",
+      "text": "\n%spark.pyspark\n\nimport numpy as np\nimport pandas as pd\nimport pyspark.ml as ml\nimport matplotlib.pylab as plt\nfrom collections import Counter\nfrom pyspark.ml.feature import VectorAssembler\nfrom pyspark.sql.functions import lit, col, when\nfrom pyspark.ml.classification import RandomForestClassifier",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.008",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920008_-1862817303",
+      "id": "20210309-151423_1062475189",
+      "dateCreated": "2021-08-10 10:22:00.008",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Open_eDR3/WD_catalogue",
+      "text": "%spark.pyspark\n\n# Useful columns\ncolumns \u003d  [\u0027source_id\u0027,\n            \u0027ra\u0027,\n            \u0027dec\u0027,\n            \u0027parallax\u0027,\n            \u0027parallax_over_error\u0027, \n#           \u0027astrometric_matched_transits\u0027,\n#           \u0027scan_direction_strength_k1\u0027,\n#           \u0027scan_direction_strength_k2\u0027,\n#           \u0027scan_direction_strength_k3\u0027,\n#           \u0027scan_direction_strength_k4\u0027,\n#           \u0027scan_direction_mean_k1\u0027,\n#           \u0027scan_direction_mean_k2\u0027,\n#           \u0027scan_direction_mean_k3\u0027,\n#           \u0027scan_direction_mean_k4\u0027,\n#           \u0027phot_g_n_obs\u0027,\n          \u0027phot_g_mean_flux\u0027,\n          \u0027phot_g_mean_flux_error\u0027,\n          \u0027phot_g_mean_flux_over_error\u0027,\n          \u0027phot_g_mean_mag\u0027,\n#           \u0027phot_bp_n_obs\u0027,\n          \u0027phot_bp_mean_flux\u0027,\n          \u0027phot_bp_mean_flux_error\u0027,\n          \u0027phot_bp_mean_flux_over_error\u0027,\n          \u0027phot_bp_mean_mag\u0027,\n# #           \u0027phot_rp_n_obs\u0027,\n          \u0027phot_rp_mean_flux\u0027,\n          \u0027phot_rp_mean_flux_error\u0027,\n          \u0027phot_rp_mean_flux_over_error\u0027,\n          \u0027phot_rp_mean_mag\u0027,\n# #           \u0027phot_bp_n_contaminated_transits\u0027,\n# #           \u0027phot_bp_n_blended_transits\u0027,\n# #           \u0027phot_rp_n_contaminated_transits\u0027,\n# #           \u0027phot_rp_n_blended_transits\u0027,\n# #           \u0027phot_proc_mode\u0027,\n#           \u0027phot_bp_rp_excess_factor\u0027,\n          \u0027bp_rp\u0027,\n          \u0027bp_g\u0027,\n          \u0027g_rp\u0027,]\n\n\n# define the data source TODO change to the \"official\" location as and when:\ngs_df \u003d sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/TESTS/GEDR3/*.parquet\u0027)\n\n# open the WD catalogue\nwd \u003d sqlContext.read.format(\u0027com.databricks.spark.csv\u0027).options(\n    header\u003d\u0027true\u0027, inferschema\u003d\u0027true\u0027).load(\u0027eDR3_wd_full.csv\u0027) # .withColumnRenamed(\u0027dr3_source_id\u0027, \u0027source_id\u0027)\nwd \u003d wd.limit(int(wd.count()/10)) # cuts the number of WDs to 1000\nwd \u003d wd.filter(col(\u0027parallax\u0027) \u003e 0) # Change to extensive quality cut\n\n# register as SQL-queryable \ngs_df.createOrReplaceTempView(\u0027dcr_gaia_source\u0027)",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.010",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m\n\u001b[0;31mKeyboardInterrupt\u001b[0m                         Traceback (most recent call last)\n\u001b[0;32m\u003cipython-input-12-1340ebc01ff1\u003e\u001b[0m in \u001b[0;36m\u003cmodule\u003e\u001b[0;34m\u001b[0m\n\u001b[1;32m      3\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m \u001b[0;31m# define the data source TODO change to the \"official\" location as and when:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----\u003e 5\u001b[0;31m \u001b[0mgs_df\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0msqlContext\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mread\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mparquet\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\u0027file:////user/nch/PARQUET/TESTS/GEDR3/*.parquet\u0027\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      6\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      7\u001b[0m \u001b[0;31m# register as SQL-queryable\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/pyspark.zip/pyspark/sql/readwriter.py\u001b[0m in \u001b[0;36mparquet\u001b[0;34m(self, *paths)\u001b[0m\n\u001b[1;32m    314\u001b[0m         \u001b[0;34m[\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\u0027name\u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m\u0027string\u0027\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0;34m\u0027year\u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m\u0027int\u0027\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0;34m\u0027month\u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m\u0027int\u0027\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0;34m\u0027day\u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m\u0027int\u0027\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    315\u001b[0m         \"\"\"\n\u001b[0;32m--\u003e 316\u001b[0;31m         \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_df\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_jreader\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mparquet\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0m_to_seq\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_spark\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_sc\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mpaths\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    317\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    318\u001b[0m     \u001b[0;34m@\u001b[0m\u001b[0mignore_unicode_prefix\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py\u001b[0m in \u001b[0;36m__call__\u001b[0;34m(self, *args)\u001b[0m\n\u001b[1;32m   1253\u001b[0m             \u001b[0mproto\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mEND_COMMAND_PART\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1254\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-\u003e 1255\u001b[0;31m         \u001b[0manswer\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mgateway_client\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msend_command\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcommand\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1256\u001b[0m         return_value \u003d get_return_value(\n\u001b[1;32m   1257\u001b[0m             answer, self.gateway_client, self.target_id, self.name)\n\n\u001b[0;32m/opt/spark/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py\u001b[0m in \u001b[0;36msend_command\u001b[0;34m(self, command, retry, binary)\u001b[0m\n\u001b[1;32m    983\u001b[0m         \u001b[0mconnection\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_get_connection\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    984\u001b[0m         \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 985\u001b[0;31m             \u001b[0mresponse\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mconnection\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msend_command\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcommand\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    986\u001b[0m             \u001b[0;32mif\u001b[0m \u001b[0mbinary\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    987\u001b[0m                 \u001b[0;32mreturn\u001b[0m \u001b[0mresponse\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_create_connection_guard\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mconnection\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py\u001b[0m in \u001b[0;36msend_command\u001b[0;34m(self, command)\u001b[0m\n\u001b[1;32m   1150\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1151\u001b[0m         \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-\u003e 1152\u001b[0;31m             \u001b[0manswer\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0msmart_decode\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mstream\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mreadline\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m-\u001b[0m\u001b[0;36m1\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1153\u001b[0m             \u001b[0mlogger\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdebug\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"Answer received: {0}\"\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mformat\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0manswer\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1154\u001b[0m             \u001b[0;32mif\u001b[0m \u001b[0manswer\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mstartswith\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mproto\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mRETURN_MESSAGE\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/usr/lib64/python3.7/socket.py\u001b[0m in \u001b[0;36mreadinto\u001b[0;34m(self, b)\u001b[0m\n\u001b[1;32m    587\u001b[0m         \u001b[0;32mwhile\u001b[0m \u001b[0;32mTrue\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    588\u001b[0m             \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 589\u001b[0;31m                 \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_sock\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mrecv_into\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mb\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    590\u001b[0m             \u001b[0;32mexcept\u001b[0m \u001b[0mtimeout\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    591\u001b[0m                 \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_timeout_occurred\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0;32mTrue\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;31mKeyboardInterrupt\u001b[0m: "
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920008_-1057026952",
+      "id": "20210309-150222_690800288",
+      "dateCreated": "2021-08-10 10:22:00.008",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "query_database",
+      "text": "%spark.pyspark\n\ndat \u003d spark.sql(\u0027SELECT columns FROM gaia_source WHERE ABS(parallax) \u003e 8.0\u0027)",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.011",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920011_655809233",
+      "id": "20210309-152542_2105066840",
+      "dateCreated": "2021-08-10 10:22:00.011",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Cache_data",
+      "text": "%spark.pyspark\n\n# \n\ndef create_SQL_queryable(df, alias):\n    \u0027\u0027\u0027makes df queryably through SQL format\u0027\u0027\u0027\n    # cache for speedy access\n    df.cache()\n    \n    df.createOrReplaceTempView(alias)\n    \ncreate_SQL_queryable(wd, \u0027wds\u0027)",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.012",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920012_-1854452504",
+      "id": "20210309-151505_1192497691",
+      "dateCreated": "2021-08-10 10:22:00.012",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Remove WD from edr3_sources - TODO",
+      "text": "%spark.pyspark\n\n// REMOVE WDs from eDR3\n\ncreate_SQL_queryable(dat, \u0027edr3_sources\u0027)\n",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.013",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920012_812638207",
+      "id": "20210309-152732_439218285",
+      "dateCreated": "2021-08-10 10:22:00.012",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "CAMD",
+      "text": "%spark.pyspark\ndef CAMD(passbands, catalogues, colors \u003d [\u0027k\u0027, \u0027darkred\u0027, \u0027darkblue\u0027], ms \u003d 1, labels \u003d None):\n    \u0027\u0027\u0027plot an observational Hertzsprung-Russell diagram (aka colour / absolute magnitude diagram)\n    for the unclassified sample to show the problem,\n    include the photometric consistency filter to show the problem is astrometric in addition to photometric \u0027\u0027\u0027\n    \n    import matplotlib.pylab as plt\n    fig \u003d plt.figure(0, figsize \u003d (9.0, 9.0))\n    c \u003d -1\n\n    for i in catalogues:\n        c+\u003d1\n        if type(ms) \u003d\u003d list:\n            s \u003d ms[c]\n        else: s \u003d ms\n        if type(labels) \u003d\u003d type(None):\n            label \u003d i\n        else: label \u003d labels[c]\n        unclassified_camd_df \u003d spark.sql(\u0027SELECT phot_{0}_mean_mag + 5.0*LOG10(parallax/100.0) \\\n                                          AS m_{0}, {1} FROM {2}\u0027\\\n                                          .format(passbands[0], passbands[1], i))\n\n        x \u003d list(unclassified_camd_df.select(\u0027g_rp\u0027).toPandas()[\u0027g_rp\u0027])\n        y \u003d list(unclassified_camd_df.select(\u0027m_g\u0027).toPandas()[\u0027m_g\u0027])\n        plt.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d s, c \u003d colors[c], label \u003d label)\n    plt.ylim(21.0, -3.0)\n    plt.ylabel(\u0027Stellar brightness (absolute G magnitude) --\u003e\u0027, fontsize \u003d 16)\n    plt.xlabel(\u0027\u003c-- Stellar temperature (G - RP magnitude)\u0027, fontsize \u003d 16)\n    lgnd \u003d plt.legend(fontsize \u003d 12, markerscale \u003d 1)\n    for i in range(len(catalogues)):\n        lgnd.legendHandles[i]._sizes \u003d [25]\n\nCAMD(passbands \u003d [\u0027g\u0027, \u0027g_rp\u0027], catalogues \u003d [\u0027edr3_sources\u0027, \u0027wds\u0027], colors \u003d [\u0027k\u0027, \u0027blue\u0027])",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.027",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920026_-2105374410",
+      "id": "20210309-152734_1237360244",
+      "dateCreated": "2021-08-10 10:22:00.026",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Split into Training and test data",
+      "text": "%spark.pyspark\n\ndef split_training_data(df, columns \u003d \u0027*\u0027, label \u003d None, split \u003d 0.8, seed \u003d 0):\n    \u0027\u0027\u0027splits df into trianing and test set. \"label\" [type int] creates a column for classification,\n    if label is present set label \u003d None\u0027\u0027\u0027\n    \n    # Select relevent columns\n    df \u003d df.select(columns)\n    if label !\u003d None:\n        df \u003d df.withColumn(\u0027label\u0027, lit(label))\n    # Split the data into train and test with seed for repeatability\n    train, test \u003d df.randomSplit([split, 1-split], seed)\n    \n    return train, test\n\ndat_train, dat_test \u003d split_training_data(dat, columns \u003d return_columns(), label \u003d 0,\n                                         split \u003d 0.67, seed \u003d 42)\nwd_train, wd_test \u003d split_training_data(wd, columns \u003d return_columns(), label \u003d 1,\n                                         split \u003d 0.67, seed \u003d 42)    ",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.027",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920027_589124627",
+      "id": "20210309-152737_543777343",
+      "dateCreated": "2021-08-10 10:22:00.027",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Combine_training_datasets",
+      "text": "%spark.pyspark\n\ndef transform_datasets(dfs, ignore \u003d [], combine \u003d True):\n    \u0027\u0027\u0027combines two dataframes into a single transformed dataFrame for spark.ml \n    classifier for training or validation\u0027\u0027\u0027\n    \n    # Annotate and transform appropriate to the input required by the classifier\u0027s API.\n    # Need a dataframe with labels and features: use vector assembler.\n    assembler \u003d VectorAssembler(inputCols\u003d[i for i in dfs[0].columns if i not in ignore], \n                            outputCol \u003d \u0027features\u0027, handleInvalid \u003d \u0027skip\u0027)\n    \n    for i in range(len(dfs)):\n        dfs[i] \u003d assembler.transform(dfs[i])\n        \n    if combine \u003d\u003d True:\n        df_comb \u003d dfs[0]\n        for i in range(1, len(dfs)):\n            dfs[0] \u003d dfs[0].union(dfs[i])\n        return dfs[0]\n    else: return dfs\n\n# transform to labelled feature vectors (0.0 \u003d data, 1.0 \u003d white_dwarf)\ntraining \u003d transform_datasets(dfs \u003d [dat_train, wd_train], ignore \u003d [\u0027label\u0027, \u0027source_id\u0027], combine \u003d True)\ndat_testing, wd_testing \u003d transform_datasets(dfs \u003d [dat_test, wd_test], ignore \u003d [\u0027label\u0027, \u0027source_id\u0027], combine \u003d False)\n\ntraining.count(), dat_test.count(), wd_test.count()",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.028",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920027_-784251122",
+      "id": "20210309-152737_5871227",
+      "dateCreated": "2021-08-10 10:22:00.027",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Train_model",
+      "text": "%spark.pyspark\n\n# This cell does the business, given the data and training sets. Follows the example Python code at \n# https://spark.apache.org/docs/2.4.7/api/python/pyspark.ml.html#pyspark.ml.classification.RandomForestClassifier\n\n\n# instantiate a trained RF classifier, seeded for repeatability at this stage:\nrf \u003d RandomForestClassifier(featureSubsetStrategy \u003d \u0027sqrt\u0027, featuresCol \u003d \u0027features\u0027, labelCol \u003d \u0027label\u0027, \n                            numTrees \u003d 50, impurity \u003d \u0027gini\u0027, seed\u003d42,)\nmodel \u003d rf.fit(training.na.drop())\nmodel",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.028",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920028_207237930",
+      "id": "20210309-152736_1954453041",
+      "dateCreated": "2021-08-10 10:22:00.028",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Format_validation_data",
+      "text": "%spark.pyspark\n\n# classify validation set\nres_wd_valid \u003d model.transform(wd_testing)\nres_df_valid \u003d model.transform(dat_testing)",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.037",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920029_191165604",
+      "id": "20210309-152735_1174863279",
+      "dateCreated": "2021-08-10 10:22:00.029",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Define_confusion_matrix",
+      "text": "%spark.pyspark\ndef build_confusion_matrix_perc(positives, negatives):\n    \u0027\u0027\u0027returns normalized confusion matrix\u0027\u0027\u0027\n    p\u003d[]\n    n\u003d[]\n    for i in positives:\n        p.append(round(positives[i]/sum(positives.values())*100,2))\n    for i in negatives:\n        n.append(round(negatives[i]/sum(negatives.values())*100, 2))\n    return [p,n[::-1]]\n\ndef build_confusion_matrix_true(positives, negatives):\n    \u0027\u0027\u0027returns confusion matrix based on values\u0027\u0027\u0027\n    p\u003d[]\n    n\u003d[]\n    for i in positives:\n        p.append(positives[i])\n    for i in negatives:\n        n.append(negatives[i])\n    return [p,n[::-1]]\n\ndef build_confusion_matrix(positives, negatives, scale \u003d \u0027flat\u0027):\n    \u0027\u0027\u0027scale \u003d [\u0027perc\u0027,\u0027true\u0027]\u0027\u0027\u0027\n    if scale \u003d\u003d \u0027true\u0027 or scale \u003d\u003d True:\n        return build_confusion_matrix_true(positives, negatives)\n    elif scale \u003d\u003d \u0027perc\u0027:\n        return build_confusion_matrix_perc(positives, negatives)\n    else: raise NameError(\u0027scale \u003d \"flat\" or \"perc\"\u0027)\n        \n\ndef confusion_matrix_text(matrix): \n    \u0027\u0027\u0027prints text confusion matrix\u0027\u0027\u0027\n    if type(matrix[0][0]) \u003d\u003d int:\n        dtype \u003d \u0027d\u0027\n    if type(matrix[0][0]) \u003d\u003d float:\n        dtype \u003d \u0027f\u0027\n        \n    print(\u0027   |%7s%7s\u0027%(\u0027p\u0027,\u0027n\u0027))\n    print(\u0027------------------------------\u0027)\n    print(\u0027 p |%7{0}| %7{0}\u0027.format(dtype)%(matrix[0][0], matrix[0][1]))\n    print(\u0027 n |%7{0}| %7{0}\u0027.format(dtype)%(matrix[1][0], matrix[1][1]))\n    \ndef matrix_rich(matrix):\n    \u0027\u0027\u0027prints rich version of confusion matrix\u0027\u0027\u0027\n    \n    plt.imshow(matrix, cmap \u003d \u0027Greens\u0027, alpha \u003d 0.75)\n    for i in range(2): # Add values to max pooling\n        for j in range(2):\n            text \u003d plt.text(j, i, matrix[i][j],\n                           ha\u003d\"center\", va\u003d\"center\", color\u003d\"k\", fontsize \u003d 20)\n    plt.axis(\u0027off\u0027)\n    \ndef plot_confusion_matrix(matrix, view \u003d \u0027rich\u0027):\n    if view \u003d\u003d \u0027rich\u0027:\n        matrix_rich(matrix)\n    elif view \u003d\u003d \u0027text\u0027:\n        confusion_matrix_text(matrix)\n    else: raise NameError(\u0027view \u003d \"rich\" or \"text\"\u0027)\n\ndef confusion_matrix(target, noise, view \u003d \u0027rich\u0027, scale \u003d \u0027flat\u0027):\n    \u0027\u0027\u0027Builds confusion matrix\n    INPUT\n        target - df of validation objects as the target\n        noise - df of validation objects as background objects\n         view - [\u0027rich\u0027, \u0027text\u0027]\n        scale - [True, \u0027norm\u0027]\u0027\u0027\u0027\n                           \n    # create positives and negatives\n    positives \u003d Counter(list(target.select(\u0027prediction\u0027).toPandas()[\u0027prediction\u0027]))\n    negatives \u003d Counter(list(noise.select(\u0027prediction\u0027).toPandas()[\u0027prediction\u0027]))\n    print(positives, negatives)\n    conf_matrix \u003d build_confusion_matrix(positives, negatives, scale \u003d scale)\n    print(conf_matrix)\n    plot_confusion_matrix(conf_matrix, view \u003d view)\n    return conf_matrix\n\ndef model_accuracy(conf_matrix):\n    \u0027\u0027\u0027returns total model accuracy\u0027\u0027\u0027\n    # Misclassification fraction: cf. GCNS paper which quotes 0.1%\n    correct \u003d ((sum([conf_matrix[i][i] for i in range(len(conf_matrix))])/np.sum(conf_matrix)))*100\n    return \u0027Misclassifications for the test set: %.2f %%\u0027%np.round(100-correct, 2)",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.038",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920038_11668763",
+      "id": "20210309-153636_2120767412",
+      "dateCreated": "2021-08-10 10:22:00.038",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Create_confusion_matrix",
+      "text": "%spark.pyspark\n\nconf_matrix \u003d confusion_matrix(target \u003d res_wd_valid, noise \u003d res_df_valid, view \u003d \u0027rich\u0027, scale \u003d \u0027true\u0027)\nmodel_accuracy(conf_matrix)\n    \n# GCNS states [[98.1, 1.9]\n#              [0.4, 99.6]]\n\n# GCNS: \n# 3 color features: 1.44%\n# 3 color + 6 photometric: 0.99%\n# 3 color + 6 photometric + parallax: 0.27%",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.039",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920038_1395803961",
+      "id": "20210309-153636_1847670451",
+      "dateCreated": "2021-08-10 10:22:00.038",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Identify_false_classifications",
+      "text": "%spark.pyspark\n\ndef true_false_classification(df, suffix \u003d \u0027\u0027, return_df \u003d True, cache \u003d True):\n    \u0027\u0027\u0027splits the df into objects classified correctly \"true\" and wrongly \"false\".\n    Returns two df if \"return_df\" \u003d True and/or caches both if \"cache\" \u003d True\u0027\u0027\u0027\n    \n    # Split data into true and falsely classified data\n    false \u003d df.filter(col(\u0027label\u0027)!\u003dcol(\u0027prediction\u0027))\n    true \u003d df.filter(col(\u0027label\u0027)\u003d\u003dcol(\u0027prediction\u0027))\n    \n    if cache \u003d\u003d True:\n        create_SQL_queryable(true, \u0027true_%s\u0027%(suffix))\n        create_SQL_queryable(false, \u0027false_%s\u0027%(suffix))\n    if return_df \u003d\u003d True:\n        return true, false\n    else: return 0\n\n    \n// false_wd signals false classifications in wd catalogue\n// false_df signals false classification in dataframe catalogue\ntrue_false_classification(res_df_valid, suffix \u003d \u0027df\u0027, return_df \u003d False, cache \u003d True)\ntrue_false_classification(res_wd_valid, suffix \u003d \u0027wd\u0027, return_df \u003d False, cache \u003d True)",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.039",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920039_-1397032142",
+      "id": "20210309-153635_1863598145",
+      "dateCreated": "2021-08-10 10:22:00.039",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "CAMD_with_confusions",
+      "text": "%spark.pyspark\n\nCAMD(passbands \u003d [\u0027g\u0027, \u0027g_rp\u0027], catalogues \u003d [\u0027true_wd\u0027, \u0027true_df\u0027,\u0027false_df\u0027, \u0027false_wd\u0027],\n     colors\u003d[\u0027blue\u0027, \u0027k\u0027, \u0027limegreen\u0027, \u0027r\u0027], ms \u003d [2,2,55,55])\n     ",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.040",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920039_1391094105",
+      "id": "20210309-153635_1247909185",
+      "dateCreated": "2021-08-10 10:22:00.039",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Calculate_feature_importance",
+      "text": "%spark.pyspark\n\ndef feature_importance(model):\n    columns \u003d return_columns()\n    FI \u003d list(model.featureImportances)\n    # for i in range(len(FI)):\n    #     print(columns[i+1], FI[i])\n\n    plt.rcParams[\u0027figure.figsize\u0027] \u003d 16,5\n    plt.bar(columns[1:], FI, color \u003d \u0027darkslategrey\u0027)\n    plt.xticks(rotation\u003d90)\n    plt.ylabel(\u0027Importance\u0027, fontsize \u003d 15)\n    plt.xlabel(\u0027Feature\u0027, fontsize \u003d 15)\n    plt.show()\n    return FI\n\nfeatureImp \u003d feature_importance(model)",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.040",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920040_968986167",
+      "id": "20210309-153634_370451393",
+      "dateCreated": "2021-08-10 10:22:00.040",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Plot_sky_projection",
+      "text": "%spark.pyspark\n\nplt.figure(3, figsize \u003d (16.18, 10.0))\nplt.subplot(111, projection\u003d\u0027aitoff\u0027)\nplt.grid(True)\nx \u003d list((wd.select(\u0027ra\u0027).toPandas()[\u0027ra\u0027] - 180.0) * np.pi / 180.0)\ny \u003d list(wd.select(\u0027dec\u0027).toPandas()[\u0027dec\u0027] * np.pi / 180.0)\nplt.title(\u0027All sources\u0027)\nplt.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1, c \u003d \u0027red\u0027)\n\nx \u003d list((dat.select(\u0027ra\u0027).toPandas()[\u0027ra\u0027] - 180.0) * np.pi / 180.0)\ny \u003d list(dat.select(\u0027dec\u0027).toPandas()[\u0027dec\u0027] * np.pi / 180.0)\nplt.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1, c \u003d \u0027grey\u0027)",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.041",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920040_1342437037",
+      "id": "20210309-153633_1375898585",
+      "dateCreated": "2021-08-10 10:22:00.040",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Classification_probabilities",
+      "text": "%spark.pyspark\n\ndef plot_probabilities(df, colors \u003d [\u0027darkblue\u0027, \u0027red\u0027], bins \u003d 25, alpha \u003d [1,1], label \u003d None):\n    \u0027\u0027\u0027histogram of the classification probabilities: cf. GCNS paper Figure 3\u0027\u0027\u0027\n\n    plt.figure(1, figsize \u003d (9.7, 6.0))\n    c \u003d -1\n    for i in df:\n        c+\u003d1\n        dat \u003d list(i.select(\u0027probability\u0027).toPandas()[\u0027probability\u0027])\n        dat \u003d [i.values[1] for i in dat]\n        plt.hist(dat, bins\u003dbins, color\u003dcolors[c], ec \u003d \u0027k\u0027, log \u003d True, alpha \u003d alpha[c])\n        plt.xlabel(\u0027Random Forest Probability\u0027)\n    plt.ylabel(\u0027N\u0027)\n    plt.annotate(\" \", xy\u003d(0.9, 950.), xytext\u003d(0.56, 10**3.), fontsize\u003d12,\n            arrowprops\u003ddict(facecolor\u003d\u0027red\u0027, shrink\u003d0.05))\n    plt.annotate(\"background | WDs\", xy\u003d(0.1, 950), xytext\u003d(0.35, 1000), fontsize\u003d12,\n            arrowprops\u003ddict(facecolor\u003d\u0027darkblue\u0027, shrink\u003d0.05))\n    \nplot_probabilities(df \u003d [res_df_valid, res_wd_valid])",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.041",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920041_2124893440",
+      "id": "20210309-154112_1347069161",
+      "dateCreated": "2021-08-10 10:22:00.041",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.042",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920041_-2021011999",
+      "id": "20210309-154111_1451664114",
+      "dateCreated": "2021-08-10 10:22:00.041",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.042",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920042_-1962793921",
+      "id": "20210309-154111_1539950579",
+      "dateCreated": "2021-08-10 10:22:00.042",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "dcr",
+      "dateUpdated": "2021-08-10 10:22:00.044",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1628590920042_-1480230363",
+      "id": "20210309-152731_1445922235",
+      "dateCreated": "2021-08-10 10:22:00.043",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "experiments/dcr/White_dwarf_detection",
+  "id": "2GEYDYEYF",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "sh:shared_process": [],
+    "spark:dcr:": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
