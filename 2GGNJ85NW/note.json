@@ -1,0 +1,31 @@
+{
+  "paragraphs": [
+    {
+      "user": "dcr",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1632323510790_-950561055",
+      "id": "20210922-151150_1228972577",
+      "dateCreated": "2021-09-22 15:11:50.790",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/experiments/dcr/HDBSCAN",
+  "id": "2GGNJ85NW",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "sh:shared_process": [],
+    "spark:dcr:": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
