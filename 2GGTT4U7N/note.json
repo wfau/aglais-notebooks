@@ -77,7 +77,7 @@
       "title": "Set up",
       "text": "%pyspark\n\nimport hdbscan\nimport numpy as np\nimport pandas as pd\nimport pyspark.ml as ml\nfrom scipy.stats import kde\nfrom math import pi, cos as mcos, sin as msin\nimport matplotlib.pylab as plt\nfrom collections import Counter\nfrom pyspark.ml.feature import VectorAssembler\nfrom pyspark.sql.types import ArrayType, DoubleType\nfrom pyspark.sql.functions import lit, col, when, udf, greatest, log10, cos, sin",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 15:42:01.260",
+      "dateUpdated": "2021-10-08 09:35:11.704",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -104,8 +104,8 @@
       "jobName": "paragraph_1632324899802_392553452",
       "id": "20210922-153459_2139306293",
       "dateCreated": "2021-09-22 15:34:59.802",
-      "dateStarted": "2021-10-05 15:42:01.293",
-      "dateFinished": "2021-10-05 15:42:02.375",
+      "dateStarted": "2021-10-08 09:35:11.734",
+      "dateFinished": "2021-10-08 09:35:12.836",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -113,7 +113,7 @@
       "title": "save functions",
       "text": "%spark.pyspark\ndef savefigs(filename, dpi \u003d 450):\n    plt.savefig(f\u0027/user/dcr/HDBSCAN/plots/{filename}.png\u0027,\n                dpi\u003ddpi, bbox_inches \u003d \u0027tight\u0027)\n    plt.savefig(f\u0027/user/dcr/HDBSCAN/plots/{filename}.pdf\u0027,\n                dpi\u003ddpi, bbox_inches \u003d \u0027tight\u0027)\n                \ndef savetxt(df, filename):\n    if type(df) \u003d\u003d list:\n        import json\n        with open(f\u0027/user/dcr/HDBSCAN/plots/data/{filename}.json\u0027, \u0027w\u0027) as f:\n            json.dump(df, f, indent\u003d2)\n            \ndef opentxt(filename):\n    if filename.split(\u0027.\u0027)[-1] \u003d\u003d \u0027json\u0027:\n        import json\n        with open(filename, \u0027r\u0027) as f:\n            score \u003d json.load(f)",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 15:42:04.765",
+      "dateUpdated": "2021-10-08 09:35:14.533",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -141,8 +141,8 @@
       "jobName": "paragraph_1632388222114_895269481",
       "id": "20210923-091022_133423620",
       "dateCreated": "2021-09-23 09:10:22.114",
-      "dateStarted": "2021-10-04 11:06:26.248",
-      "dateFinished": "2021-10-04 11:06:26.335",
+      "dateStarted": "2021-10-08 09:35:13.488",
+      "dateFinished": "2021-10-08 09:35:13.591",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -150,7 +150,7 @@
       "title": "Return columns",
       "text": "%pyspark\ndef return_columns(how \u003d \u0027list\u0027):\n    if how \u003d\u003d \u0027list\u0027:\n        return [\u0027source_id\u0027, \u0027parallax\u0027, \u0027ra\u0027, \u0027dec\u0027, \u0027l\u0027, \u0027b\u0027, \u0027pmra\u0027, \u0027pmdec\u0027,\n                \u0027phot_g_mean_mag\u0027, \u0027phot_bp_mean_mag\u0027, \u0027phot_rp_mean_mag\u0027, \u0027g_rp\u0027]\n    elif how \u003d\u003d\u0027str\u0027:\n        return \u0027source_id, parallax, ra, dec, l, b, pmra, pmdec, \\\n                phot_g_mean_mag, phot_bp_mean_mag, phot_rp_mean_mag, g_rp\u0027",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 15:42:05.464",
+      "dateUpdated": "2021-10-08 09:35:15.232",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -178,8 +178,8 @@
       "jobName": "paragraph_1632388063960_513371957",
       "id": "20210923-090743_592184010",
       "dateCreated": "2021-09-23 09:07:43.960",
-      "dateStarted": "2021-10-05 15:42:05.490",
-      "dateFinished": "2021-10-05 15:42:05.555",
+      "dateStarted": "2021-10-08 09:35:15.260",
+      "dateFinished": "2021-10-08 09:35:15.416",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -187,7 +187,7 @@
       "title": "Make spurious sources queryable",
       "text": "%spark.pyspark\n\ndef vector_to_array(col):\n    def to_array_(v):\n        return v.toArray().tolist()\n    # Important: asNondeterministic requires Spark 2.3 or later\n    # It can be safely removed i.e.\n    # return udf(to_array_, ArrayType(DoubleType()))(col)\n    # but at the cost of decreased performance\n    return udf(to_array_, ArrayType(DoubleType())).asNondeterministic()(col)\n    \n    \ndef queryableSpuriousSources(filename):\n    \u0027\u0027\u0027opens result from ML_cuts and makes queryable \u0027\u0027\u0027\n\n    QC_cuts \u003d spark.read.parquet(\u0027file:///user/dcr//ML_cuts/results/allDataMatchPS1.parquet\u0027)\n    QC_cuts \u003d QC_cuts.withColumn(\"probability\", vector_to_array(col(\"probability\")))\\\n                       .select([\u0027source_id\u0027, \u0027prediction\u0027] + [col(\"probability\")[i] for i in range(2)])\\\n                        .withColumn(\u0027confidence\u0027, greatest(col(\u0027probability[0]\u0027), col(\u0027probability[1]\u0027)))\\\n                        .select([\u0027source_id\u0027, \u0027prediction\u0027, \u0027confidence\u0027])\\\n                        .withColumnRenamed(\u0027prediction\u0027, \u0027is_good\u0027)\n     \n    QC_cuts.createOrReplaceTempView(\u0027dcr_spurious_sources\u0027)\n\nqueryableSpuriousSources(filename \u003d \u0027file:///user/dcr//ML_cuts/results/allDataMatchPS1.parquet\u0027, )\n# source_id \u003d\u003d gaia edr3 source id\n#   is_good \u003d\u003d flag for good astrometric sources (0.0 \u003d bad, 1.0 \u003d good)\n# confidence \u003d\u003d confidence in prediction.\n\nspark.catalog.listTables()\n",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 15:42:06.919",
+      "dateUpdated": "2021-10-08 09:35:17.342",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -220,8 +220,8 @@
       "jobName": "paragraph_1632324590310_-1208792119",
       "id": "20210922-152950_1679523845",
       "dateCreated": "2021-09-22 15:29:50.310",
-      "dateStarted": "2021-10-05 15:42:06.947",
-      "dateFinished": "2021-10-05 15:42:10.635",
+      "dateStarted": "2021-10-08 09:35:17.370",
+      "dateFinished": "2021-10-08 09:35:21.651",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -229,7 +229,7 @@
       "title": "Select good sources ",
       "text": "%pyspark\n\ndef initial_query(columns, how, limit \u003d None, tablename \u003d \u0027dcr_raw_sources\u0027, make_queryable \u003d False, \n                    return_table \u003d False, additional_cuts \u003d \u0027\u0027):\n    if how \u003d\u003d \u0027NoLimit\u0027:\n        raw_sources_df \u003d spark.sql(f\u0027SELECT {columns} \\\n                                     FROM gaia_source as a \\\n                                     WHERE {additional_cuts}\u0027)\n    elif how \u003d\u003d \u0027limited\u0027:\n        raw_sources_df \u003d spark.sql(f\u0027SELECT {columns} FROM gaia_source \\\n                                        WHERE {additional_cuts} \\\n                                        (1/parallax \u003c limit)\u0027)\n    elif how \u003d\u003d \u0027sampled\u0027:\n        sample_filter \u003d f\u0027 WHERE MOD(source_id, {limit}) \u003d 0\u0027\n        raw_sources_df \u003d spark.sql(f\u0027SELECT {columns} FROM gaia_source \\\n                                    {sample_filter} \\\n                                    AND {additional_cuts}\u0027)\n\n    else: raise NameError(\u0027how must equal: [\"NoLimit\", \"limited\", \"sampled\"]\u0027)\n    \n    if make_queryable:\n        raw_sources_df.createOrReplaceTempView(tablename)\n        # print(f\u0027data at: {tablename}\u0027)\n    if return_table:\n        return raw_sources_df\n        \ndef applyQualityControl(catalogue, QCcatalogue, threshold \u003d 0.0):\n    df \u003d spark.sql(f\u0027SELECT a.*, b.is_good, b.confidence \\\n                FROM {catalogue} as a, \\\n                {QCcatalogue} as b\\\n                WHERE (b.source_id \u003d\u003d a.source_id AND b.is_good \u003d\u003d 1.0 AND b.confidence \u003e {threshold})\u0027)\n    return df\n    \ndef addAbsoluteMag(df, passband \u003d \u0027g\u0027):\n    return df.withColumn(f\u0027m_{passband}\u0027, col(f\u0027phot_{passband}_mean_mag\u0027) \\\n                             + 5.0*log10(col(\u0027parallax\u0027)/100))\n        \ndef get_data(makeQueryable \u003d \u0027dcr_raw_sources\u0027, sampled \u003d False,\n             qualityControl \u003d False, limit \u003d 5000, threshold \u003d 0.0,\n             addAbsolute \u003d False, additional_cuts \u003d \u0027\u0027):\n    \u0027\u0027\u0027 Gets a subsample of eDR3 data and appends the wds. (labelled) \u0027\u0027\u0027\n    \n    if not sampled:\n        sampled \u003d \u0027sampled\u0027\n    \n    df \u003d initial_query(columns \u003d return_columns(how \u003d \u0027str\u0027), how \u003d sampled, limit \u003d limit, return_table \u003d True, additional_cuts \u003d additional_cuts)\n    \n    if addAbsolute:\n        df \u003d addAbsoluteMag(df \u003d df, passband \u003d \u0027g\u0027)\n    \n    if makeQueryable:\n        # print(f\u0027data queryable from {makeQueryable}\u0027)\n        df.createOrReplaceTempView(makeQueryable)\n        \n    if qualityControl:\n        if not makeQueryable:\n            raise nameError(\u0027For quality control makeQueryable must be True\u0027)\n        df \u003d applyQualityControl(catalogue \u003d makeQueryable, QCcatalogue \u003d \u0027dcr_spurious_sources\u0027, threshold \u003d threshold)\n        df.createOrReplaceTempView(makeQueryable)\n    return df",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 15:51:14.481",
+      "dateUpdated": "2021-10-08 09:35:18.413",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -257,16 +257,16 @@
       "jobName": "paragraph_1632324365092_885651060",
       "id": "20210922-152605_2054633471",
       "dateCreated": "2021-09-22 15:26:05.092",
-      "dateStarted": "2021-10-05 15:51:11.447",
-      "dateFinished": "2021-10-05 15:51:11.543",
+      "dateStarted": "2021-10-08 09:35:18.445",
+      "dateFinished": "2021-10-08 09:35:21.688",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "getData",
-      "text": "%pyspark\n\n\nfor threshold in [0.5, 0.7, 0.8, 0.9, 0.95]:\n    additional_cuts \u003d \u0027ABS(b) \u003c 30 and 1/parallax \u003c 0.5\u0027 # 1/parallax \u003c max_distance in kpc\n\n    df \u003d get_data(makeQueryable \u003d \u0027dcr_HDBSCAN_sources\u0027, sampled \u003d \u0027sampled\u0027,  limit \u003d 12,\n             qualityControl \u003d True, threshold \u003d 0.9, addAbsolute \u003d False, \n             additional_cuts \u003d additional_cuts).dropna()\n             \n    print(f\u0027{df.count()} sources within .5pc with Threshold \u003d {threshold}\u0027)",
+      "text": "%pyspark\n\n\nfor threshold in [0.5]:\n    additional_cuts \u003d \u0027ABS(b) \u003c 30 and 1/parallax \u003c 0.5\u0027 # 1/parallax \u003c max_distance in kpc\n\n    df \u003d get_data(makeQueryable \u003d \u0027dcr_HDBSCAN_sources\u0027, sampled \u003d \u0027sampled\u0027,  limit \u003d 10000,\n             qualityControl \u003d True, threshold \u003d 0.9, addAbsolute \u003d False, \n             additional_cuts \u003d additional_cuts).dropna()\n             \n    print(f\u0027{df.count()} sources within .5pc with Threshold \u003d {threshold}\u0027)",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 15:51:17.549",
+      "dateUpdated": "2021-10-08 13:35:57.938",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -290,7 +290,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "11735186 sources within .5pc with Threshold \u003d 0.5\n11735186 sources within .5pc with Threshold \u003d 0.7\n11735186 sources within .5pc with Threshold \u003d 0.8\n11735186 sources within .5pc with Threshold \u003d 0.9\n11735186 sources within .5pc with Threshold \u003d 0.95\n"
+            "data": "56038 sources within .5pc with Threshold \u003d 0.5\n"
           }
         ]
       },
@@ -298,15 +298,15 @@
       "jobName": "paragraph_1632324845627_-834684628",
       "id": "20210922-153405_646865393",
       "dateCreated": "2021-09-22 15:34:05.627",
-      "dateStarted": "2021-10-05 15:51:17.580",
-      "dateFinished": "2021-10-05 16:18:29.522",
+      "dateStarted": "2021-10-08 13:35:57.985",
+      "dateFinished": "2021-10-08 13:41:08.782",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%pyspark\n# 107,188,678 sources within 1kpc when Threshold \u003d 0.5. \n#  89,709,634 sources within 1kpc when Threshold \u003d 0.7.\n#  80,466,582 sources within 1kpc when Threshold \u003d 0.8.\n#  68,670,504 sources within 1kpc when Threshold \u003d 0.9.\n#  59,589,008 sources within 1kpc when Threshold \u003d 0.95. ",
+      "text": "%pyspark\n# Limit should be 12 currently\n\n# 107,188,678 sources within 1kpc when Threshold \u003d 0.5. \n#  89,709,634 sources within 1kpc when Threshold \u003d 0.7.\n#  80,466,582 sources within 1kpc when Threshold \u003d 0.8.\n#  68,670,504 sources within 1kpc when Threshold \u003d 0.9.\n#  59,589,008 sources within 1kpc when Threshold \u003d 0.95. ",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 15:41:40.679",
+      "dateUpdated": "2021-10-08 10:55:49.305",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -335,7 +335,7 @@
       "title": "def plotTypes",
       "text": "%spark.pyspark\ndef selectPlotType(x, y, plotType \u003d \u0027scatter\u0027, ax \u003d False, cmap \u003d None, color \u003d None,\n                  label \u003d None, s \u003d 1, white_nan \u003d False, bins \u003d 100, cbar \u003d True,\n                  alpha \u003d 1.0):\n    if plotType \u003d\u003d \u0027scatter\u0027:\n        scatter(x, y, ax \u003d ax,\n                color \u003d color, label \u003d label, s \u003d s, alpha \u003d alpha)\n    elif plotType \u003d\u003d \u0027kdeHeatmap\u0027:\n         kdeHeatmap(x, y, ax \u003d ax, cmap \u003d cmap, \n           white_nan \u003d True, bins \u003d bins, cbar \u003d cbar)\n    elif plotType \u003d\u003d \u00272Dhist\u0027:\n         hist2d(x,y, ax \u003d ax, cmap \u003d cmap, \n           white_nan \u003d True, bins \u003d bins, cbar \u003d cbar)\n    elif plotType \u003d\u003d \u00272DhistSub\u0027:\n         hist2dSubplots(x,y, ax \u003d ax, cmap \u003d cmap, \n           white_nan \u003d True, bins \u003d bins, cbar \u003d cbar)\n    else: raise nameError(\u0027plotType must be one of [\"scatter\", \"kdeHeatmap\", \"2Dhist\", 2DhistSub]\u0027)\n        \ndef kdeHeatmap(x,y, ax \u003d False, cmap \u003d \u0027cividis\u0027, white_nan \u003d False, bins \u003d 100, cbar \u003d True):\n    \u0027\u0027\u0027creates a kdeHeatmap\u0027\u0027\u0027\n    \n    if not ax:\n        ax \u003d plt.figure(111)\n    if white_nan:\n        cmap \u003d whiteNan(cmap)\n\n    # Evaluate a gaussian kde on a regular grid of nbins x nbins over data extents\n    nbins\u003dbins\n    k \u003d kde.gaussian_kde([x,y])\n    xi, yi \u003d np.mgrid[x.min():x.max():nbins*1j, y.min():y.max():nbins*1j]\n    zi \u003d k(np.vstack([xi.flatten(), yi.flatten()]))\n\n    # Make the plot\n    im \u003d ax.pcolormesh(xi, yi, zi.reshape(xi.shape), shading\u003d\u0027auto\u0027, cmap \u003d cmap)\n    \n#     if cbar:\n#         add_colorbar(cmap \u003d cmap, im \u003d im)\n    \ndef scatter(x,y, ax \u003d False, color \u003d None, label \u003d None, s \u003d 1, alpha \u003d 1.0):\n    \u0027\u0027\u0027creates a scatter plot\u0027\u0027\u0027\n    if not ax:\n        ax \u003d plt.figure(111)\n    ax.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d s, c \u003d color, label \u003d label, alpha \u003d alpha)\n    \n\ndef add_colorbar(cmap, im):\n    import matplotlib.pyplot as plt\n    h \u003d im[0]\n    sm \u003d plt.cm.ScalarMappable(cmap\u003dcmap, norm\u003dplt.Normalize(vmin\u003dnp.min(h), vmax\u003dnp.max(h)))\n    plt.colorbar(sm)\n    \ndef hist2dSubplots(x,y, ax \u003d False, cmap \u003d \u0027cividis\u0027, white_nan \u003d False, bins \u003d 100, cbar \u003d True):\n    \u0027\u0027\u0027creates a 2dhist plot\u0027\u0027\u0027\n    \n    if not ax:\n        ax \u003d plt.figure(111)\n    if white_nan:\n        cmap \u003d whiteNan(cmap)\n    im \u003d ax.hist2d(x, y, bins\u003dbins, cmap\u003dcmap)\n    if cbar:\n        addColorbarSubplots(cmap \u003d cmap, im \u003d im, ax \u003d ax)\n\ndef addColorbarSubplots(cmap, im, ax):\n    from mpl_toolkits.axes_grid1 import make_axes_locatable\n    h \u003d im[0]\n    divider \u003d make_axes_locatable(ax)\n    cax \u003d divider.append_axes(\u0027right\u0027, size\u003d\u00275%\u0027, pad\u003d0.05)\n    sm \u003d plt.cm.ScalarMappable(cmap\u003dcmap, norm\u003dplt.Normalize(vmin\u003dnp.min(h), vmax\u003dnp.max(h)))\n    plt.colorbar(sm, cax \u003d cax)\n    \n    \ndef hist2d(x,y, ax \u003d False, cmap \u003d \u0027cividis\u0027, white_nan \u003d False, bins \u003d 100, cbar \u003d True):\n    \u0027\u0027\u0027creates a 2dhist plot\u0027\u0027\u0027\n    \n    if not ax:\n        ax \u003d plt.figure(111)\n    if white_nan:\n        cmap \u003d whiteNan(cmap)\n    im \u003d ax.hist2d(x, y, bins\u003dbins, cmap\u003dcmap)\n    if cbar:\n        add_colorbar(cmap \u003d cmap, im \u003d im)\n    \ndef whiteNan(cmap):\n    \u0027\u0027\u0027adds white base for colormaps\u0027\u0027\u0027\n    \n    from matplotlib import cm\n    from matplotlib.colors import ListedColormap\n    \n    cmap \u003d cm.get_cmap(cmap, 256)\n    newcolors \u003d cmap(np.linspace(0, 1, 256))\n    white \u003d np.array([1, 1, 1, 0])\n    newcolors[:2, :] \u003d white\n    cmap \u003d ListedColormap(newcolors)\n    return cmap",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 16:19:02.076",
+      "dateUpdated": "2021-10-08 10:55:52.327",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -363,8 +363,8 @@
       "jobName": "paragraph_1632325045941_-146122633",
       "id": "20210922-153725_802274472",
       "dateCreated": "2021-09-22 15:37:25.941",
-      "dateStarted": "2021-10-05 16:19:02.121",
-      "dateFinished": "2021-10-05 16:19:02.172",
+      "dateStarted": "2021-10-08 11:01:03.210",
+      "dateFinished": "2021-10-08 11:01:03.314",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -372,7 +372,7 @@
       "title": "def CAMD",
       "text": "%spark.pyspark\ndef CAMD(passbands, catalogues, colors \u003d [\u0027k\u0027, \u0027darkred\u0027, \u0027darkblue\u0027], ms \u003d 1, save \u003d False, colorbar \u003d False,\n         labels \u003d None, plotType \u003d \u0027scatter\u0027, cmap \u003d \u0027cividis\u0027, bins \u003d 100, limit \u003d 25000, title \u003d None):\n    \u0027\u0027\u0027plot an observational Hertzsprung-Russell diagram (aka colour / absolute magnitude diagram)\n    for the unclassified sample to show the problem,\n    include the photometric consistency filter to show the problem is astrometric in addition to photometric \u0027\u0027\u0027\n    \n    import matplotlib.pylab as plt\n    fig, ax \u003d plt.subplots(figsize \u003d (9.0, 9.0))\n    c \u003d -1\n    quick_plot_filter \u003d f\u0027 WHERE MOD(source_id, {limit}) \u003d 0\u0027\n    for i in catalogues:\n        c+\u003d1\n        if type(ms) \u003d\u003d list:\n            s \u003d ms[c]\n        else: s \u003d ms\n        if type(labels) \u003d\u003d type(None):\n            label \u003d i\n        else: label \u003d labels[c]\n            \n        if plotType \u003d\u003d \u0027scatter\u0027:\n            color \u003d colors[c]\n        else: color \u003d None\n        \n        tmp_df \u003d spark.sql(f\"SELECT phot_{passbands[0]}_mean_mag + 5.0*LOG10(parallax/100.0) AS m_{passbands[0]}, \\\n                            {passbands[1]} FROM {i} {quick_plot_filter}\")\n\n        tmp_df \u003d tmp_df.toPandas().dropna()\n        selectPlotType(x \u003d tmp_df[f\u0027{passbands[1]}\u0027], y \u003d tmp_df[f\u0027m_{passbands[0]}\u0027], \n                      plotType \u003d plotType, ax \u003d ax, cmap \u003d cmap, color \u003d color,\n                      label \u003d label, s \u003d s, white_nan \u003d True, bins \u003d bins, cbar \u003d colorbar)\n        \n    plt.ylim(18.0, -10.0)\n    plt.xlim(-0.5, 3)\n    plt.ylabel(\u0027Stellar brightness (absolute G magnitude) --\u003e\u0027, fontsize \u003d 16)\n    plt.xlabel(\u0027\u003c-- Stellar temperature (G - RP magnitude)\u0027, fontsize \u003d 16)\n    if plotType \u003d\u003d \u0027scatter\u0027:\n        lgnd \u003d plt.legend(fontsize \u003d 12, markerscale \u003d 1)\n        for i in range(len(catalogues)):\n            lgnd.legendHandles[i]._sizes \u003d [25]\n    else:\n        plt.title(title)\n        \n    if save:\n        if not dev_run:\n            savefigs(save)",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 16:19:03.350",
+      "dateUpdated": "2021-10-08 10:55:50.975",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -400,8 +400,8 @@
       "jobName": "paragraph_1632325072306_638604335",
       "id": "20210922-153752_1751222227",
       "dateCreated": "2021-09-22 15:37:52.306",
-      "dateStarted": "2021-10-05 16:19:03.413",
-      "dateFinished": "2021-10-05 16:19:03.444",
+      "dateStarted": "2021-10-08 10:55:51.017",
+      "dateFinished": "2021-10-08 11:01:03.165",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -455,7 +455,7 @@
       "title": "Spark df manipulations",
       "text": "%spark.pyspark\ndef reshape_input(Input, padding \u003d 1, desired_length \u003d 2):\n    \u0027\u0027\u0027reshapes input into list of lists padded/cut to a standard desired length\n    \n    EXAMPLE\n        input \u003d [[cos, cos], [sin], [cos, sin, cos],\n                 [sin, cos], [cos], [sin, sin],\n                   [sin],     [0],    [cos]]\n                   \n        new_input \u003d  reshape_input(input, padding \u003d 1) \n        \n        new_input \u003d [[cos, cos], [sin, 1], [cos, sin],\n                     [sin, cos], [cos, 1], [sin, sin],\n                      [sin, 1],   [0, 1],   [cos, 1]]\n        \u0027\u0027\u0027\n    \n    for i in Input:\n        if len(i) \u003c desired_length:\n            while len(i) \u003c desired_length:\n                i.append(padding)\n        elif len(i)\u003edesired_length: \n            while len(i) \u003e desired_length:\n                i.pop()\n    return Input\n\ndef element_transform(function, col_name, sign \u003d 1, padding \u003d 1, col_units \u003d \u0027degrees\u0027):\n    \u0027\u0027\u0027Returns the spark syntax to select and transform columns from a dataframe\n    \u0027\u0027\u0027\n    \n    if function \u003d\u003d padding:\n        return 1\n    \n    elif type(function) \u003d\u003d int: \n        return lit(function)\n    \n    else:\n        if col_units \u003d\u003d \u0027degrees\u0027:\n            conv\u003dpi/180\n        else:\n            conv \u003d 1\n        return sign*function(col(col_name)*conv)\n    \ndef drop_matrix_from_dataframe(df, name):\n    \u0027\u0027\u0027Drops matrix from the dataframe, assuming the column names\n    use function: \"create_matrix_index\" notation. \u0027\u0027\u0027\n    drop \u003d [i for i in df.columns if name in i]\n    df \u003d df.select([column for column in df.columns if column not in drop])\n    return df\n\ndef create_matrix_index(N,M, matrix_name \u003d \u0027A\u0027):\n    \u0027\u0027\u0027Creates index for matrix column names.\u0027\u0027\u0027\n    indicies\u003d[]\n    for i in range(M):\n        for j in range(N):\n            indicies.append(\u0027{}{}{}\u0027.format(matrix_name,i,j))\n    return indicies\n\ndef drop_DataFrame(df, matrix_cols, signs, names, drop_df \u003d True):\n    \u0027\u0027\u0027Drops input DataFrame columns after calulation\u0027\u0027\u0027\n    \n    if drop_df \u003d\u003d True:\n        A \u003d df.select([c for c in matrix_cols])\n        for i in range(len(signs)):\n            A \u003d A.withColumnRenamed(A.columns[i], names[i])\n        return A\n    else:\n        for i in range(len(matrix_cols)):\n            df \u003d df.withColumn(names[i], matrix_cols[i])\n            \n        index \u003d len(df.columns) - len(signs)\n        for i in range(len(signs)):\n            df \u003d df.withColumnRenamed(df.columns[index+i], names[i])\n        return df",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 16:19:10.984",
+      "dateUpdated": "2021-10-08 10:55:55.654",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -483,8 +483,8 @@
       "jobName": "paragraph_1632408437277_-237448684",
       "id": "20210923-144717_657496516",
       "dateCreated": "2021-09-23 14:47:17.277",
-      "dateStarted": "2021-10-05 16:19:09.887",
-      "dateFinished": "2021-10-05 16:19:09.939",
+      "dateStarted": "2021-10-08 11:01:03.352",
+      "dateFinished": "2021-10-08 11:01:03.538",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -492,7 +492,7 @@
       "title": "LSR Function definitions",
       "text": "%pyspark\n\n# Generic functions used later\n\ndef convDegRad(args, units\u003d\"degrees\"):\n    \u0027\u0027\u0027args in km/sTransforms degrees to radians or returns radians if in radians\n        units - [\u0027degrees\u0027, \u0027radians\u0027] Units of args\u0027\u0027\u0027\n\n    if units \u003d\u003d \u0027degrees\u0027:\n        args \u003d [i*pi/180 for i in args]\n    return args\n\ndef convMasKm(args, parallax, units\u003d \u0027mas/yr\u0027):\n    \u0027\u0027\u0027Converts data from mas/yr to km/s\n        units - [\u0027mas/yr\u0027, \u0027km/s\u0027] Units of args\u0027\u0027\u0027\n    \n    if units \u003d\u003d \u0027mas/yr\u0027:\n        k \u003d 4.74057\n        args \u003d [i/parallax * 4.74057 for i in args]\n    elif units !\u003d \u0027km/s\u0027:\n        raise ValueError(\"Input proper motion values in either mas/yr or km/s\")\n    return args\n\ndef matrix_multiplication_arrays(A,B):\n    \u0027\u0027\u0027Matrix multiplication of Matrix A and B if both are either lists or numpy.arrays\u0027\u0027\u0027\n    \n    if np.shape(A)[1] !\u003d np.shape(B)[0]:\n        return \u0027Invalid matrix shape\u0027\n    else:\n        n,m \u003d np.shape(A)[0], np.shape(B)[1]\n        M \u003d np.zeros((n,m))\n        \n        for i in range(n):\n            for j in range(len(B[0])):\n                E\u003d0\n                for k in range(len(B)):\n#                     print(\u0027A{}{}*B{}{}\u0027.format(i,k,k,j))\n                    E +\u003d A[i][k]*B[k][j]\n                M[i,j] \u003d E\n#                 print(\u0027\\n\u0027)\n        return M\n        \n# Functions to perform the LSR cut\n\ndef create_Matrix_A(ra, dec, coord_units \u003d \u0027degrees\u0027):\n    \u0027\u0027\u0027creates Matrix A, where A \u003d [[cos(ra)*cos(dec), -sin(ra), -cos(ra)*sin(dec)],\n                                     [sin(ra)*cos(dec),  cos(ra), -sin(ra)*sin(dec)],\n                                     [sin(dec),             0,     cos(dec)]])\u0027\u0027\u0027\n    \n#     if all(v is None for v in {data, ra, dec}):\n#         raise ValueError(\"Expected input either as array or \u0027ra\u0027 and \u0027dec\u0027 values\")\n#     if data is None:\n#         if any(v is None for v in {ra,dec}):\n#             raise ValueError(\"Expected input either as array or \u0027ra\u0027 and \u0027dec\u0027 values\")\n\n    ra,dec \u003d convDegRad([ra,dec], units \u003d coord_units)  # Ensures radians\n        \n    A \u003d np.array([[cos(ra)*cos(dec), -sin(ra), -cos(ra)*sin(dec)],\n              [sin(ra)*cos(dec), cos(ra), -sin(ra)*sin(dec)],\n              [sin(dec), 0, cos(dec)]])\n    return A\n\ndef create_matrix_C(pmra, pmdec, parallax \u003d None, radial_velocity \u003d 0.0, units \u003d \u0027mas/yr\u0027):\n    \u0027\u0027\u0027creates Matrix C, where C \u003d [radial_velocity, pmra, pmdec]\u0027\u0027\u0027\n    \n    if parallax \u003d\u003d None and units \u003d\u003d \u0027mas/yr\u0027:\n        raise ValueError(\"Parallax value must be supplied if proper motion units are \u0027mas/yr\u0027\")\n\n    pmra,pmdec \u003d convMasKm([pmra, pmdec], parallax \u003d parallax, units \u003d units)  # Ensures proper motions in km/s\n    C \u003d np.array([[radial_velocity, pmra, pmdec]]).T\n    \n    \n    return C\n    \ndef conv_Galactic_LSR(G, magnitude \u003d True):\n    \u0027\u0027\u0027Calculates magnitude of LSR velocity give U,V,W velocity.\n    \n    SEE ALSO\n        v_sun values from Schonrich, R., Binney, J., \u0026 Dehnen, W. 2010 | \n        DOI: 10.1111/j.1365-2966.2010.16253.x\u0027\u0027\u0027\n        \n    v_sun \u003d [11.1, 12.24, 7.25]\n    lsr \u003d np.asarray(G).T + v_sun\n    \n    if magnitude \u003d\u003d True:\n        v_lsr \u003d np.sqrt(np.sum([i**2 for i in lsr]))\n        return v_lsr\n    return lsr\n    \ndef LSR_conv(ra, dec, parallax, pmra, pmdec, coord_units \u003d \u0027degrees\u0027, pm_units\u003d\u0027mas/yr\u0027, radial_velocity \u003d 0.0, magnitude \u003d True):\n    \u0027\u0027\u0027Converts proper motions from ra, dec to LSR velocity\n    SEE ALSO\n         Method from: Johnson, Dean R. H., Soderblom, David R. DOI: 10.1086/114370\n    \u0027\u0027\u0027\n    \n    T \u003d [[-0.05646624, -0.87325802, -0.48397519],\n         [ 0.49253617, -0.44602111,  0.74731071],\n         [-0.86845823, -0.19617746,  0.4552963 ]]\n\n    A \u003d create_Matrix_A(ra,dec, coord_units\u003dcoord_units)   # forms Marix A\n    B \u003d matrix_multiplication_arrays(T, A)  # forms Matrix B\n    \n    C \u003d create_matrix_C(pmra,pmdec,parallax, units \u003d pm_units, radial_velocity \u003d radial_velocity)    # forms Matrix C\n    G \u003d matrix_multiplication_arrays(B,C) # Calculates U, W, V\n\n    v_lsr \u003d conv_Galactic_LSR(G, magnitude \u003d magnitude) # Calculates velocity magnitude in LSR coords\n    \n    return v_lsr\n\n# This function needs to be called by the UDF, all optional parameters are set as required - e.g. show_velocity \u003d False.\n\ndef LSR_cut(ra,dec,parallax,pmra,pmdec, \n            cut \u003d 60, coord_units \u003d \u0027degrees\u0027, \n            pm_units\u003d\u0027mas/yr\u0027, show_velocity \u003d False):\n    \u0027\u0027\u0027Calculates LSR velocity through LSR_conv and returns boolean if satisfies cut condition\u0027\u0027\u0027\n    \n    v \u003d LSR_conv(ra,dec,parallax,pmra,pmdec, coord_units\u003dcoord_units, pm_units\u003dpm_units)\n    if show_velocity \u003d\u003d True:\n        print(v)\n    if v \u003c cut:\n        return 1\n    if v \u003e cut:\n        return 0\n        \n\nfrom pyspark.sql.types import IntegerType\n\n# finally, register the top-level user-defined function for inclusion in queries\nspark.udf.register(\"udf_lsr_cut\", LSR_cut, IntegerType())        \n",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 16:19:13.102",
+      "dateUpdated": "2021-10-08 13:36:05.293",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -525,8 +525,8 @@
       "jobName": "paragraph_1632323773885_-1208597923",
       "id": "20210510-152257_591411400",
       "dateCreated": "2021-09-22 15:16:13.885",
-      "dateStarted": "2021-10-05 16:19:11.981",
-      "dateFinished": "2021-10-05 16:19:12.152",
+      "dateStarted": "2021-10-08 11:01:03.571",
+      "dateFinished": "2021-10-08 11:01:03.735",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -534,7 +534,7 @@
       "title": "Create and cache the primary data set",
       "text": "%pyspark\n\n# apply the velocity cut to the data frame and at this point cache for downstream processing\n# df \u003d df.select(\"*\").where(\"udf_lsr_cut(ra, dec, parallax, pmra, pmdec) \u003d 1\").dropna()\n\n# sanity check\n# df.show()\n# print (\"Data frame rows: \",df_lsr_cut.count())",
       "user": "dcr",
-      "dateUpdated": "2021-09-28 11:02:25.951",
+      "dateUpdated": "2021-10-08 13:45:13.466",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -555,16 +555,21 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
-        "msg": []
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m\n\u001b[0;31mPy4JJavaError\u001b[0m                             Traceback (most recent call last)\n\u001b[0;32m/tmp/ipykernel_17821/1463834636.py\u001b[0m in \u001b[0;36m\u003cmodule\u003e\u001b[0;34m\u001b[0m\n\u001b[1;32m      3\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m \u001b[0;31m# sanity check\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----\u003e 5\u001b[0;31m \u001b[0mdf\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mshow\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      6\u001b[0m \u001b[0;31m# print (\"Data frame rows: \",df_lsr_cut.count())\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/pyspark.zip/pyspark/sql/dataframe.py\u001b[0m in \u001b[0;36mshow\u001b[0;34m(self, n, truncate, vertical)\u001b[0m\n\u001b[1;32m    379\u001b[0m         \"\"\"\n\u001b[1;32m    380\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0misinstance\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtruncate\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mbool\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32mand\u001b[0m \u001b[0mtruncate\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 381\u001b[0;31m             \u001b[0mprint\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_jdf\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mshowString\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mn\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;36m20\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mvertical\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    382\u001b[0m         \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    383\u001b[0m             \u001b[0mprint\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_jdf\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mshowString\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mn\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mint\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtruncate\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mvertical\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py\u001b[0m in \u001b[0;36m__call__\u001b[0;34m(self, *args)\u001b[0m\n\u001b[1;32m   1255\u001b[0m         \u001b[0manswer\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mgateway_client\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msend_command\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcommand\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1256\u001b[0m         return_value \u003d get_return_value(\n\u001b[0;32m-\u003e 1257\u001b[0;31m             answer, self.gateway_client, self.target_id, self.name)\n\u001b[0m\u001b[1;32m   1258\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1259\u001b[0m         \u001b[0;32mfor\u001b[0m \u001b[0mtemp_arg\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mtemp_args\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/pyspark.zip/pyspark/sql/utils.py\u001b[0m in \u001b[0;36mdeco\u001b[0;34m(*a, **kw)\u001b[0m\n\u001b[1;32m     61\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mdeco\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0ma\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkw\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     62\u001b[0m         \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---\u003e 63\u001b[0;31m             \u001b[0;32mreturn\u001b[0m \u001b[0mf\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0ma\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkw\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     64\u001b[0m         \u001b[0;32mexcept\u001b[0m \u001b[0mpy4j\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mprotocol\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mPy4JJavaError\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     65\u001b[0m             \u001b[0ms\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mjava_exception\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtoString\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m/opt/spark/python/lib/py4j-0.10.7-src.zip/py4j/protocol.py\u001b[0m in \u001b[0;36mget_return_value\u001b[0;34m(answer, gateway_client, target_id, name)\u001b[0m\n\u001b[1;32m    326\u001b[0m                 raise Py4JJavaError(\n\u001b[1;32m    327\u001b[0m                     \u001b[0;34m\"An error occurred while calling {0}{1}{2}.\\n\"\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 328\u001b[0;31m                     format(target_id, \".\", name), value)\n\u001b[0m\u001b[1;32m    329\u001b[0m             \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    330\u001b[0m                 raise Py4JError(\n\n\u001b[0;31mPy4JJavaError\u001b[0m: An error occurred while calling o223.showString.\n: org.apache.spark.SparkException: Job aborted due to stage failure: Task 7 in stage 19.0 failed 4 times, most recent failure: Lost task 7.3 in stage 19.0 (TID 5553, worker05, executor 19): org.apache.spark.api.python.PythonException: Traceback (most recent call last):\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/worker.py\", line 377, in main\n    process()\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/worker.py\", line 372, in process\n    serializer.dump_stream(func(split_index, iterator), outfile)\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/serializers.py\", line 352, in dump_stream\n    self.serializer.dump_stream(self._batched(iterator), stream)\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/serializers.py\", line 142, in dump_stream\n    for obj in iterator:\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/serializers.py\", line 341, in _batched\n    for item in iterator:\n  File \"\u003cstring\u003e\", line 1, in \u003clambda\u003e\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/worker.py\", line 85, in \u003clambda\u003e\n    return lambda *a: f(*a)\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/util.py\", line 99, in wrapper\n    return f(*args, **kwargs)\n  File \"/tmp/ipykernel_17821/3077792792.py\", line 115, in LSR_cut\n  File \"/tmp/ipykernel_17821/3077792792.py\", line 98, in LSR_conv\n  File \"/tmp/ipykernel_17821/3077792792.py\", line 56, in create_Matrix_A\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/sql/functions.py\", line 44, in _\n    jc \u003d getattr(sc._jvm.functions, name)(col._jc if isinstance(col, Column) else col)\nAttributeError: \u0027NoneType\u0027 object has no attribute \u0027_jvm\u0027\n\n\tat org.apache.spark.api.python.BasePythonRunner$ReaderIterator.handlePythonException(PythonRunner.scala:456)\n\tat org.apache.spark.sql.execution.python.PythonUDFRunner$$anon$1.read(PythonUDFRunner.scala:81)\n\tat org.apache.spark.sql.execution.python.PythonUDFRunner$$anon$1.read(PythonUDFRunner.scala:64)\n\tat org.apache.spark.api.python.BasePythonRunner$ReaderIterator.hasNext(PythonRunner.scala:410)\n\tat org.apache.spark.InterruptibleIterator.hasNext(InterruptibleIterator.scala:37)\n\tat scala.collection.Iterator$$anon$12.hasNext(Iterator.scala:440)\n\tat scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:409)\n\tat scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:409)\n\tat org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage2.processNext(Unknown Source)\n\tat org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)\n\tat org.apache.spark.sql.execution.WholeStageCodegenExec$$anonfun$13$$anon$1.hasNext(WholeStageCodegenExec.scala:636)\n\tat scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:409)\n\tat org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:125)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:99)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:55)\n\tat org.apache.spark.scheduler.Task.run(Task.scala:123)\n\tat org.apache.spark.executor.Executor$TaskRunner$$anonfun$10.apply(Executor.scala:408)\n\tat org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1360)\n\tat org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:414)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n\nDriver stacktrace:\n\tat org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1925)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1913)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1912)\n\tat scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)\n\tat scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)\n\tat org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1912)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:948)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:948)\n\tat scala.Option.foreach(Option.scala:257)\n\tat org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:948)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2146)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2095)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2084)\n\tat org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)\n\tat org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:759)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2061)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2082)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2101)\n\tat org.apache.spark.sql.execution.SparkPlan.executeTake(SparkPlan.scala:365)\n\tat org.apache.spark.sql.execution.CollectLimitExec.executeCollect(limit.scala:38)\n\tat org.apache.spark.sql.Dataset.org$apache$spark$sql$Dataset$$collectFromPlan(Dataset.scala:3389)\n\tat org.apache.spark.sql.Dataset$$anonfun$head$1.apply(Dataset.scala:2550)\n\tat org.apache.spark.sql.Dataset$$anonfun$head$1.apply(Dataset.scala:2550)\n\tat org.apache.spark.sql.Dataset$$anonfun$52.apply(Dataset.scala:3370)\n\tat org.apache.spark.sql.execution.SQLExecution$$anonfun$withNewExecutionId$1.apply(SQLExecution.scala:80)\n\tat org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:127)\n\tat org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:75)\n\tat org.apache.spark.sql.Dataset.org$apache$spark$sql$Dataset$$withAction(Dataset.scala:3369)\n\tat org.apache.spark.sql.Dataset.head(Dataset.scala:2550)\n\tat org.apache.spark.sql.Dataset.take(Dataset.scala:2764)\n\tat org.apache.spark.sql.Dataset.getRows(Dataset.scala:254)\n\tat org.apache.spark.sql.Dataset.showString(Dataset.scala:291)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\n\tat py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\n\tat py4j.Gateway.invoke(Gateway.java:282)\n\tat py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\n\tat py4j.commands.CallCommand.execute(CallCommand.java:79)\n\tat py4j.GatewayConnection.run(GatewayConnection.java:238)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: org.apache.spark.api.python.PythonException: Traceback (most recent call last):\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/worker.py\", line 377, in main\n    process()\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/worker.py\", line 372, in process\n    serializer.dump_stream(func(split_index, iterator), outfile)\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/serializers.py\", line 352, in dump_stream\n    self.serializer.dump_stream(self._batched(iterator), stream)\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/serializers.py\", line 142, in dump_stream\n    for obj in iterator:\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/serializers.py\", line 341, in _batched\n    for item in iterator:\n  File \"\u003cstring\u003e\", line 1, in \u003clambda\u003e\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/worker.py\", line 85, in \u003clambda\u003e\n    return lambda *a: f(*a)\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/util.py\", line 99, in wrapper\n    return f(*args, **kwargs)\n  File \"/tmp/ipykernel_17821/3077792792.py\", line 115, in LSR_cut\n  File \"/tmp/ipykernel_17821/3077792792.py\", line 98, in LSR_conv\n  File \"/tmp/ipykernel_17821/3077792792.py\", line 56, in create_Matrix_A\n  File \"/var/hadoop/data/usercache/fedora/appcache/application_1628130159581_0053/container_1628130159581_0053_01_000020/pyspark.zip/pyspark/sql/functions.py\", line 44, in _\n    jc \u003d getattr(sc._jvm.functions, name)(col._jc if isinstance(col, Column) else col)\nAttributeError: \u0027NoneType\u0027 object has no attribute \u0027_jvm\u0027\n\n\tat org.apache.spark.api.python.BasePythonRunner$ReaderIterator.handlePythonException(PythonRunner.scala:456)\n\tat org.apache.spark.sql.execution.python.PythonUDFRunner$$anon$1.read(PythonUDFRunner.scala:81)\n\tat org.apache.spark.sql.execution.python.PythonUDFRunner$$anon$1.read(PythonUDFRunner.scala:64)\n\tat org.apache.spark.api.python.BasePythonRunner$ReaderIterator.hasNext(PythonRunner.scala:410)\n\tat org.apache.spark.InterruptibleIterator.hasNext(InterruptibleIterator.scala:37)\n\tat scala.collection.Iterator$$anon$12.hasNext(Iterator.scala:440)\n\tat scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:409)\n\tat scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:409)\n\tat org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage2.processNext(Unknown Source)\n\tat org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)\n\tat org.apache.spark.sql.execution.WholeStageCodegenExec$$anonfun$13$$anon$1.hasNext(WholeStageCodegenExec.scala:636)\n\tat scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:409)\n\tat org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:125)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:99)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:55)\n\tat org.apache.spark.scheduler.Task.run(Task.scala:123)\n\tat org.apache.spark.executor.Executor$TaskRunner$$anonfun$10.apply(Executor.scala:408)\n\tat org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1360)\n\tat org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:414)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\t... 1 more\n"
+          }
+        ]
       },
       "apps": [],
       "jobName": "paragraph_1632323773886_-472658050",
       "id": "20210510-152604_936587614",
       "dateCreated": "2021-09-22 15:16:13.886",
-      "dateStarted": "2021-09-28 11:02:25.986",
-      "dateFinished": "2021-09-28 11:02:26.017",
-      "status": "FINISHED",
+      "dateStarted": "2021-10-08 13:36:07.032",
+      "dateFinished": "2021-10-08 13:41:29.527",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -719,9 +724,9 @@
     },
     {
       "title": "Run HDBSCAN",
-      "text": "%pyspark\n# Apply HDBSCAN for full data with prediction ON.\nclusterer \u003d hdbscan.HDBSCAN(min_cluster_size\u003d40, min_samples\u003d25, prediction_data\u003dTrue, allow_single_cluster\u003dFalse, cluster_selection_method\u003d\u0027leaf\u0027, gen_min_span_tree\u003dTrue).fit(df[cluster_cols[-5:]])\n\n# Create clusterer\n# clusterer \u003d hdbscan.HDBSCAN(min_cluster_size\u003d10, min_samples\u003d5, prediction_data\u003dTrue, allow_single_cluster\u003dFalse, \n#                             cluster_selection_method\u003d\u0027leaf\u0027, gen_min_span_tree\u003dTrue).fit(df[cluster_cols[-5:]])\n                            \n# add clusters to data and get cluster persistance\ndf, persistance \u003d clustering_info(clusterer, add_to_data \u003d True, df \u003d df)",
+      "text": "%pyspark\n\n# Apply HDBSCAN for full data with prediction ON.\nclusterer \u003d hdbscan.HDBSCAN(min_cluster_size\u003d40, min_samples\u003d25, prediction_data\u003dTrue, allow_single_cluster\u003dFalse, cluster_selection_method\u003d\u0027leaf\u0027, gen_min_span_tree\u003dTrue).fit(df[cluster_cols[-5:]])\n\n# Create clusterer\n# clusterer \u003d hdbscan.HDBSCAN(min_cluster_size\u003d10, min_samples\u003d5, prediction_data\u003dTrue, allow_single_cluster\u003dFalse, \n#                             cluster_selection_method\u003d\u0027leaf\u0027, gen_min_span_tree\u003dTrue).fit(df[cluster_cols[-5:]])\n                            \n# add clusters to data and get cluster persistance\ndf, persistance \u003d clustering_info(clusterer, add_to_data \u003d True, df \u003d df)",
       "user": "dcr",
-      "dateUpdated": "2021-10-05 16:19:26.111",
+      "dateUpdated": "2021-10-08 09:22:43.289",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
