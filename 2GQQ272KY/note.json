@@ -38,7 +38,7 @@
       "title": "Reformatting function definition(s)",
       "text": "%pyspark\n\nfrom pyspark.sql import functions as f\nfrom pyspark.sql import *\n\ndef cast_to_array(data_frame : DataFrame, column_name : str, data_type : DataType):\n    \"\"\"\n    Casts the specified string column in the given data frame into an\n    array with the specified data type. Assumes the string column contains\n    comma-separated values in plain text delimited by braces (which are\n    ignored). The array column is appended to the existing column set while \n    the original string column is removed. The resulting data frame will\n    contain an array column with the same name as the original string\n    data column.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    column_name : str\n        The column name that contains the array data as a plain text string of \n        comma-separated values\n    data_type : DataType()\n        The PySpark data structure data type which should be ArrayType(SomeType())\n        \n    Returns:\n    --------\n    a new data frame containing the requested modification\n    \"\"\"\n    \n    # a temporary working column name for the array\n    temporary_column_name \u003d column_name + \u0027_array_data\u0027\n    \n    # reformat the string csv data as an array of the specified type\n    data_frame \u003d data_frame.withColumn(temporary_column_name, f.split(f.col(column_name).substr(f.lit(2), f.length(f.col(column_name)) - 2), \u0027,\u0027).cast(data_type))\n    \n    # drop the original string column to save space\n    data_frame \u003d data_frame.drop(column_name)\n    \n    # rename the temporary column with the original column name\n    data_frame \u003d data_frame.withColumnRenamed(temporary_column_name, column_name)\n    \n    return data_frame\n    \n    \ndef reorder_columns(data_frame : DataFrame, data_structure : StructType):\n    \"\"\"\n    Reorder the columns according to the Gaia archive public schema and so that\n    the parquet files can be re-attached against that standard schema.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    data_structure : StructType()\n        The PySpark data structure containing the required schema definition\n    \"\"\"\n    \n    # use the schema to define the column order\n    ordered_columns \u003d [field.name for field in data_structure]\n    \n    # give it back in the schema-driven order\n    return data_frame.select(ordered_columns)\n    \n\ndef cast_all_arrays(data_frame : DataFrame, data_structure : StructType):\n    \"\"\"\n    Given an interim data frame read from csv and containing arrays in\n    plain text string representation, cycles over the schema transforming\n    all strings associated with arrays into the required primitive type.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    data_structure : StructType()\n        The PySpark data structure containing the required schema definition\n    \"\"\"\n    \n    # cycle over the defined fields looking for arrays\n    for field in data_structure:\n        \n        # if it\u0027s an array type then transmogrify:\n        if type(field.dataType) \u003d\u003d ArrayType: \n            data_frame \u003d cast_to_array(data_frame, field.name, field.dataType)\n    \n    # finally reorder according to the original specification\n    return reorder_columns(data_frame, data_structure)\n    \n    ",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:37:26.929",
+      "dateUpdated": "2021-11-22 16:48:00.127",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -72,7 +72,7 @@
       "title": "Ingest some test data",
       "text": "%pyspark\n\ndf \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(interim_xp_continuous_mean_spectrum_schema).csv(\u0027file:////user/nch/XP_CONTINUOUS_RAW.csv\u0027)\n\ndf.show()\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:35:52.336",
+      "dateUpdated": "2021-11-22 16:41:38.600",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -96,8 +96,8 @@
       "jobName": "paragraph_1637324732802_628278780",
       "id": "20211119-122532_1810293669",
       "dateCreated": "2021-11-19 12:25:32.803",
-      "dateStarted": "2021-11-22 15:33:38.186",
-      "dateFinished": "2021-11-22 15:33:38.621",
+      "dateStarted": "2021-11-22 16:41:22.827",
+      "dateFinished": "2021-11-22 16:41:23.152",
       "status": "FINISHED",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
@@ -140,7 +140,7 @@
       "title": "Original string data",
       "text": "%pyspark\n\ndf.select(\u0027bp_coefficients\u0027).show(10, False)",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:33:38.997",
+      "dateUpdated": "2021-11-22 16:40:45.119",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -164,8 +164,8 @@
       "jobName": "paragraph_1637330433985_969864653",
       "id": "20211119-140033_365043102",
       "dateCreated": "2021-11-19 14:00:33.985",
-      "dateStarted": "2021-11-22 15:33:39.008",
-      "dateFinished": "2021-11-22 15:33:39.329",
+      "dateStarted": "2021-11-22 16:40:45.141",
+      "dateFinished": "2021-11-22 16:40:45.591",
       "status": "FINISHED",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
@@ -174,7 +174,7 @@
       "title": "Cast array data sanity check",
       "text": "%pyspark\n\nfd.select(\u0027array_data\u0027).show(10, False)",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:33:39.408",
+      "dateUpdated": "2021-11-22 16:41:06.576",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -360,7 +360,7 @@
       "title": "Example plots of sampled spectra",
       "text": "%pyspark\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nn \u003d 10\n\nsample \u003d dfs.select(\"source_id\", \"flux\", \"flux_error\").toPandas()\nf, axes \u003d plt.subplots(n, 1, sharex\u003dTrue, figsize\u003d(8, 2*n))\n\nfor i in range(n):\n    flux \u003d np.array(sample.loc[i, \"flux\"])\n    error \u003d np.array(sample.loc[i, \"flux_error\"])\n    x \u003d np.arange(335.0, 335.0 +2.0*flux.size,2.0)\n    axes[i].plot(x, flux)\n    axes[i].fill_between(x, flux - error, flux + error, color\u003d\u0027gray\u0027, alpha\u003d0.2)\n    axes[i].set_title(\u0027source_id \u0027 + str(sample.loc[i, \"source_id\"]))\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:38:30.314",
+      "dateUpdated": "2021-11-22 15:50:00.649",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -403,9 +403,10 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%pyspark\n",
+      "title": "Similarity function (continuous representation)",
+      "text": "%pyspark\n\n# UDF to find spectra similar to a given template\ndef find_similar_continuous_spectra(data_frame : DataFrame, template : DataFrame):\n    \"\"\"\n    \"\"\"\n    \n    # define a filter clause based on relevant template attributes\n    filter_clause \u003d \u0027bp_n_relevant_bases \u003d %d and rp_n_relevant_bases \u003d %d and \u0027%(TODO)\n    \n    # get a temporary set having the same representation\n    temp_df \u003d data_frame.filter(filter_clause)\n    \n    # get any spectra that have the same basis coefficients within the combined uncertainties TODO\n    return temp_df.\n\n# we want this source as the template\nwant_id \u003d 6030020833890693248\n\n# get the relevant attributes for this\ntemplate_df \u003d df.filter(\u0027source_id \u003d 6030020833890693248\u0027)\n\n# get any that are similar\nsimilar_df \u003d find_similar_continuous_spectra(df, template_df).show()\n\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:33:43.208",
+      "dateUpdated": "2021-11-22 16:54:35.178",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -417,18 +418,45 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "title": true
       },
       "settings": {
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n|          source_id|        solution_id|bp_basis_function_id|bp_degrees_of_freedom|bp_n_parameters|bp_n_measurements|bp_n_rejected_measurements|bp_standard_deviation|bp_chi_squared|     bp_coefficients|bp_coefficient_errors|bp_coefficient_correlations|bp_n_relevant_bases|bp_relative_shrinking|rp_basis_function_id|rp_degrees_of_freedom|rp_n_parameters|rp_n_measurements|rp_n_rejected_measurements|rp_standard_deviation|rp_chi_squared|     rp_coefficients|rp_coefficient_errors|rp_coefficient_correlations|rp_n_relevant_bases|rp_relative_shrinking|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n|6030020833890693248|4545469030156206081|                  56|                 2146|             55|             2201|                        14|            1.0583289|      2403.649|(850.769352327487...| (1.1296523, 0.969...|       (0.4637005, 0.042...|                 53|           0.99999994|                  57|                 2434|             55|             2489|                        20|            1.0511642|      2689.439|(3475.74320956029...| (1.7000587, 1.518...|       (0.083734974, 0.1...|                 14|           0.99999577|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1637594438504_-508203556",
       "id": "20211122-152038_223972611",
       "dateCreated": "2021-11-22 15:20:38.504",
+      "dateStarted": "2021-11-22 16:43:39.384",
+      "dateFinished": "2021-11-22 16:43:39.710",
       "status": "FINISHED",
-      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n",
+      "user": "nch",
+      "dateUpdated": "2021-11-22 16:43:39.370",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1637599419369_-607852594",
+      "id": "20211122-164339_1088469008",
+      "dateCreated": "2021-11-22 16:43:39.370",
+      "status": "READY",
       "progressUpdateIntervalMs": 500
     }
   ],
