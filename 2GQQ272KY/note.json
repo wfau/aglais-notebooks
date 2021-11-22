@@ -4,7 +4,7 @@
       "title": "Tests of ingest of array data from csv to parquet: data structure definitions",
       "text": "%pyspark\n\n# structure definitions: true, compact internal format, and interim format with arrays expressed as string data\n# (AFAIK this is the only way of ingesting from csv - not aware of any other way of doing this)\n\nfrom pyspark.sql.types import *\n\nxp_continuous_mean_spectrum_schema \u003d StructType([\n    StructField(\u0027source_id\u0027, LongType(), False), # Unique source identifier (unique within a particular Data Release)\n    StructField(\u0027solution_id\u0027, LongType(), True), # Solution Identifier\n    StructField(\u0027bp_basis_function_id\u0027, ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField(\u0027bp_degrees_of_freedom\u0027, ShortType(), True), # Degrees of freedom for the BP spectrum representation\n    StructField(\u0027bp_n_parameters\u0027, ByteType(), True), # Number of parameters for the BP spectrum representation\n    StructField(\u0027bp_n_measurements\u0027, ShortType(), True), # Number of measurements used for the BP spectrum generation\n    StructField(\u0027bp_n_rejected_measurements\u0027, ShortType(), True), # Number of rejected measurements in the BP spectrum generation\n    StructField(\u0027bp_standard_deviation\u0027, FloatType(), True), # Standard deviation for the BP spectrum representation\n    StructField(\u0027bp_chi_squared\u0027, FloatType(), True), # Chi squared for the BP spectrum representation\n    StructField(\u0027bp_coefficients\u0027, ArrayType(DoubleType()), True), # Basis function coefficients for the BP spectrum representation\n    StructField(\u0027bp_coefficient_errors\u0027, ArrayType(FloatType()), True), # Basis function coefficient errors for the BP spectrum representation\n    StructField(\u0027bp_coefficient_correlations\u0027, ArrayType(FloatType()), True), # Correlation matrix for BP coefficients\n    StructField(\u0027bp_n_relevant_bases\u0027, ShortType(), True), # Number of bases that are relevant for the representation of this mean BP spectrum\n    StructField(\u0027bp_relative_shrinking\u0027, FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean BP spectrum\n    StructField(\u0027rp_basis_function_id\u0027, ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField(\u0027rp_degrees_of_freedom\u0027, ShortType(), True), # Degrees of freedom for the RP spectrum representation\n    StructField(\u0027rp_n_parameters\u0027, ByteType(), True), # Number of parameters for the RP spectrum representation\n    StructField(\u0027rp_n_measurements\u0027, ShortType(), True), # Number of measurements used for the RP spectrum generation\n    StructField(\u0027rp_n_rejected_measurements\u0027, ShortType(), True), # Number of rejected measurements in the RP spectrum generation\n    StructField(\u0027rp_standard_deviation\u0027, FloatType(), True), # Standard deviation for the RP spectrum representation\n    StructField(\u0027rp_chi_squared\u0027, FloatType(), True), # Chi squared for the RP spectrum representation\n    StructField(\u0027rp_coefficients\u0027, ArrayType(DoubleType()), True), # Basis function coefficients for the RP spectrum representation\n    StructField(\u0027rp_coefficient_errors\u0027, ArrayType(FloatType()), True), # Basis function coefficient errors for the RP spectrum representation\n    StructField(\u0027rp_coefficient_correlations\u0027, ArrayType(FloatType()), True), # Correlation matrix for RP coefficients\n    StructField(\u0027rp_n_relevant_bases\u0027, ShortType(), True), # Number of bases that are relevant for the representation of this mean RP spectrum\n    StructField(\u0027rp_relative_shrinking\u0027, FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean RP spectrum\n])\n\ninterim_xp_continuous_mean_spectrum_schema \u003d StructType([\n    StructField(\u0027source_id\u0027, LongType(), False), # Unique source identifier (unique within a particular Data Release)\n    StructField(\u0027solution_id\u0027, LongType(), True), # Solution Identifier\n    StructField(\u0027bp_basis_function_id\u0027, ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField(\u0027bp_degrees_of_freedom\u0027, ShortType(), True), # Degrees of freedom for the BP spectrum representation\n    StructField(\u0027bp_n_parameters\u0027, ByteType(), True), # Number of parameters for the BP spectrum representation\n    StructField(\u0027bp_n_measurements\u0027, ShortType(), True), # Number of measurements used for the BP spectrum generation\n    StructField(\u0027bp_n_rejected_measurements\u0027, ShortType(), True), # Number of rejected measurements in the BP spectrum generation\n    StructField(\u0027bp_standard_deviation\u0027, FloatType(), True), # Standard deviation for the BP spectrum representation\n    StructField(\u0027bp_chi_squared\u0027, FloatType(), True), # Chi squared for the BP spectrum representation\n    StructField(\u0027bp_coefficients\u0027, StringType(), True), # Basis function coefficients for the BP spectrum representation\n    StructField(\u0027bp_coefficient_errors\u0027, StringType(), True), # Basis function coefficient errors for the BP spectrum representation\n    StructField(\u0027bp_coefficient_correlations\u0027, StringType(), True), # Correlation matrix for BP coefficients\n    StructField(\u0027bp_n_relevant_bases\u0027, ShortType(), True), # Number of bases that are relevant for the representation of this mean BP spectrum\n    StructField(\u0027bp_relative_shrinking\u0027, FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean BP spectrum\n    StructField(\u0027rp_basis_function_id\u0027, ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField(\u0027rp_degrees_of_freedom\u0027, ShortType(), True), # Degrees of freedom for the RP spectrum representation\n    StructField(\u0027rp_n_parameters\u0027, ByteType(), True), # Number of parameters for the RP spectrum representation\n    StructField(\u0027rp_n_measurements\u0027, ShortType(), True), # Number of measurements used for the RP spectrum generation\n    StructField(\u0027rp_n_rejected_measurements\u0027, ShortType(), True), # Number of rejected measurements in the RP spectrum generation\n    StructField(\u0027rp_standard_deviation\u0027, FloatType(), True), # Standard deviation for the RP spectrum representation\n    StructField(\u0027rp_chi_squared\u0027, FloatType(), True), # Chi squared for the RP spectrum representation\n    StructField(\u0027rp_coefficients\u0027, StringType(), True), # Basis function coefficients for the RP spectrum representation\n    StructField(\u0027rp_coefficient_errors\u0027, StringType(), True), # Basis function coefficient errors for the RP spectrum representation\n    StructField(\u0027rp_coefficient_correlations\u0027, StringType(), True), # Correlation matrix for RP coefficients\n    StructField(\u0027rp_n_relevant_bases\u0027, ShortType(), True), # Number of bases that are relevant for the representation of this mean RP spectrum\n    StructField(\u0027rp_relative_shrinking\u0027, FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean RP spectrum\n])\n\nxp_sampled_mean_spectrum_schema \u003d StructType([\n    StructField(\u0027source_id\u0027, LongType(), False), # Unique source identifier (unique within a particular Data Release)\n    StructField(\u0027solution_id\u0027, LongType(), True), # Solution Identifier\n    StructField(\u0027ra\u0027, DoubleType(), True), # Right Ascension\n    StructField(\u0027dec\u0027, DoubleType(), True), # Declination\n    StructField(\u0027flux\u0027, ArrayType(FloatType()), True), # mean BP + RP combined spectrum flux\n    StructField(\u0027flux_error\u0027, ArrayType(FloatType()), True), # mean BP + RP combined spectrum flux error\n])\n\ninterim_xp_sampled_mean_spectrum_schema \u003d StructType([\n    StructField(\u0027source_id\u0027, LongType(), False), # Unique source identifier (unique within a particular Data Release)\n    StructField(\u0027solution_id\u0027, LongType(), True), # Solution Identifier\n    StructField(\u0027ra\u0027, DoubleType(), True), # Right Ascension\n    StructField(\u0027dec\u0027, DoubleType(), True), # Declination\n    StructField(\u0027flux\u0027, StringType(), True), # mean BP + RP combined spectrum flux\n    StructField(\u0027flux_error\u0027, StringType(), True), # mean BP + RP combined spectrum flux error\n])\n\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:17:32.095",
+      "dateUpdated": "2021-11-22 15:41:22.365",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -24,24 +24,21 @@
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
       "apps": [],
       "jobName": "paragraph_1637319816603_695651966",
       "id": "20211119-110336_1205750852",
       "dateCreated": "2021-11-19 11:03:36.603",
-      "dateStarted": "2021-11-22 15:14:07.244",
-      "dateFinished": "2021-11-22 15:14:07.528",
+      "dateStarted": "2021-11-22 15:33:37.553",
+      "dateFinished": "2021-11-22 15:33:37.701",
       "status": "FINISHED",
+      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Reformatting function definition(s)",
       "text": "%pyspark\n\nfrom pyspark.sql import functions as f\nfrom pyspark.sql import *\n\ndef cast_to_array(data_frame : DataFrame, column_name : str, data_type : DataType):\n    \"\"\"\n    Casts the specified string column in the given data frame into an\n    array with the specified data type. Assumes the string column contains\n    comma-separated values in plain text delimited by braces (which are\n    ignored). The array column is appended to the existing column set while \n    the original string column is removed. The resulting data frame will\n    contain an array column with the same name as the original string\n    data column.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    column_name : str\n        The column name that contains the array data as a plain text string of \n        comma-separated values\n    data_type : DataType()\n        The PySpark data structure data type which should be ArrayType(SomeType())\n        \n    Returns:\n    --------\n    a new data frame containing the requested modification\n    \"\"\"\n    \n    # a temporary working column name for the array\n    temporary_column_name \u003d column_name + \u0027_array_data\u0027\n    \n    # reformat the string csv data as an array of the specified type\n    data_frame \u003d data_frame.withColumn(temporary_column_name, f.split(f.col(column_name).substr(f.lit(2), f.length(f.col(column_name)) - 2), \u0027,\u0027).cast(data_type))\n    \n    # drop the original string column to save space\n    data_frame \u003d data_frame.drop(column_name)\n    \n    # rename the temporary column with the original column name\n    data_frame \u003d data_frame.withColumnRenamed(temporary_column_name, column_name)\n    \n    return data_frame\n    \n    \ndef reorder_columns(data_frame : DataFrame, data_structure : StructType):\n    \"\"\"\n    Reorder the columns according to the Gaia archive public schema and so that\n    the parquet files can be re-attached against that standard schema.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    data_structure : StructType()\n        The PySpark data structure containing the required schema definition\n    \"\"\"\n    \n    # use the schema to define the column order\n    ordered_columns \u003d [field.name for field in data_structure]\n    \n    # give it back in the schema-driven order\n    return data_frame.select(ordered_columns)\n    \n\ndef cast_all_arrays(data_frame : DataFrame, data_structure : StructType):\n    \"\"\"\n    Given an interim data frame read from csv and containing arrays in\n    plain text string representation, cycles over the schema transforming\n    all strings associated with arrays into the required primitive type.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    data_structure : StructType()\n        The PySpark data structure containing the required schema definition\n    \"\"\"\n    \n    # cycle over the defined fields looking for arrays\n    for field in data_structure:\n        \n        # if it\u0027s an array type then transmogrify:\n        if type(field.dataType) \u003d\u003d ArrayType: \n            data_frame \u003d cast_to_array(data_frame, field.name, field.dataType)\n    \n    # finally reorder according to the original specification\n    return reorder_columns(data_frame, data_structure)\n    \n    ",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:01:13.669",
+      "dateUpdated": "2021-11-22 15:37:26.929",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -61,24 +58,21 @@
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
       "apps": [],
       "jobName": "paragraph_1637322789521_1794720344",
       "id": "20211119-115309_444867408",
       "dateCreated": "2021-11-19 11:53:09.521",
-      "dateStarted": "2021-11-22 14:01:31.630",
-      "dateFinished": "2021-11-22 14:01:31.894",
+      "dateStarted": "2021-11-22 15:33:37.774",
+      "dateFinished": "2021-11-22 15:33:38.089",
       "status": "FINISHED",
+      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Ingest some test data",
       "text": "%pyspark\n\ndf \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(interim_xp_continuous_mean_spectrum_schema).csv(\u0027file:////user/nch/XP_CONTINUOUS_RAW.csv\u0027)\n\ndf.show()\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:10:10.530",
+      "dateUpdated": "2021-11-22 15:35:52.336",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -92,35 +86,27 @@
         },
         "editorMode": "ace/mode/python",
         "title": true,
-        "editorHide": false
+        "editorHide": true
       },
       "settings": {
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n|          source_id|        solution_id|bp_basis_function_id|bp_degrees_of_freedom|bp_n_parameters|bp_n_measurements|bp_n_rejected_measurements|bp_standard_deviation|bp_chi_squared|     bp_coefficients|bp_coefficient_errors|bp_coefficient_correlations|bp_n_relevant_bases|bp_relative_shrinking|rp_basis_function_id|rp_degrees_of_freedom|rp_n_parameters|rp_n_measurements|rp_n_rejected_measurements|rp_standard_deviation|rp_chi_squared|     rp_coefficients|rp_coefficient_errors|rp_coefficient_correlations|rp_n_relevant_bases|rp_relative_shrinking|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n|6030020833890693248|4545469030156206081|                  56|                 2146|             55|             2201|                        14|            1.0583289|      2403.649|(850.769352327487...| (1.1296523, 0.969...|       (0.4637005, 0.042...|                 53|           0.99999994|                  57|                 2434|             55|             2489|                        20|            1.0511642|      2689.439|(3475.74320956029...| (1.7000587, 1.518...|       (0.083734974, 0.1...|                 14|           0.99999577|\n|6030020838301512192|4545469030156206081|                  56|                 1904|             55|             1959|                        16|              1.03183|     2027.1373|(1976.35960326726...| (1.7924176, 1.477...|       (0.42829382, -0.0...|                  6|            0.9999947|                  57|                 2365|             55|             2420|                        23|            1.0589762|     2652.1833|(4611.57412765266...| (1.824685, 1.6294...|       (0.13184875, 0.19...|                 50|                  1.0|\n|6030020868250061312|4545469030156206081|                  56|                 1959|             55|             2014|                        24|            1.0442481|     2136.1995|(1290.21030299786...| (1.3093321, 1.155...|       (0.18031654, -0.0...|                 11|             0.999991|                  57|                 2259|             55|             2314|                        11|            1.0490594|     2486.0876|(1459.93353109699...| (1.1455681, 1.093...|       (0.015920334, 0.0...|                 25|            0.9999935|\n|6030108077645263232|4545469030156206081|                  56|                 3450|             55|             3505|                        39|            1.0307266|       3665.27|(892.028285492520...| (0.8879109, 0.723...|       (0.42090708, -0.0...|                 10|            0.9999929|                  57|                 3879|             55|             3934|                        25|            1.0296093|       4112.11|(2418.94195325853...| (1.0126915, 0.880...|       (0.15913828, 0.23...|                 12|            0.9999977|\n|6030020872661249152|4545469030156206081|                  56|                 2038|             55|             2093|                         6|             1.042565|     2215.1873|(3125.99812906493...| (2.3077424, 1.951...|       (0.35940862, -0.0...|                 26|            0.9999992|                  57|                 2375|             55|             2430|                        21|            1.0444568|      2590.864|(6820.87075359326...| (2.226311, 1.9936...|       (0.121767856, 0.1...|                 20|           0.99999934|\n|6030108141985317760|4545469030156206081|                  56|                 3611|             55|             3666|                        62|            1.0227207|     3776.9526|(1699.84194310860...| (1.3490654, 1.123...|       (0.49060243, -0.0...|                 22|           0.99999905|                  57|                 3624|             55|             3679|                        45|            1.0614879|     4083.3657|(5120.75303837552...| (1.5528071, 1.369...|       (0.15045689, 0.21...|                 13|           0.99999875|\n|6030020936969572096|4545469030156206081|                  56|                 1980|             55|             2035|                         9|            1.0500401|     2183.1167|(2057.13544554305...| (1.8373564, 1.526...|       (0.3251621, -0.10...|                 17|           0.99999774|                  57|                 2378|             55|             2433|                        12|             1.055152|     2647.5364|(3914.46089425611...| (1.6560131, 1.495...|       (0.062493138, 0.1...|                  7|           0.99999744|\n|6030108146364749568|4545469030156206081|                  56|                 3644|             55|             3699|                        86|            1.0242693|     3823.0212|(1836.32222970779...| (1.346063, 1.0901...|       (0.35691574, -0.1...|                 17|            0.9999982|                  57|                 4050|             55|             4105|                        35|            1.0227664|      4236.507|(2920.18978423807...| (1.0702223, 0.971...|       (0.07750569, 0.17...|                 11|           0.99999845|\n|6030020975740465920|4545469030156206081|                  56|                 1937|             55|             1992|                        47|            1.0465312|     2121.4558|(2051.55246619061...| (2.043284, 1.6635...|       (0.4422872, -0.05...|                  7|           0.99999285|                  57|                 2503|             55|             2558|                        68|            1.0413345|      2714.197|(5553.49785574567...| (1.9622343, 1.825...|       (0.16479991, 0.11...|                 10|           0.99999803|\n|6030020975740468864|4545469030156206081|                  56|                 2139|             55|             2194|                        11|            1.0684712|      2441.948|(1913.15021606374...| (1.9137821, 1.561...|       (0.44980755, -0.0...|                 17|            0.9999983|                  57|                 2601|             55|             2656|                        19|            1.0807636|     3038.0977|(5313.85694808551...| (1.9438034, 1.745...|       (0.15658168, 0.17...|                 10|            0.9999984|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n\n"
-          }
-        ]
-      },
       "apps": [],
       "jobName": "paragraph_1637324732802_628278780",
       "id": "20211119-122532_1810293669",
       "dateCreated": "2021-11-19 12:25:32.803",
-      "dateStarted": "2021-11-22 13:50:00.037",
-      "dateFinished": "2021-11-22 13:50:00.498",
+      "dateStarted": "2021-11-22 15:33:38.186",
+      "dateFinished": "2021-11-22 15:33:38.621",
       "status": "FINISHED",
+      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "How to cast a single column to ArrayType(DataType())",
       "text": "%pyspark\n\n# testdf.withColumn(\u0027activity\u0027,f.split(f.col(\u0027activity\u0027).substr(f.lit(2),f.length(f.col(\u0027activity\u0027))-2),\u0027,\u0027).cast(t.ArrayType(t.DoubleType()))).show(2, False)\n\nfrom pyspark.sql import functions as f\n\nfd \u003d df.withColumn(\u0027array_data\u0027, f.split(f.col(\u0027bp_coefficients\u0027).substr(f.lit(2), f.length(f.col(\u0027bp_coefficients\u0027))-2), \u0027,\u0027).cast(ArrayType(DoubleType())))\n\nfd.show()\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 13:49:29.220",
+      "dateUpdated": "2021-11-22 15:33:38.687",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -144,8 +130,8 @@
       "jobName": "paragraph_1637329832690_-1917541678",
       "id": "20211119-135032_1757305163",
       "dateCreated": "2021-11-19 13:50:32.690",
-      "dateStarted": "2021-11-19 14:06:38.030",
-      "dateFinished": "2021-11-19 14:06:38.466",
+      "dateStarted": "2021-11-22 15:33:38.697",
+      "dateFinished": "2021-11-22 15:33:38.948",
       "status": "FINISHED",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
@@ -154,7 +140,7 @@
       "title": "Original string data",
       "text": "%pyspark\n\ndf.select(\u0027bp_coefficients\u0027).show(10, False)",
       "user": "nch",
-      "dateUpdated": "2021-11-22 13:49:40.860",
+      "dateUpdated": "2021-11-22 15:33:38.997",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -178,8 +164,8 @@
       "jobName": "paragraph_1637330433985_969864653",
       "id": "20211119-140033_365043102",
       "dateCreated": "2021-11-19 14:00:33.985",
-      "dateStarted": "2021-11-19 14:17:40.411",
-      "dateFinished": "2021-11-19 14:17:40.684",
+      "dateStarted": "2021-11-22 15:33:39.008",
+      "dateFinished": "2021-11-22 15:33:39.329",
       "status": "FINISHED",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
@@ -188,7 +174,7 @@
       "title": "Cast array data sanity check",
       "text": "%pyspark\n\nfd.select(\u0027array_data\u0027).show(10, False)",
       "user": "nch",
-      "dateUpdated": "2021-11-22 13:49:49.313",
+      "dateUpdated": "2021-11-22 15:33:39.408",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -212,8 +198,8 @@
       "jobName": "paragraph_1637331142862_1594603826",
       "id": "20211119-141222_871114066",
       "dateCreated": "2021-11-19 14:12:22.863",
-      "dateStarted": "2021-11-19 14:18:03.861",
-      "dateFinished": "2021-11-19 14:18:04.199",
+      "dateStarted": "2021-11-22 15:33:39.420",
+      "dateFinished": "2021-11-22 15:33:39.873",
       "status": "FINISHED",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
@@ -222,7 +208,7 @@
       "title": "Test functions",
       "text": "%pyspark\n\n# test reformat of one array column\n#df \u003d cast_to_array(df, \u0027bp_coefficients\u0027, ArrayType(DoubleType()))\n\ndf \u003d cast_all_arrays(df, xp_continuous_mean_spectrum_schema)\n\ndf.show()\n\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 14:01:37.731",
+      "dateUpdated": "2021-11-22 15:35:55.376",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -235,36 +221,28 @@
           "completionSupport": true
         },
         "editorMode": "ace/mode/python",
-        "editorHide": false,
+        "editorHide": true,
         "title": true
       },
       "settings": {
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n|          source_id|        solution_id|bp_basis_function_id|bp_degrees_of_freedom|bp_n_parameters|bp_n_measurements|bp_n_rejected_measurements|bp_standard_deviation|bp_chi_squared|     bp_coefficients|bp_coefficient_errors|bp_coefficient_correlations|bp_n_relevant_bases|bp_relative_shrinking|rp_basis_function_id|rp_degrees_of_freedom|rp_n_parameters|rp_n_measurements|rp_n_rejected_measurements|rp_standard_deviation|rp_chi_squared|     rp_coefficients|rp_coefficient_errors|rp_coefficient_correlations|rp_n_relevant_bases|rp_relative_shrinking|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n|6030020833890693248|4545469030156206081|                  56|                 2146|             55|             2201|                        14|            1.0583289|      2403.649|[850.769352327487...| [1.1296523, 0.969...|       [0.4637005, 0.042...|                 53|           0.99999994|                  57|                 2434|             55|             2489|                        20|            1.0511642|      2689.439|[3475.74320956029...| [1.7000587, 1.518...|       [0.083734974, 0.1...|                 14|           0.99999577|\n|6030020838301512192|4545469030156206081|                  56|                 1904|             55|             1959|                        16|              1.03183|     2027.1373|[1976.35960326726...| [1.7924176, 1.477...|       [0.42829382, -0.0...|                  6|            0.9999947|                  57|                 2365|             55|             2420|                        23|            1.0589762|     2652.1833|[4611.57412765266...| [1.824685, 1.6294...|       [0.13184875, 0.19...|                 50|                  1.0|\n|6030020868250061312|4545469030156206081|                  56|                 1959|             55|             2014|                        24|            1.0442481|     2136.1995|[1290.21030299786...| [1.3093321, 1.155...|       [0.18031654, -0.0...|                 11|             0.999991|                  57|                 2259|             55|             2314|                        11|            1.0490594|     2486.0876|[1459.93353109699...| [1.1455681, 1.093...|       [0.015920334, 0.0...|                 25|            0.9999935|\n|6030108077645263232|4545469030156206081|                  56|                 3450|             55|             3505|                        39|            1.0307266|       3665.27|[892.028285492520...| [0.8879109, 0.723...|       [0.42090708, -0.0...|                 10|            0.9999929|                  57|                 3879|             55|             3934|                        25|            1.0296093|       4112.11|[2418.94195325853...| [1.0126915, 0.880...|       [0.15913828, 0.23...|                 12|            0.9999977|\n|6030020872661249152|4545469030156206081|                  56|                 2038|             55|             2093|                         6|             1.042565|     2215.1873|[3125.99812906493...| [2.3077424, 1.951...|       [0.35940862, -0.0...|                 26|            0.9999992|                  57|                 2375|             55|             2430|                        21|            1.0444568|      2590.864|[6820.87075359326...| [2.226311, 1.9936...|       [0.121767856, 0.1...|                 20|           0.99999934|\n|6030108141985317760|4545469030156206081|                  56|                 3611|             55|             3666|                        62|            1.0227207|     3776.9526|[1699.84194310860...| [1.3490654, 1.123...|       [0.49060243, -0.0...|                 22|           0.99999905|                  57|                 3624|             55|             3679|                        45|            1.0614879|     4083.3657|[5120.75303837552...| [1.5528071, 1.369...|       [0.15045689, 0.21...|                 13|           0.99999875|\n|6030020936969572096|4545469030156206081|                  56|                 1980|             55|             2035|                         9|            1.0500401|     2183.1167|[2057.13544554305...| [1.8373564, 1.526...|       [0.3251621, -0.10...|                 17|           0.99999774|                  57|                 2378|             55|             2433|                        12|             1.055152|     2647.5364|[3914.46089425611...| [1.6560131, 1.495...|       [0.062493138, 0.1...|                  7|           0.99999744|\n|6030108146364749568|4545469030156206081|                  56|                 3644|             55|             3699|                        86|            1.0242693|     3823.0212|[1836.32222970779...| [1.346063, 1.0901...|       [0.35691574, -0.1...|                 17|            0.9999982|                  57|                 4050|             55|             4105|                        35|            1.0227664|      4236.507|[2920.18978423807...| [1.0702223, 0.971...|       [0.07750569, 0.17...|                 11|           0.99999845|\n|6030020975740465920|4545469030156206081|                  56|                 1937|             55|             1992|                        47|            1.0465312|     2121.4558|[2051.55246619061...| [2.043284, 1.6635...|       [0.4422872, -0.05...|                  7|           0.99999285|                  57|                 2503|             55|             2558|                        68|            1.0413345|      2714.197|[5553.49785574567...| [1.9622343, 1.825...|       [0.16479991, 0.11...|                 10|           0.99999803|\n|6030020975740468864|4545469030156206081|                  56|                 2139|             55|             2194|                        11|            1.0684712|      2441.948|[1913.15021606374...| [1.9137821, 1.561...|       [0.44980755, -0.0...|                 17|            0.9999983|                  57|                 2601|             55|             2656|                        19|            1.0807636|     3038.0977|[5313.85694808551...| [1.9438034, 1.745...|       [0.15658168, 0.17...|                 10|            0.9999984|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n\n"
-          }
-        ]
-      },
       "apps": [],
       "jobName": "paragraph_1637331177367_1679010452",
       "id": "20211119-141257_1913706627",
       "dateCreated": "2021-11-19 14:12:57.367",
-      "dateStarted": "2021-11-22 14:01:37.741",
-      "dateFinished": "2021-11-22 14:01:38.503",
+      "dateStarted": "2021-11-22 15:33:39.934",
+      "dateFinished": "2021-11-22 15:33:40.553",
       "status": "FINISHED",
+      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Check on no. of relevant bases in representation",
       "text": "%pyspark\n\ndf.select(\"bp_n_relevant_bases\", \"rp_n_relevant_bases\").show()\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:11:10.908",
+      "dateUpdated": "2021-11-22 15:37:43.425",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -279,73 +257,6 @@
         "editorMode": "ace/mode/python",
         "title": true,
         "editorHide": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "apps": [],
-      "jobName": "paragraph_1637338160882_-1163181556",
-      "id": "20211119-160920_335367253",
-      "dateCreated": "2021-11-19 16:09:20.882",
-      "dateStarted": "2021-11-22 14:49:20.978",
-      "dateFinished": "2021-11-22 14:49:21.389",
-      "status": "FINISHED",
-      "errorMessage": "",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "title": "Schema check",
-      "text": "%pyspark\n\ndf.printSchema()\n",
-      "user": "nch",
-      "dateUpdated": "2021-11-22 15:11:28.958",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/python",
-        "title": true,
-        "editorHide": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "apps": [],
-      "jobName": "paragraph_1637592560967_162616024",
-      "id": "20211122-144920_1820730068",
-      "dateCreated": "2021-11-22 14:49:20.967",
-      "dateStarted": "2021-11-22 15:00:41.283",
-      "dateFinished": "2021-11-22 15:00:41.438",
-      "status": "FINISHED",
-      "errorMessage": "",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "title": "Ingested sampled spectrum check",
-      "text": "%pyspark\n\n# read in and reformat the data\ndf \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(interim_xp_sampled_mean_spectrum_schema).csv(\u0027file:////user/nch/XP_SAMPLED_RAW.csv\u0027)\ndf \u003d cast_all_arrays(df, xp_sampled_mean_spectrum_schema)\ndf.show()\n\n",
-      "user": "nch",
-      "dateUpdated": "2021-11-22 15:22:20.536",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/python",
-        "title": true
       },
       "settings": {
         "params": {},
@@ -356,24 +267,24 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "+-------------------+-------------------+------------------+-------------------+--------------------+--------------------+\n|          source_id|        solution_id|                ra|                dec|                flux|          flux_error|\n+-------------------+-------------------+------------------+-------------------+--------------------+--------------------+\n|6030020833890693248|4545469030156206081|256.45814992197637|-28.452514787516083|[1.0889408E-17, 4...|[4.304545E-18, 3....|\n|6030020838301512192|4545469030156206081|256.47191317296966|-28.448841222359025|[1.1643161E-17, 3...|[3.5305727E-18, 2...|\n|6030020868250061312|4545469030156206081| 256.4803664471802| -28.43609033156031|[1.9678005E-17, 1...|[3.4442275E-18, 2...|\n|6030108077645263232|4545469030156206081|255.52089898401047|-28.374972736031303|[-1.4788831E-18, ...|[2.6169958E-18, 1...|\n|6030020872661249152|4545469030156206081|256.48344636534773|-28.441737213223597|[1.7946276E-17, 1...|[5.344963E-18, 3....|\n|6030108141985317760|4545469030156206081|255.55374907836546|-28.359745976710734|[6.0126944E-18, 5...|[3.0698606E-18, 2...|\n|6030020936969572096|4545469030156206081|256.46353922927096|-28.427610777426512|[1.448913E-17, 8....|[4.117422E-18, 3....|\n|6030108146364749568|4545469030156206081|255.55798242984343| -28.35397084866027|[1.330313E-17, 7....|[2.8492946E-18, 2...|\n|6030020975740465920|4545469030156206081|256.49260767247574| -28.43329800632626|[9.461836E-18, 5....|[5.9275428E-18, 4...|\n|6030020975740468864|4545469030156206081|256.48791637335205|-28.431981473944134|[2.78523E-18, 3.6...|[4.076407E-18, 2....|\n+-------------------+-------------------+------------------+-------------------+--------------------+--------------------+\n\n"
+            "data": "+-------------------+-------------------+\n|bp_n_relevant_bases|rp_n_relevant_bases|\n+-------------------+-------------------+\n|                 53|                 14|\n|                  6|                 50|\n|                 11|                 25|\n|                 10|                 12|\n|                 26|                 20|\n|                 22|                 13|\n|                 17|                  7|\n|                 17|                 11|\n|                  7|                 10|\n|                 17|                 10|\n+-------------------+-------------------+\n\n"
           }
         ]
       },
       "apps": [],
-      "jobName": "paragraph_1637593241268_384832499",
-      "id": "20211122-150041_968328741",
-      "dateCreated": "2021-11-22 15:00:41.269",
-      "dateStarted": "2021-11-22 15:18:02.798",
-      "dateFinished": "2021-11-22 15:18:03.192",
+      "jobName": "paragraph_1637338160882_-1163181556",
+      "id": "20211119-160920_335367253",
+      "dateCreated": "2021-11-19 16:09:20.882",
+      "dateStarted": "2021-11-22 15:37:43.441",
+      "dateFinished": "2021-11-22 15:37:43.605",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "title": "Example plots of sampled spectra",
-      "text": "%pyspark\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nn \u003d 10\n\nsample \u003d df.select(\"source_id\", \"flux\", \"flux_error\").toPandas()\nf, axes \u003d plt.subplots(n, 1, sharex\u003dTrue, figsize\u003d(8, 2*n))\n\nfor i in range(n):\n    flux \u003d np.array(sample.loc[i, \"flux\"])\n    error \u003d np.array(sample.loc[i, \"flux_error\"])\n    x \u003d np.arange(335.0, 335.0 +2.0*flux.size,2.0)\n    axes[i].plot(x, flux)\n    axes[i].fill_between(x, flux - error, flux + error, color\u003d\u0027gray\u0027, alpha\u003d0.2)\n    axes[i].set_title(\u0027source_id \u0027 + str(sample.loc[i, \"source_id\"]))\n\n#%matplot plt",
+      "title": "Schema check",
+      "text": "%pyspark\n\ndf.printSchema()\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:22:00.020",
+      "dateUpdated": "2021-11-22 15:37:45.985",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -386,7 +297,84 @@
           "completionSupport": true
         },
         "editorMode": "ace/mode/python",
-        "title": true
+        "title": true,
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- source_id: long (nullable \u003d true)\n |-- solution_id: long (nullable \u003d true)\n |-- bp_basis_function_id: short (nullable \u003d true)\n |-- bp_degrees_of_freedom: short (nullable \u003d true)\n |-- bp_n_parameters: byte (nullable \u003d true)\n |-- bp_n_measurements: short (nullable \u003d true)\n |-- bp_n_rejected_measurements: short (nullable \u003d true)\n |-- bp_standard_deviation: float (nullable \u003d true)\n |-- bp_chi_squared: float (nullable \u003d true)\n |-- bp_coefficients: array (nullable \u003d true)\n |    |-- element: double (containsNull \u003d true)\n |-- bp_coefficient_errors: array (nullable \u003d true)\n |    |-- element: float (containsNull \u003d true)\n |-- bp_coefficient_correlations: array (nullable \u003d true)\n |    |-- element: float (containsNull \u003d true)\n |-- bp_n_relevant_bases: short (nullable \u003d true)\n |-- bp_relative_shrinking: float (nullable \u003d true)\n |-- rp_basis_function_id: short (nullable \u003d true)\n |-- rp_degrees_of_freedom: short (nullable \u003d true)\n |-- rp_n_parameters: byte (nullable \u003d true)\n |-- rp_n_measurements: short (nullable \u003d true)\n |-- rp_n_rejected_measurements: short (nullable \u003d true)\n |-- rp_standard_deviation: float (nullable \u003d true)\n |-- rp_chi_squared: float (nullable \u003d true)\n |-- rp_coefficients: array (nullable \u003d true)\n |    |-- element: double (containsNull \u003d true)\n |-- rp_coefficient_errors: array (nullable \u003d true)\n |    |-- element: float (containsNull \u003d true)\n |-- rp_coefficient_correlations: array (nullable \u003d true)\n |    |-- element: float (containsNull \u003d true)\n |-- rp_n_relevant_bases: short (nullable \u003d true)\n |-- rp_relative_shrinking: float (nullable \u003d true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1637592560967_162616024",
+      "id": "20211122-144920_1820730068",
+      "dateCreated": "2021-11-22 14:49:20.967",
+      "dateStarted": "2021-11-22 15:37:46.000",
+      "dateFinished": "2021-11-22 15:37:46.383",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Ingested sampled spectrum check",
+      "text": "%pyspark\n\n# read in and reformat the data\ndfs \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(interim_xp_sampled_mean_spectrum_schema).csv(\u0027file:////user/nch/XP_SAMPLED_RAW.csv\u0027)\ndfs \u003d cast_all_arrays(dfs, xp_sampled_mean_spectrum_schema)\ndfs.show()\n\n",
+      "user": "nch",
+      "dateUpdated": "2021-11-22 15:38:08.251",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "title": true,
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1637593241268_384832499",
+      "id": "20211122-150041_968328741",
+      "dateCreated": "2021-11-22 15:00:41.269",
+      "dateStarted": "2021-11-22 15:33:41.171",
+      "dateFinished": "2021-11-22 15:33:41.739",
+      "status": "FINISHED",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Example plots of sampled spectra",
+      "text": "%pyspark\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nn \u003d 10\n\nsample \u003d dfs.select(\"source_id\", \"flux\", \"flux_error\").toPandas()\nf, axes \u003d plt.subplots(n, 1, sharex\u003dTrue, figsize\u003d(8, 2*n))\n\nfor i in range(n):\n    flux \u003d np.array(sample.loc[i, \"flux\"])\n    error \u003d np.array(sample.loc[i, \"flux_error\"])\n    x \u003d np.arange(335.0, 335.0 +2.0*flux.size,2.0)\n    axes[i].plot(x, flux)\n    axes[i].fill_between(x, flux - error, flux + error, color\u003d\u0027gray\u0027, alpha\u003d0.2)\n    axes[i].set_title(\u0027source_id \u0027 + str(sample.loc[i, \"source_id\"]))\n",
+      "user": "nch",
+      "dateUpdated": "2021-11-22 15:38:30.314",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "title": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -409,16 +397,28 @@
       "jobName": "paragraph_1637594282783_1940315919",
       "id": "20211122-151802_1597974986",
       "dateCreated": "2021-11-22 15:18:02.783",
-      "dateStarted": "2021-11-22 15:21:14.060",
-      "dateFinished": "2021-11-22 15:21:15.207",
+      "dateStarted": "2021-11-22 15:36:04.936",
+      "dateFinished": "2021-11-22 15:36:06.163",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%pyspark\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:20:38.505",
-      "config": {},
+      "dateUpdated": "2021-11-22 15:33:43.208",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
       "settings": {
         "params": {},
         "forms": {}
@@ -427,7 +427,8 @@
       "jobName": "paragraph_1637594438504_-508203556",
       "id": "20211122-152038_223972611",
       "dateCreated": "2021-11-22 15:20:38.504",
-      "status": "READY",
+      "status": "FINISHED",
+      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     }
   ],
