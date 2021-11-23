@@ -4,7 +4,7 @@
       "title": "Tests of ingest of array data from csv to parquet: data structure definitions",
       "text": "%pyspark\n\n# structure definitions: true, compact internal format, and interim format with arrays expressed as string data\n# (AFAIK this is the only way of ingesting from csv - not aware of any other way of doing this)\n\nfrom pyspark.sql.types import *\n\nxp_continuous_mean_spectrum_schema \u003d StructType([\n    StructField(\u0027source_id\u0027, LongType(), False), # Unique source identifier (unique within a particular Data Release)\n    StructField(\u0027solution_id\u0027, LongType(), True), # Solution Identifier\n    StructField(\u0027bp_basis_function_id\u0027, ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField(\u0027bp_degrees_of_freedom\u0027, ShortType(), True), # Degrees of freedom for the BP spectrum representation\n    StructField(\u0027bp_n_parameters\u0027, ByteType(), True), # Number of parameters for the BP spectrum representation\n    StructField(\u0027bp_n_measurements\u0027, ShortType(), True), # Number of measurements used for the BP spectrum generation\n    StructField(\u0027bp_n_rejected_measurements\u0027, ShortType(), True), # Number of rejected measurements in the BP spectrum generation\n    StructField(\u0027bp_standard_deviation\u0027, FloatType(), True), # Standard deviation for the BP spectrum representation\n    StructField(\u0027bp_chi_squared\u0027, FloatType(), True), # Chi squared for the BP spectrum representation\n    StructField(\u0027bp_coefficients\u0027, ArrayType(DoubleType()), True), # Basis function coefficients for the BP spectrum representation\n    StructField(\u0027bp_coefficient_errors\u0027, ArrayType(FloatType()), True), # Basis function coefficient errors for the BP spectrum representation\n    StructField(\u0027bp_coefficient_correlations\u0027, ArrayType(FloatType()), True), # Correlation matrix for BP coefficients\n    StructField(\u0027bp_n_relevant_bases\u0027, ShortType(), True), # Number of bases that are relevant for the representation of this mean BP spectrum\n    StructField(\u0027bp_relative_shrinking\u0027, FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean BP spectrum\n    StructField(\u0027rp_basis_function_id\u0027, ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField(\u0027rp_degrees_of_freedom\u0027, ShortType(), True), # Degrees of freedom for the RP spectrum representation\n    StructField(\u0027rp_n_parameters\u0027, ByteType(), True), # Number of parameters for the RP spectrum representation\n    StructField(\u0027rp_n_measurements\u0027, ShortType(), True), # Number of measurements used for the RP spectrum generation\n    StructField(\u0027rp_n_rejected_measurements\u0027, ShortType(), True), # Number of rejected measurements in the RP spectrum generation\n    StructField(\u0027rp_standard_deviation\u0027, FloatType(), True), # Standard deviation for the RP spectrum representation\n    StructField(\u0027rp_chi_squared\u0027, FloatType(), True), # Chi squared for the RP spectrum representation\n    StructField(\u0027rp_coefficients\u0027, ArrayType(DoubleType()), True), # Basis function coefficients for the RP spectrum representation\n    StructField(\u0027rp_coefficient_errors\u0027, ArrayType(FloatType()), True), # Basis function coefficient errors for the RP spectrum representation\n    StructField(\u0027rp_coefficient_correlations\u0027, ArrayType(FloatType()), True), # Correlation matrix for RP coefficients\n    StructField(\u0027rp_n_relevant_bases\u0027, ShortType(), True), # Number of bases that are relevant for the representation of this mean RP spectrum\n    StructField(\u0027rp_relative_shrinking\u0027, FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean RP spectrum\n])\n\ninterim_xp_continuous_mean_spectrum_schema \u003d StructType([\n    StructField(\u0027source_id\u0027, LongType(), False), # Unique source identifier (unique within a particular Data Release)\n    StructField(\u0027solution_id\u0027, LongType(), True), # Solution Identifier\n    StructField(\u0027bp_basis_function_id\u0027, ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField(\u0027bp_degrees_of_freedom\u0027, ShortType(), True), # Degrees of freedom for the BP spectrum representation\n    StructField(\u0027bp_n_parameters\u0027, ByteType(), True), # Number of parameters for the BP spectrum representation\n    StructField(\u0027bp_n_measurements\u0027, ShortType(), True), # Number of measurements used for the BP spectrum generation\n    StructField(\u0027bp_n_rejected_measurements\u0027, ShortType(), True), # Number of rejected measurements in the BP spectrum generation\n    StructField(\u0027bp_standard_deviation\u0027, FloatType(), True), # Standard deviation for the BP spectrum representation\n    StructField(\u0027bp_chi_squared\u0027, FloatType(), True), # Chi squared for the BP spectrum representation\n    StructField(\u0027bp_coefficients\u0027, StringType(), True), # Basis function coefficients for the BP spectrum representation\n    StructField(\u0027bp_coefficient_errors\u0027, StringType(), True), # Basis function coefficient errors for the BP spectrum representation\n    StructField(\u0027bp_coefficient_correlations\u0027, StringType(), True), # Correlation matrix for BP coefficients\n    StructField(\u0027bp_n_relevant_bases\u0027, ShortType(), True), # Number of bases that are relevant for the representation of this mean BP spectrum\n    StructField(\u0027bp_relative_shrinking\u0027, FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean BP spectrum\n    StructField(\u0027rp_basis_function_id\u0027, ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField(\u0027rp_degrees_of_freedom\u0027, ShortType(), True), # Degrees of freedom for the RP spectrum representation\n    StructField(\u0027rp_n_parameters\u0027, ByteType(), True), # Number of parameters for the RP spectrum representation\n    StructField(\u0027rp_n_measurements\u0027, ShortType(), True), # Number of measurements used for the RP spectrum generation\n    StructField(\u0027rp_n_rejected_measurements\u0027, ShortType(), True), # Number of rejected measurements in the RP spectrum generation\n    StructField(\u0027rp_standard_deviation\u0027, FloatType(), True), # Standard deviation for the RP spectrum representation\n    StructField(\u0027rp_chi_squared\u0027, FloatType(), True), # Chi squared for the RP spectrum representation\n    StructField(\u0027rp_coefficients\u0027, StringType(), True), # Basis function coefficients for the RP spectrum representation\n    StructField(\u0027rp_coefficient_errors\u0027, StringType(), True), # Basis function coefficient errors for the RP spectrum representation\n    StructField(\u0027rp_coefficient_correlations\u0027, StringType(), True), # Correlation matrix for RP coefficients\n    StructField(\u0027rp_n_relevant_bases\u0027, ShortType(), True), # Number of bases that are relevant for the representation of this mean RP spectrum\n    StructField(\u0027rp_relative_shrinking\u0027, FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean RP spectrum\n])\n\nxp_sampled_mean_spectrum_schema \u003d StructType([\n    StructField(\u0027source_id\u0027, LongType(), False), # Unique source identifier (unique within a particular Data Release)\n    StructField(\u0027solution_id\u0027, LongType(), True), # Solution Identifier\n    StructField(\u0027ra\u0027, DoubleType(), True), # Right Ascension\n    StructField(\u0027dec\u0027, DoubleType(), True), # Declination\n    StructField(\u0027flux\u0027, ArrayType(FloatType()), True), # mean BP + RP combined spectrum flux\n    StructField(\u0027flux_error\u0027, ArrayType(FloatType()), True), # mean BP + RP combined spectrum flux error\n])\n\ninterim_xp_sampled_mean_spectrum_schema \u003d StructType([\n    StructField(\u0027source_id\u0027, LongType(), False), # Unique source identifier (unique within a particular Data Release)\n    StructField(\u0027solution_id\u0027, LongType(), True), # Solution Identifier\n    StructField(\u0027ra\u0027, DoubleType(), True), # Right Ascension\n    StructField(\u0027dec\u0027, DoubleType(), True), # Declination\n    StructField(\u0027flux\u0027, StringType(), True), # mean BP + RP combined spectrum flux\n    StructField(\u0027flux_error\u0027, StringType(), True), # mean BP + RP combined spectrum flux error\n])\n\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:41:22.365",
+      "dateUpdated": "2021-11-23 11:52:31.509",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -24,21 +24,24 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
       "apps": [],
       "jobName": "paragraph_1637319816603_695651966",
       "id": "20211119-110336_1205750852",
       "dateCreated": "2021-11-19 11:03:36.603",
-      "dateStarted": "2021-11-22 15:33:37.553",
-      "dateFinished": "2021-11-22 15:33:37.701",
+      "dateStarted": "2021-11-23 11:52:31.525",
+      "dateFinished": "2021-11-23 11:52:31.707",
       "status": "FINISHED",
-      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Reformatting function definition(s)",
       "text": "%pyspark\n\nfrom pyspark.sql import functions as f\nfrom pyspark.sql import *\n\ndef cast_to_array(data_frame : DataFrame, column_name : str, data_type : DataType):\n    \"\"\"\n    Casts the specified string column in the given data frame into an\n    array with the specified data type. Assumes the string column contains\n    comma-separated values in plain text delimited by braces (which are\n    ignored). The array column is appended to the existing column set while \n    the original string column is removed. The resulting data frame will\n    contain an array column with the same name as the original string\n    data column.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    column_name : str\n        The column name that contains the array data as a plain text string of \n        comma-separated values\n    data_type : DataType()\n        The PySpark data structure data type which should be ArrayType(SomeType())\n        \n    Returns:\n    --------\n    a new data frame containing the requested modification\n    \"\"\"\n    \n    # a temporary working column name for the array\n    temporary_column_name \u003d column_name + \u0027_array_data\u0027\n    \n    # reformat the string csv data as an array of the specified type\n    data_frame \u003d data_frame.withColumn(temporary_column_name, f.split(f.col(column_name).substr(f.lit(2), f.length(f.col(column_name)) - 2), \u0027,\u0027).cast(data_type))\n    \n    # drop the original string column to save space\n    data_frame \u003d data_frame.drop(column_name)\n    \n    # rename the temporary column with the original column name\n    data_frame \u003d data_frame.withColumnRenamed(temporary_column_name, column_name)\n    \n    return data_frame\n    \n    \ndef reorder_columns(data_frame : DataFrame, data_structure : StructType):\n    \"\"\"\n    Reorder the columns according to the Gaia archive public schema and so that\n    the parquet files can be re-attached against that standard schema.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    data_structure : StructType()\n        The PySpark data structure containing the required schema definition\n    \"\"\"\n    \n    # use the schema to define the column order\n    ordered_columns \u003d [field.name for field in data_structure]\n    \n    # give it back in the schema-driven order\n    return data_frame.select(ordered_columns)\n    \n\ndef cast_all_arrays(data_frame : DataFrame, data_structure : StructType):\n    \"\"\"\n    Given an interim data frame read from csv and containing arrays in\n    plain text string representation, cycles over the schema transforming\n    all strings associated with arrays into the required primitive type.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    data_structure : StructType()\n        The PySpark data structure containing the required schema definition\n    \"\"\"\n    \n    # cycle over the defined fields looking for arrays\n    for field in data_structure:\n        \n        # if it\u0027s an array type then transmogrify:\n        if type(field.dataType) \u003d\u003d ArrayType: \n            data_frame \u003d cast_to_array(data_frame, field.name, field.dataType)\n    \n    # finally reorder according to the original specification\n    return reorder_columns(data_frame, data_structure)\n    \n    ",
       "user": "nch",
-      "dateUpdated": "2021-11-22 16:48:00.127",
+      "dateUpdated": "2021-11-23 11:52:33.917",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -58,21 +61,24 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
       "apps": [],
       "jobName": "paragraph_1637322789521_1794720344",
       "id": "20211119-115309_444867408",
       "dateCreated": "2021-11-19 11:53:09.521",
-      "dateStarted": "2021-11-22 15:33:37.774",
-      "dateFinished": "2021-11-22 15:33:38.089",
+      "dateStarted": "2021-11-23 11:52:33.933",
+      "dateFinished": "2021-11-23 11:52:34.035",
       "status": "FINISHED",
-      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Ingest some test data",
       "text": "%pyspark\n\ndf \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(interim_xp_continuous_mean_spectrum_schema).csv(\u0027file:////user/nch/XP_CONTINUOUS_RAW.csv\u0027)\n\ndf.show()\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 16:41:38.600",
+      "dateUpdated": "2021-11-23 11:52:35.376",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -92,21 +98,29 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n|          source_id|        solution_id|bp_basis_function_id|bp_degrees_of_freedom|bp_n_parameters|bp_n_measurements|bp_n_rejected_measurements|bp_standard_deviation|bp_chi_squared|     bp_coefficients|bp_coefficient_errors|bp_coefficient_correlations|bp_n_relevant_bases|bp_relative_shrinking|rp_basis_function_id|rp_degrees_of_freedom|rp_n_parameters|rp_n_measurements|rp_n_rejected_measurements|rp_standard_deviation|rp_chi_squared|     rp_coefficients|rp_coefficient_errors|rp_coefficient_correlations|rp_n_relevant_bases|rp_relative_shrinking|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n|6030020833890693248|4545469030156206081|                  56|                 2146|             55|             2201|                        14|            1.0583289|      2403.649|(850.769352327487...| (1.1296523, 0.969...|       (0.4637005, 0.042...|                 53|           0.99999994|                  57|                 2434|             55|             2489|                        20|            1.0511642|      2689.439|(3475.74320956029...| (1.7000587, 1.518...|       (0.083734974, 0.1...|                 14|           0.99999577|\n|6030020838301512192|4545469030156206081|                  56|                 1904|             55|             1959|                        16|              1.03183|     2027.1373|(1976.35960326726...| (1.7924176, 1.477...|       (0.42829382, -0.0...|                  6|            0.9999947|                  57|                 2365|             55|             2420|                        23|            1.0589762|     2652.1833|(4611.57412765266...| (1.824685, 1.6294...|       (0.13184875, 0.19...|                 50|                  1.0|\n|6030020868250061312|4545469030156206081|                  56|                 1959|             55|             2014|                        24|            1.0442481|     2136.1995|(1290.21030299786...| (1.3093321, 1.155...|       (0.18031654, -0.0...|                 11|             0.999991|                  57|                 2259|             55|             2314|                        11|            1.0490594|     2486.0876|(1459.93353109699...| (1.1455681, 1.093...|       (0.015920334, 0.0...|                 25|            0.9999935|\n|6030108077645263232|4545469030156206081|                  56|                 3450|             55|             3505|                        39|            1.0307266|       3665.27|(892.028285492520...| (0.8879109, 0.723...|       (0.42090708, -0.0...|                 10|            0.9999929|                  57|                 3879|             55|             3934|                        25|            1.0296093|       4112.11|(2418.94195325853...| (1.0126915, 0.880...|       (0.15913828, 0.23...|                 12|            0.9999977|\n|6030020872661249152|4545469030156206081|                  56|                 2038|             55|             2093|                         6|             1.042565|     2215.1873|(3125.99812906493...| (2.3077424, 1.951...|       (0.35940862, -0.0...|                 26|            0.9999992|                  57|                 2375|             55|             2430|                        21|            1.0444568|      2590.864|(6820.87075359326...| (2.226311, 1.9936...|       (0.121767856, 0.1...|                 20|           0.99999934|\n|6030108141985317760|4545469030156206081|                  56|                 3611|             55|             3666|                        62|            1.0227207|     3776.9526|(1699.84194310860...| (1.3490654, 1.123...|       (0.49060243, -0.0...|                 22|           0.99999905|                  57|                 3624|             55|             3679|                        45|            1.0614879|     4083.3657|(5120.75303837552...| (1.5528071, 1.369...|       (0.15045689, 0.21...|                 13|           0.99999875|\n|6030020936969572096|4545469030156206081|                  56|                 1980|             55|             2035|                         9|            1.0500401|     2183.1167|(2057.13544554305...| (1.8373564, 1.526...|       (0.3251621, -0.10...|                 17|           0.99999774|                  57|                 2378|             55|             2433|                        12|             1.055152|     2647.5364|(3914.46089425611...| (1.6560131, 1.495...|       (0.062493138, 0.1...|                  7|           0.99999744|\n|6030108146364749568|4545469030156206081|                  56|                 3644|             55|             3699|                        86|            1.0242693|     3823.0212|(1836.32222970779...| (1.346063, 1.0901...|       (0.35691574, -0.1...|                 17|            0.9999982|                  57|                 4050|             55|             4105|                        35|            1.0227664|      4236.507|(2920.18978423807...| (1.0702223, 0.971...|       (0.07750569, 0.17...|                 11|           0.99999845|\n|6030020975740465920|4545469030156206081|                  56|                 1937|             55|             1992|                        47|            1.0465312|     2121.4558|(2051.55246619061...| (2.043284, 1.6635...|       (0.4422872, -0.05...|                  7|           0.99999285|                  57|                 2503|             55|             2558|                        68|            1.0413345|      2714.197|(5553.49785574567...| (1.9622343, 1.825...|       (0.16479991, 0.11...|                 10|           0.99999803|\n|6030020975740468864|4545469030156206081|                  56|                 2139|             55|             2194|                        11|            1.0684712|      2441.948|(1913.15021606374...| (1.9137821, 1.561...|       (0.44980755, -0.0...|                 17|            0.9999983|                  57|                 2601|             55|             2656|                        19|            1.0807636|     3038.0977|(5313.85694808551...| (1.9438034, 1.745...|       (0.15658168, 0.17...|                 10|            0.9999984|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1637324732802_628278780",
       "id": "20211119-122532_1810293669",
       "dateCreated": "2021-11-19 12:25:32.803",
-      "dateStarted": "2021-11-22 16:41:22.827",
-      "dateFinished": "2021-11-22 16:41:23.152",
+      "dateStarted": "2021-11-23 11:52:35.391",
+      "dateFinished": "2021-11-23 11:52:35.777",
       "status": "FINISHED",
-      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "How to cast a single column to ArrayType(DataType())",
       "text": "%pyspark\n\n# testdf.withColumn(\u0027activity\u0027,f.split(f.col(\u0027activity\u0027).substr(f.lit(2),f.length(f.col(\u0027activity\u0027))-2),\u0027,\u0027).cast(t.ArrayType(t.DoubleType()))).show(2, False)\n\nfrom pyspark.sql import functions as f\n\nfd \u003d df.withColumn(\u0027array_data\u0027, f.split(f.col(\u0027bp_coefficients\u0027).substr(f.lit(2), f.length(f.col(\u0027bp_coefficients\u0027))-2), \u0027,\u0027).cast(ArrayType(DoubleType())))\n\nfd.show()\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:33:38.687",
+      "dateUpdated": "2021-11-23 11:52:39.492",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -126,21 +140,29 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+\n|          source_id|        solution_id|bp_basis_function_id|bp_degrees_of_freedom|bp_n_parameters|bp_n_measurements|bp_n_rejected_measurements|bp_standard_deviation|bp_chi_squared|     bp_coefficients|bp_coefficient_errors|bp_coefficient_correlations|bp_n_relevant_bases|bp_relative_shrinking|rp_basis_function_id|rp_degrees_of_freedom|rp_n_parameters|rp_n_measurements|rp_n_rejected_measurements|rp_standard_deviation|rp_chi_squared|     rp_coefficients|rp_coefficient_errors|rp_coefficient_correlations|rp_n_relevant_bases|rp_relative_shrinking|          array_data|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+\n|6030020833890693248|4545469030156206081|                  56|                 2146|             55|             2201|                        14|            1.0583289|      2403.649|(850.769352327487...| (1.1296523, 0.969...|       (0.4637005, 0.042...|                 53|           0.99999994|                  57|                 2434|             55|             2489|                        20|            1.0511642|      2689.439|(3475.74320956029...| (1.7000587, 1.518...|       (0.083734974, 0.1...|                 14|           0.99999577|[850.769352327487...|\n|6030020838301512192|4545469030156206081|                  56|                 1904|             55|             1959|                        16|              1.03183|     2027.1373|(1976.35960326726...| (1.7924176, 1.477...|       (0.42829382, -0.0...|                  6|            0.9999947|                  57|                 2365|             55|             2420|                        23|            1.0589762|     2652.1833|(4611.57412765266...| (1.824685, 1.6294...|       (0.13184875, 0.19...|                 50|                  1.0|[1976.35960326726...|\n|6030020868250061312|4545469030156206081|                  56|                 1959|             55|             2014|                        24|            1.0442481|     2136.1995|(1290.21030299786...| (1.3093321, 1.155...|       (0.18031654, -0.0...|                 11|             0.999991|                  57|                 2259|             55|             2314|                        11|            1.0490594|     2486.0876|(1459.93353109699...| (1.1455681, 1.093...|       (0.015920334, 0.0...|                 25|            0.9999935|[1290.21030299786...|\n|6030108077645263232|4545469030156206081|                  56|                 3450|             55|             3505|                        39|            1.0307266|       3665.27|(892.028285492520...| (0.8879109, 0.723...|       (0.42090708, -0.0...|                 10|            0.9999929|                  57|                 3879|             55|             3934|                        25|            1.0296093|       4112.11|(2418.94195325853...| (1.0126915, 0.880...|       (0.15913828, 0.23...|                 12|            0.9999977|[892.028285492520...|\n|6030020872661249152|4545469030156206081|                  56|                 2038|             55|             2093|                         6|             1.042565|     2215.1873|(3125.99812906493...| (2.3077424, 1.951...|       (0.35940862, -0.0...|                 26|            0.9999992|                  57|                 2375|             55|             2430|                        21|            1.0444568|      2590.864|(6820.87075359326...| (2.226311, 1.9936...|       (0.121767856, 0.1...|                 20|           0.99999934|[3125.99812906493...|\n|6030108141985317760|4545469030156206081|                  56|                 3611|             55|             3666|                        62|            1.0227207|     3776.9526|(1699.84194310860...| (1.3490654, 1.123...|       (0.49060243, -0.0...|                 22|           0.99999905|                  57|                 3624|             55|             3679|                        45|            1.0614879|     4083.3657|(5120.75303837552...| (1.5528071, 1.369...|       (0.15045689, 0.21...|                 13|           0.99999875|[1699.84194310860...|\n|6030020936969572096|4545469030156206081|                  56|                 1980|             55|             2035|                         9|            1.0500401|     2183.1167|(2057.13544554305...| (1.8373564, 1.526...|       (0.3251621, -0.10...|                 17|           0.99999774|                  57|                 2378|             55|             2433|                        12|             1.055152|     2647.5364|(3914.46089425611...| (1.6560131, 1.495...|       (0.062493138, 0.1...|                  7|           0.99999744|[2057.13544554305...|\n|6030108146364749568|4545469030156206081|                  56|                 3644|             55|             3699|                        86|            1.0242693|     3823.0212|(1836.32222970779...| (1.346063, 1.0901...|       (0.35691574, -0.1...|                 17|            0.9999982|                  57|                 4050|             55|             4105|                        35|            1.0227664|      4236.507|(2920.18978423807...| (1.0702223, 0.971...|       (0.07750569, 0.17...|                 11|           0.99999845|[1836.32222970779...|\n|6030020975740465920|4545469030156206081|                  56|                 1937|             55|             1992|                        47|            1.0465312|     2121.4558|(2051.55246619061...| (2.043284, 1.6635...|       (0.4422872, -0.05...|                  7|           0.99999285|                  57|                 2503|             55|             2558|                        68|            1.0413345|      2714.197|(5553.49785574567...| (1.9622343, 1.825...|       (0.16479991, 0.11...|                 10|           0.99999803|[2051.55246619061...|\n|6030020975740468864|4545469030156206081|                  56|                 2139|             55|             2194|                        11|            1.0684712|      2441.948|(1913.15021606374...| (1.9137821, 1.561...|       (0.44980755, -0.0...|                 17|            0.9999983|                  57|                 2601|             55|             2656|                        19|            1.0807636|     3038.0977|(5313.85694808551...| (1.9438034, 1.745...|       (0.15658168, 0.17...|                 10|            0.9999984|[1913.15021606374...|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+\n\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1637329832690_-1917541678",
       "id": "20211119-135032_1757305163",
       "dateCreated": "2021-11-19 13:50:32.690",
-      "dateStarted": "2021-11-22 15:33:38.697",
-      "dateFinished": "2021-11-22 15:33:38.948",
+      "dateStarted": "2021-11-23 11:52:39.506",
+      "dateFinished": "2021-11-23 11:52:39.886",
       "status": "FINISHED",
-      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Original string data",
       "text": "%pyspark\n\ndf.select(\u0027bp_coefficients\u0027).show(10, False)",
       "user": "nch",
-      "dateUpdated": "2021-11-22 16:40:45.119",
+      "dateUpdated": "2021-11-23 11:52:43.748",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -160,21 +182,29 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n|bp_coefficients                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |\n+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n|(850.7693523274877, 175.12048926753118, 2.5877987414570014, 4.977861899431593, 3.088787239735159, 9.478850307329143, -0.024658806684982826, 2.0548573141731015, -3.8858361690367746, -3.575948463656856, -0.9974146188953448, 1.40536808426699, 2.1916625740626343, -2.9383648781094163, 1.7329755203208874, -1.5366483964940412, -1.345940743114135, -1.2243332103958102, -0.42639510391927743, -1.4126459788882493, 0.19045040949445036, -1.3026131931484104, -0.7229731987571212, -0.4097499265782728, 0.4030926097347392, -0.5954674399992208, -1.4784990016423625, 0.11536466036906948, 0.08144564654022268, -0.2998142666398675, 1.2921072171633115, -0.5638244375000957, -0.19052877307184846, -0.4364109873436949, 0.1872420179006494, 0.4619418703186936, -0.08706812837088213, 0.36281884593287883, -0.8649795098683377, -0.07879875963964247, -0.3568653044665783, 0.10131481429020854, -0.24705412181527855, 0.2105238899915846, 0.12327366770426644, -0.054876197763565296, 0.3021872305055503, -0.002974000120672296, 0.4023738959005592, 0.18988391284242265, 0.15270051231045345, 0.09485267352066482, -0.3053807159616038, -0.2896036875735167, 0.10243191216097436)                |\n|(1976.359603267265, 322.1722634525395, -89.7691243900717, -29.85681720209013, -5.337306724119157, 17.18730031463682, 0.9687614510866789, -0.9953793504807258, -3.8163641027143362, 0.8001107845008267, 0.6456960866165301, -1.4138374790462045, -2.158884481117947, -0.20388405368029516, 0.6170891635087359, 0.9064852099106638, -2.5770038694837565, 0.023258924334947233, -0.6507386149295702, 0.43041780848778477, 0.5017846081787574, -2.370948905579644, 0.7544405399428582, 0.6677314324486602, -0.448027978996361, -0.4805913222299095, -0.4424317943192183, -0.11006322780011558, 0.1000888481707306, -0.1385915253173988, -0.2087643428136623, 0.6129039819750371, -0.23474841715138153, 0.043373181338491426, -0.10588232816406062, -0.629593840363841, 0.022529757835520442, -0.4212787550830822, 0.4688300783407613, -0.6114353300877817, -0.08635874686493004, -0.15538025405426922, -0.4362160749466177, 0.16408485722844285, -0.008348677386275791, -0.06174979829332237, -0.003419039252298438, -0.020344277969609078, 0.4644426371254566, -0.39105366872352065, 0.06032030037410629, 0.06520430487189187, 0.06359031172599332, 0.0819753076451291, -0.02408309779337703)           |\n|(1290.2103029978698, -146.00457098068003, -16.293106378258933, 8.665911257761664, -8.420973978590462, 5.04060409364169, -2.4234262689853323, -0.6737622907016017, -0.8292706159364103, 0.8661656379630203, 1.979175167268019, -1.4190208539363733, -1.4423859658010227, -2.396596911210163, 0.5471446262995434, -1.0618190362395803, 1.8407493778827748, 0.2770422437970982, -0.06928616046909818, -1.3195611277932773, -0.20002077733515794, 1.0164718133290616, -1.7941183394233553, 0.42267729153155664, -2.331110188970637, -0.37148344105256814, 0.7533118694419427, 0.03443924723259532, -0.2256183299205142, 0.22242330752783293, 0.3810791279558629, 0.514639050540725, 0.06848749279551355, 0.9059620526045615, -0.36863049441664103, -0.0896188648434053, -0.03143901363365615, -0.47130613134151694, 0.17700310463315105, 0.26976127343008627, -0.23273249959170153, 0.010854413716100741, -0.11738110381004233, 0.10742425441429337, 0.6750682326853019, 0.16446395443545575, -0.26451923521478005, -0.5600956291084555, 0.4398617611688201, 0.24904630737495287, 0.4182159435273298, 0.10332015782036487, -0.10355349069391817, -0.09179009740485145, 0.04655135985133383)              |\n|(892.0282854925205, 166.9027418369333, -34.838605648166485, -15.595212469744581, 4.6741711242059525, 8.021084456162798, -0.49867193141136246, -0.6315480394400976, 0.07357802548442138, 1.8551610915915397, -1.356310321504099, 1.083911034351806, -0.7111433539779747, -1.7553187564706463, 0.672203698074991, 0.7441276891477299, -0.5346654361786691, -0.5693102443960544, 0.283624175019071, 0.002595019204470521, 0.8970675238136361, -0.1997268212241182, -0.13350138368618863, -0.7076879837723142, -0.3695625850540022, -0.26192426609609154, -0.4256518077469922, 0.5907119450339, 0.058007556618912576, -0.10768479379616647, 0.3225881593764234, -0.0758786866082783, -0.6635474608952655, 0.15991809138605909, 0.097785447375339, -0.0051107528730718055, -0.05610722561343981, -0.2775185170147625, 0.4074700224357345, -0.05719598066351973, 0.31758122742710293, -0.05906764130247927, 0.1718325967826589, -0.35335970835095265, -0.13879191944375002, -0.10975624187612273, 0.16758446182344036, 0.17576980899060604, -0.15355519311096322, 0.12999527293976104, 0.18889574234072223, 0.0672551742136526, 0.014700845435123976, 0.024733066229496586, -0.037397390980658286)         |\n|(3125.998129064934, 466.0558496891946, -150.6568944269616, -43.364668764561074, -4.670697419399075, 27.071600301464468, -6.449344617306788, -0.3876210950838145, -2.5364598489236645, 3.3060733626894887, 1.3278797255026586, 3.3114776656429505, 1.5898606485281706, -3.4568891990774766, -0.8200656403454429, 2.504969116114318, -8.405693617509579, -2.020883094462639, -3.402997551847835, 0.470349757153544, 1.9523153854970106, -2.3245457901774826, 1.588648150779662, -1.2544017912115033, 3.0755058682248158, 1.5471574659215845, -2.0393494090740973, -0.03128221313066137, -0.9964986780675247, -2.0423259778517058, 0.05795951420655598, 0.7317336245361848, -0.28420361290922685, 0.12518703027798067, 0.6506593491389018, -0.12795680006296656, 1.0728873142543682, -0.6959632760024259, 1.4486906867090656, 0.001385558352111932, -0.10392527889078562, 1.098726387902912, 0.5961241168227038, 0.28064219596770085, -0.129275166429969, 0.1309252022189763, -0.036564310830887986, 0.2429898526949901, -0.1901394256352571, 0.03134728909765244, -0.1193572914788151, -0.2917147531996957, 0.09144317559146029, -0.11279865926587161, -0.09497112760048743)                           |\n|(1699.8419431086038, 321.62082720977435, -37.53178925306461, -11.735855420038119, 8.147688909427982, 11.823480840536677, -0.4369073231770001, 1.1577907857205143, -1.1447357376684688, 0.010204391839906207, -1.6389424581165812, 2.650627462938712, 3.430306587577497, -3.439923221412478, 1.2232569957485453, -0.8938301942396475, -4.788175762490461, -0.09830641207037492, 0.6653614214717366, -1.1750122010395887, -0.11844938470118055, -2.5216405041348913, -0.20191707465377481, -1.3136999309588515, 0.6812670142603425, -0.13198661491141786, -1.0340689125639009, -0.07219567451190607, -0.6787353963883382, -0.20191033329505892, 0.3109804136788534, 0.6301281875439725, 0.012619154923344773, -0.2916581430804792, 0.09621067075066657, -0.21727593087113517, -0.1556065384172028, 0.38848583496636113, 0.4998414347642666, 0.1940186711037017, 0.33075667379576534, 0.22895951611032317, 0.25127028992410505, -0.4003879613328291, -0.17433628571692847, 0.21641704943453394, 0.16273386997656494, 0.290098223358976, 0.019985849757947698, 0.04895509283363801, -0.19842921878222972, 0.009363447107696606, 0.15851001101168424, -0.08374669093190727, 0.07100737272164725)          |\n|(2057.1354455430524, 214.2342674449909, -102.09103856343478, -17.19629338445057, -8.6145269473031, 15.418793030801282, -5.533672970979585, 2.2301415371483357, -2.8578421312366062, 0.7347004165656906, 1.2423842389179522, 0.8533690955779136, 0.6553994107600122, -1.1398124137694832, 0.5633180687352595, -1.3266465571748083, -5.568940039801676, -0.3196369314381512, -2.257652644594338, -0.1294073503622465, 1.7743154859446193, -1.6748871053477385, 0.5840609266964979, -1.0993649680344852, 0.014728363937303524, -0.7527482490242537, -0.40897348459788946, -0.8357863228218981, 0.38099324210233043, -0.6468401716804203, 1.1847495140208384, 0.951639034454339, -0.7269999115387906, -0.10496565652662333, 0.1268760018154021, -0.33300276461671485, 0.2556156452762489, 0.19423488905710673, 0.5476583063138786, -0.25749181309491, 0.283165461211619, 0.48062632478108885, 0.38703251778759057, -0.14204350553250894, 0.4976415407750602, 0.1869969075575476, -0.2925269932460212, 0.38658866144380727, 0.38692137085005346, 9.840066097726585E-4, 0.1730904632648556, -0.01252603328177258, -0.1200938426600854, -0.015967324952733536, 0.028648080251154787)                        |\n|(1836.322229707795, 65.97658875166928, -79.61022899393645, 6.274876907662353, -16.782746337272503, 10.816363863579731, -7.060970787197291, 3.191334289130145, -0.18130248718155917, 2.257789207094255, 1.679992915733609, 2.4443631735063946, -0.2409183184520179, -0.9714514383869168, -0.09364491166112827, -0.03516095248829267, -2.7515224139116494, 0.7528481291417085, -2.301621779819729, 1.0130893297995696, 0.004078375315144449, 0.49730701952269124, -1.4405360202161732, -0.5523328356770324, 0.11185687060301132, -0.22280965304949793, 0.23028219243314343, -0.1538064000103993, -0.7646130491609394, -0.3755587989861552, -0.11760168347563138, 0.18339059007582448, -0.46572190418803705, -0.18913573701807274, -0.17147356086941748, -0.47396800830242114, 0.3127100398364567, 0.2214671343781514, 0.13123168728673537, -0.35992604208300477, 0.1467442878347053, -0.010318366074464637, -0.46404484276427915, 0.047883646193912666, -0.2420860251507756, -0.014937091770302481, 0.6730764459341838, 0.3778161314884582, -0.10241324023863926, -0.22192100330209857, -0.08449152854414922, -0.04756666003527431, -0.007413263738113445, -0.03736141721651019, -0.057184518324014215)|\n|(2051.552466190618, 376.11940333873184, -72.6373015072669, -28.609595754653093, 4.532249405858719, 18.750070259083436, -4.648697431442671, -3.030500069922277, -0.675006395198099, -0.550644404376163, 1.164606045951793, 1.6557725157574348, -0.6538995252650455, -3.8118657415646187, 2.4409323222694645, 0.6692266993961141, -2.847687770983087, -1.0846554016002952, -0.7127632144262527, -1.6988815337992904, 2.058018285967379, -0.5751773662526132, -0.5696066165272521, -1.752614166489049, 0.9599593353538765, -0.02014056579017226, -1.066438972934065, 0.2508176828248947, -0.910153176218298, -0.2692299872355012, -0.35597008899922583, -0.34391906048406007, 0.5251764074734927, 0.22962736843544335, 0.7053073988195576, -0.43828968821936354, 0.3252675145896069, 0.1397154894272321, 0.5713951530615679, -0.10901333822238117, 0.22322226736433184, 0.6976920897729084, -0.4091844649712294, 0.1474376778469348, 0.3881839770297403, -0.17471950112987744, -0.3495907450461131, 0.11841105935365642, 0.0012573774967767869, 0.3548066397883156, 0.4384375933827149, 0.1952258028898521, -0.3856122157654236, 0.04267174526453259, 0.0860799585380518)                               |\n|(1913.1502160637426, 351.8195171110667, -61.29094078899001, -23.296760440722704, 3.5083633494912214, 14.272285780223676, -0.04122788314880191, -1.7483148952203442, -0.04483685855241613, 2.5223151441461145, 1.2050433744547835, 0.8433925062127188, 2.2903930394243415, -0.9608488046097222, -0.7286759491340841, -3.048927498918242, -5.233697143929578, -0.17211193467733146, -0.2276230849789266, -2.0007707434555533, 1.378138656383184, -0.8024528671117119, 0.8216588081041672, -1.210849921878089, 0.9409456161963496, 0.015455716457328014, -0.34277519860300715, 0.007497784407947643, -1.070175605764828, 0.021069000353411124, 0.03422516649328347, 0.5322808095248902, -0.13827982884567092, 0.163824415972608, 0.015390413064803626, 0.3843659092555579, -0.22469384670319617, -0.17727718119161473, 0.9620681154408933, -0.09354695563800879, 0.30576282775364166, 0.22998859133040328, 0.26279707405081165, 0.004502532582895934, -0.3577291820168561, 0.15806194883377092, 0.25682560316419745, 0.33442192372978374, 0.008177015461998284, -0.17176140314333355, -0.03324368723125801, 0.07824561396806158, 0.21440213966003785, -0.015093205773702299, -0.015315924692319864)     |\n+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1637330433985_969864653",
       "id": "20211119-140033_365043102",
       "dateCreated": "2021-11-19 14:00:33.985",
-      "dateStarted": "2021-11-22 16:40:45.141",
-      "dateFinished": "2021-11-22 16:40:45.591",
+      "dateStarted": "2021-11-23 11:52:43.763",
+      "dateFinished": "2021-11-23 11:52:43.953",
       "status": "FINISHED",
-      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Cast array data sanity check",
       "text": "%pyspark\n\nfd.select(\u0027array_data\u0027).show(10, False)",
       "user": "nch",
-      "dateUpdated": "2021-11-22 16:41:06.576",
+      "dateUpdated": "2021-11-23 11:52:47.357",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -194,21 +224,29 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n|array_data                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |\n+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n|[850.7693523274877, 175.12048926753118, 2.5877987414570014, 4.977861899431593, 3.088787239735159, 9.478850307329143, -0.024658806684982826, 2.0548573141731015, -3.8858361690367746, -3.575948463656856, -0.9974146188953448, 1.40536808426699, 2.1916625740626343, -2.9383648781094163, 1.7329755203208874, -1.5366483964940412, -1.345940743114135, -1.2243332103958102, -0.42639510391927743, -1.4126459788882493, 0.19045040949445036, -1.3026131931484104, -0.7229731987571212, -0.4097499265782728, 0.4030926097347392, -0.5954674399992208, -1.4784990016423625, 0.11536466036906948, 0.08144564654022268, -0.2998142666398675, 1.2921072171633115, -0.5638244375000957, -0.19052877307184846, -0.4364109873436949, 0.1872420179006494, 0.4619418703186936, -0.08706812837088213, 0.36281884593287883, -0.8649795098683377, -0.07879875963964247, -0.3568653044665783, 0.10131481429020854, -0.24705412181527855, 0.2105238899915846, 0.12327366770426644, -0.054876197763565296, 0.3021872305055503, -0.002974000120672296, 0.4023738959005592, 0.18988391284242265, 0.15270051231045345, 0.09485267352066482, -0.3053807159616038, -0.2896036875735167, 0.10243191216097436]                |\n|[1976.359603267265, 322.1722634525395, -89.7691243900717, -29.85681720209013, -5.337306724119157, 17.18730031463682, 0.9687614510866789, -0.9953793504807258, -3.8163641027143362, 0.8001107845008267, 0.6456960866165301, -1.4138374790462045, -2.158884481117947, -0.20388405368029516, 0.6170891635087359, 0.9064852099106638, -2.5770038694837565, 0.023258924334947233, -0.6507386149295702, 0.43041780848778477, 0.5017846081787574, -2.370948905579644, 0.7544405399428582, 0.6677314324486602, -0.448027978996361, -0.4805913222299095, -0.4424317943192183, -0.11006322780011558, 0.1000888481707306, -0.1385915253173988, -0.2087643428136623, 0.6129039819750371, -0.23474841715138153, 0.043373181338491426, -0.10588232816406062, -0.629593840363841, 0.022529757835520442, -0.4212787550830822, 0.4688300783407613, -0.6114353300877817, -0.08635874686493004, -0.15538025405426922, -0.4362160749466177, 0.16408485722844285, -0.008348677386275791, -0.06174979829332237, -0.003419039252298438, -0.020344277969609078, 0.4644426371254566, -0.39105366872352065, 0.06032030037410629, 0.06520430487189187, 0.06359031172599332, 0.0819753076451291, -0.02408309779337703]           |\n|[1290.2103029978698, -146.00457098068003, -16.293106378258933, 8.665911257761664, -8.420973978590462, 5.04060409364169, -2.4234262689853323, -0.6737622907016017, -0.8292706159364103, 0.8661656379630203, 1.979175167268019, -1.4190208539363733, -1.4423859658010227, -2.396596911210163, 0.5471446262995434, -1.0618190362395803, 1.8407493778827748, 0.2770422437970982, -0.06928616046909818, -1.3195611277932773, -0.20002077733515794, 1.0164718133290616, -1.7941183394233553, 0.42267729153155664, -2.331110188970637, -0.37148344105256814, 0.7533118694419427, 0.03443924723259532, -0.2256183299205142, 0.22242330752783293, 0.3810791279558629, 0.514639050540725, 0.06848749279551355, 0.9059620526045615, -0.36863049441664103, -0.0896188648434053, -0.03143901363365615, -0.47130613134151694, 0.17700310463315105, 0.26976127343008627, -0.23273249959170153, 0.010854413716100741, -0.11738110381004233, 0.10742425441429337, 0.6750682326853019, 0.16446395443545575, -0.26451923521478005, -0.5600956291084555, 0.4398617611688201, 0.24904630737495287, 0.4182159435273298, 0.10332015782036487, -0.10355349069391817, -0.09179009740485145, 0.04655135985133383]              |\n|[892.0282854925205, 166.9027418369333, -34.838605648166485, -15.595212469744581, 4.6741711242059525, 8.021084456162798, -0.49867193141136246, -0.6315480394400976, 0.07357802548442138, 1.8551610915915397, -1.356310321504099, 1.083911034351806, -0.7111433539779747, -1.7553187564706463, 0.672203698074991, 0.7441276891477299, -0.5346654361786691, -0.5693102443960544, 0.283624175019071, 0.002595019204470521, 0.8970675238136361, -0.1997268212241182, -0.13350138368618863, -0.7076879837723142, -0.3695625850540022, -0.26192426609609154, -0.4256518077469922, 0.5907119450339, 0.058007556618912576, -0.10768479379616647, 0.3225881593764234, -0.0758786866082783, -0.6635474608952655, 0.15991809138605909, 0.097785447375339, -0.0051107528730718055, -0.05610722561343981, -0.2775185170147625, 0.4074700224357345, -0.05719598066351973, 0.31758122742710293, -0.05906764130247927, 0.1718325967826589, -0.35335970835095265, -0.13879191944375002, -0.10975624187612273, 0.16758446182344036, 0.17576980899060604, -0.15355519311096322, 0.12999527293976104, 0.18889574234072223, 0.0672551742136526, 0.014700845435123976, 0.024733066229496586, -0.037397390980658286]         |\n|[3125.998129064934, 466.0558496891946, -150.6568944269616, -43.364668764561074, -4.670697419399075, 27.071600301464468, -6.449344617306788, -0.3876210950838145, -2.5364598489236645, 3.3060733626894887, 1.3278797255026586, 3.3114776656429505, 1.5898606485281706, -3.4568891990774766, -0.8200656403454429, 2.504969116114318, -8.405693617509579, -2.020883094462639, -3.402997551847835, 0.470349757153544, 1.9523153854970106, -2.3245457901774826, 1.588648150779662, -1.2544017912115033, 3.0755058682248158, 1.5471574659215845, -2.0393494090740973, -0.03128221313066137, -0.9964986780675247, -2.0423259778517058, 0.05795951420655598, 0.7317336245361848, -0.28420361290922685, 0.12518703027798067, 0.6506593491389018, -0.12795680006296656, 1.0728873142543682, -0.6959632760024259, 1.4486906867090656, 0.001385558352111932, -0.10392527889078562, 1.098726387902912, 0.5961241168227038, 0.28064219596770085, -0.129275166429969, 0.1309252022189763, -0.036564310830887986, 0.2429898526949901, -0.1901394256352571, 0.03134728909765244, -0.1193572914788151, -0.2917147531996957, 0.09144317559146029, -0.11279865926587161, -0.09497112760048743]                           |\n|[1699.8419431086038, 321.62082720977435, -37.53178925306461, -11.735855420038119, 8.147688909427982, 11.823480840536677, -0.4369073231770001, 1.1577907857205143, -1.1447357376684688, 0.010204391839906207, -1.6389424581165812, 2.650627462938712, 3.430306587577497, -3.439923221412478, 1.2232569957485453, -0.8938301942396475, -4.788175762490461, -0.09830641207037492, 0.6653614214717366, -1.1750122010395887, -0.11844938470118055, -2.5216405041348913, -0.20191707465377481, -1.3136999309588515, 0.6812670142603425, -0.13198661491141786, -1.0340689125639009, -0.07219567451190607, -0.6787353963883382, -0.20191033329505892, 0.3109804136788534, 0.6301281875439725, 0.012619154923344773, -0.2916581430804792, 0.09621067075066657, -0.21727593087113517, -0.1556065384172028, 0.38848583496636113, 0.4998414347642666, 0.1940186711037017, 0.33075667379576534, 0.22895951611032317, 0.25127028992410505, -0.4003879613328291, -0.17433628571692847, 0.21641704943453394, 0.16273386997656494, 0.290098223358976, 0.019985849757947698, 0.04895509283363801, -0.19842921878222972, 0.009363447107696606, 0.15851001101168424, -0.08374669093190727, 0.07100737272164725]          |\n|[2057.1354455430524, 214.2342674449909, -102.09103856343478, -17.19629338445057, -8.6145269473031, 15.418793030801282, -5.533672970979585, 2.2301415371483357, -2.8578421312366062, 0.7347004165656906, 1.2423842389179522, 0.8533690955779136, 0.6553994107600122, -1.1398124137694832, 0.5633180687352595, -1.3266465571748083, -5.568940039801676, -0.3196369314381512, -2.257652644594338, -0.1294073503622465, 1.7743154859446193, -1.6748871053477385, 0.5840609266964979, -1.0993649680344852, 0.014728363937303524, -0.7527482490242537, -0.40897348459788946, -0.8357863228218981, 0.38099324210233043, -0.6468401716804203, 1.1847495140208384, 0.951639034454339, -0.7269999115387906, -0.10496565652662333, 0.1268760018154021, -0.33300276461671485, 0.2556156452762489, 0.19423488905710673, 0.5476583063138786, -0.25749181309491, 0.283165461211619, 0.48062632478108885, 0.38703251778759057, -0.14204350553250894, 0.4976415407750602, 0.1869969075575476, -0.2925269932460212, 0.38658866144380727, 0.38692137085005346, 9.840066097726585E-4, 0.1730904632648556, -0.01252603328177258, -0.1200938426600854, -0.015967324952733536, 0.028648080251154787]                        |\n|[1836.322229707795, 65.97658875166928, -79.61022899393645, 6.274876907662353, -16.782746337272503, 10.816363863579731, -7.060970787197291, 3.191334289130145, -0.18130248718155917, 2.257789207094255, 1.679992915733609, 2.4443631735063946, -0.2409183184520179, -0.9714514383869168, -0.09364491166112827, -0.03516095248829267, -2.7515224139116494, 0.7528481291417085, -2.301621779819729, 1.0130893297995696, 0.004078375315144449, 0.49730701952269124, -1.4405360202161732, -0.5523328356770324, 0.11185687060301132, -0.22280965304949793, 0.23028219243314343, -0.1538064000103993, -0.7646130491609394, -0.3755587989861552, -0.11760168347563138, 0.18339059007582448, -0.46572190418803705, -0.18913573701807274, -0.17147356086941748, -0.47396800830242114, 0.3127100398364567, 0.2214671343781514, 0.13123168728673537, -0.35992604208300477, 0.1467442878347053, -0.010318366074464637, -0.46404484276427915, 0.047883646193912666, -0.2420860251507756, -0.014937091770302481, 0.6730764459341838, 0.3778161314884582, -0.10241324023863926, -0.22192100330209857, -0.08449152854414922, -0.04756666003527431, -0.007413263738113445, -0.03736141721651019, -0.057184518324014215]|\n|[2051.552466190618, 376.11940333873184, -72.6373015072669, -28.609595754653093, 4.532249405858719, 18.750070259083436, -4.648697431442671, -3.030500069922277, -0.675006395198099, -0.550644404376163, 1.164606045951793, 1.6557725157574348, -0.6538995252650455, -3.8118657415646187, 2.4409323222694645, 0.6692266993961141, -2.847687770983087, -1.0846554016002952, -0.7127632144262527, -1.6988815337992904, 2.058018285967379, -0.5751773662526132, -0.5696066165272521, -1.752614166489049, 0.9599593353538765, -0.02014056579017226, -1.066438972934065, 0.2508176828248947, -0.910153176218298, -0.2692299872355012, -0.35597008899922583, -0.34391906048406007, 0.5251764074734927, 0.22962736843544335, 0.7053073988195576, -0.43828968821936354, 0.3252675145896069, 0.1397154894272321, 0.5713951530615679, -0.10901333822238117, 0.22322226736433184, 0.6976920897729084, -0.4091844649712294, 0.1474376778469348, 0.3881839770297403, -0.17471950112987744, -0.3495907450461131, 0.11841105935365642, 0.0012573774967767869, 0.3548066397883156, 0.4384375933827149, 0.1952258028898521, -0.3856122157654236, 0.04267174526453259, 0.0860799585380518]                               |\n|[1913.1502160637426, 351.8195171110667, -61.29094078899001, -23.296760440722704, 3.5083633494912214, 14.272285780223676, -0.04122788314880191, -1.7483148952203442, -0.04483685855241613, 2.5223151441461145, 1.2050433744547835, 0.8433925062127188, 2.2903930394243415, -0.9608488046097222, -0.7286759491340841, -3.048927498918242, -5.233697143929578, -0.17211193467733146, -0.2276230849789266, -2.0007707434555533, 1.378138656383184, -0.8024528671117119, 0.8216588081041672, -1.210849921878089, 0.9409456161963496, 0.015455716457328014, -0.34277519860300715, 0.007497784407947643, -1.070175605764828, 0.021069000353411124, 0.03422516649328347, 0.5322808095248902, -0.13827982884567092, 0.163824415972608, 0.015390413064803626, 0.3843659092555579, -0.22469384670319617, -0.17727718119161473, 0.9620681154408933, -0.09354695563800879, 0.30576282775364166, 0.22998859133040328, 0.26279707405081165, 0.004502532582895934, -0.3577291820168561, 0.15806194883377092, 0.25682560316419745, 0.33442192372978374, 0.008177015461998284, -0.17176140314333355, -0.03324368723125801, 0.07824561396806158, 0.21440213966003785, -0.015093205773702299, -0.015315924692319864]     |\n+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1637331142862_1594603826",
       "id": "20211119-141222_871114066",
       "dateCreated": "2021-11-19 14:12:22.863",
-      "dateStarted": "2021-11-22 15:33:39.420",
-      "dateFinished": "2021-11-22 15:33:39.873",
+      "dateStarted": "2021-11-23 11:52:47.371",
+      "dateFinished": "2021-11-23 11:52:47.587",
       "status": "FINISHED",
-      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Test functions",
       "text": "%pyspark\n\n# test reformat of one array column\n#df \u003d cast_to_array(df, \u0027bp_coefficients\u0027, ArrayType(DoubleType()))\n\ndf \u003d cast_all_arrays(df, xp_continuous_mean_spectrum_schema)\n\ndf.show()\n\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:35:55.376",
+      "dateUpdated": "2021-11-23 11:52:53.171",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -228,21 +266,29 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n|          source_id|        solution_id|bp_basis_function_id|bp_degrees_of_freedom|bp_n_parameters|bp_n_measurements|bp_n_rejected_measurements|bp_standard_deviation|bp_chi_squared|     bp_coefficients|bp_coefficient_errors|bp_coefficient_correlations|bp_n_relevant_bases|bp_relative_shrinking|rp_basis_function_id|rp_degrees_of_freedom|rp_n_parameters|rp_n_measurements|rp_n_rejected_measurements|rp_standard_deviation|rp_chi_squared|     rp_coefficients|rp_coefficient_errors|rp_coefficient_correlations|rp_n_relevant_bases|rp_relative_shrinking|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n|6030020833890693248|4545469030156206081|                  56|                 2146|             55|             2201|                        14|            1.0583289|      2403.649|[850.769352327487...| [1.1296523, 0.969...|       [0.4637005, 0.042...|                 53|           0.99999994|                  57|                 2434|             55|             2489|                        20|            1.0511642|      2689.439|[3475.74320956029...| [1.7000587, 1.518...|       [0.083734974, 0.1...|                 14|           0.99999577|\n|6030020838301512192|4545469030156206081|                  56|                 1904|             55|             1959|                        16|              1.03183|     2027.1373|[1976.35960326726...| [1.7924176, 1.477...|       [0.42829382, -0.0...|                  6|            0.9999947|                  57|                 2365|             55|             2420|                        23|            1.0589762|     2652.1833|[4611.57412765266...| [1.824685, 1.6294...|       [0.13184875, 0.19...|                 50|                  1.0|\n|6030020868250061312|4545469030156206081|                  56|                 1959|             55|             2014|                        24|            1.0442481|     2136.1995|[1290.21030299786...| [1.3093321, 1.155...|       [0.18031654, -0.0...|                 11|             0.999991|                  57|                 2259|             55|             2314|                        11|            1.0490594|     2486.0876|[1459.93353109699...| [1.1455681, 1.093...|       [0.015920334, 0.0...|                 25|            0.9999935|\n|6030108077645263232|4545469030156206081|                  56|                 3450|             55|             3505|                        39|            1.0307266|       3665.27|[892.028285492520...| [0.8879109, 0.723...|       [0.42090708, -0.0...|                 10|            0.9999929|                  57|                 3879|             55|             3934|                        25|            1.0296093|       4112.11|[2418.94195325853...| [1.0126915, 0.880...|       [0.15913828, 0.23...|                 12|            0.9999977|\n|6030020872661249152|4545469030156206081|                  56|                 2038|             55|             2093|                         6|             1.042565|     2215.1873|[3125.99812906493...| [2.3077424, 1.951...|       [0.35940862, -0.0...|                 26|            0.9999992|                  57|                 2375|             55|             2430|                        21|            1.0444568|      2590.864|[6820.87075359326...| [2.226311, 1.9936...|       [0.121767856, 0.1...|                 20|           0.99999934|\n|6030108141985317760|4545469030156206081|                  56|                 3611|             55|             3666|                        62|            1.0227207|     3776.9526|[1699.84194310860...| [1.3490654, 1.123...|       [0.49060243, -0.0...|                 22|           0.99999905|                  57|                 3624|             55|             3679|                        45|            1.0614879|     4083.3657|[5120.75303837552...| [1.5528071, 1.369...|       [0.15045689, 0.21...|                 13|           0.99999875|\n|6030020936969572096|4545469030156206081|                  56|                 1980|             55|             2035|                         9|            1.0500401|     2183.1167|[2057.13544554305...| [1.8373564, 1.526...|       [0.3251621, -0.10...|                 17|           0.99999774|                  57|                 2378|             55|             2433|                        12|             1.055152|     2647.5364|[3914.46089425611...| [1.6560131, 1.495...|       [0.062493138, 0.1...|                  7|           0.99999744|\n|6030108146364749568|4545469030156206081|                  56|                 3644|             55|             3699|                        86|            1.0242693|     3823.0212|[1836.32222970779...| [1.346063, 1.0901...|       [0.35691574, -0.1...|                 17|            0.9999982|                  57|                 4050|             55|             4105|                        35|            1.0227664|      4236.507|[2920.18978423807...| [1.0702223, 0.971...|       [0.07750569, 0.17...|                 11|           0.99999845|\n|6030020975740465920|4545469030156206081|                  56|                 1937|             55|             1992|                        47|            1.0465312|     2121.4558|[2051.55246619061...| [2.043284, 1.6635...|       [0.4422872, -0.05...|                  7|           0.99999285|                  57|                 2503|             55|             2558|                        68|            1.0413345|      2714.197|[5553.49785574567...| [1.9622343, 1.825...|       [0.16479991, 0.11...|                 10|           0.99999803|\n|6030020975740468864|4545469030156206081|                  56|                 2139|             55|             2194|                        11|            1.0684712|      2441.948|[1913.15021606374...| [1.9137821, 1.561...|       [0.44980755, -0.0...|                 17|            0.9999983|                  57|                 2601|             55|             2656|                        19|            1.0807636|     3038.0977|[5313.85694808551...| [1.9438034, 1.745...|       [0.15658168, 0.17...|                 10|            0.9999984|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+\n\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1637331177367_1679010452",
       "id": "20211119-141257_1913706627",
       "dateCreated": "2021-11-19 14:12:57.367",
-      "dateStarted": "2021-11-22 15:33:39.934",
-      "dateFinished": "2021-11-22 15:33:40.553",
+      "dateStarted": "2021-11-23 11:52:53.186",
+      "dateFinished": "2021-11-23 11:52:53.735",
       "status": "FINISHED",
-      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Check on no. of relevant bases in representation",
       "text": "%pyspark\n\ndf.select(\"bp_n_relevant_bases\", \"rp_n_relevant_bases\").show()\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:37:43.425",
+      "dateUpdated": "2021-11-23 11:52:58.973",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -275,8 +321,8 @@
       "jobName": "paragraph_1637338160882_-1163181556",
       "id": "20211119-160920_335367253",
       "dateCreated": "2021-11-19 16:09:20.882",
-      "dateStarted": "2021-11-22 15:37:43.441",
-      "dateFinished": "2021-11-22 15:37:43.605",
+      "dateStarted": "2021-11-23 11:52:58.988",
+      "dateFinished": "2021-11-23 11:52:59.170",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -284,7 +330,7 @@
       "title": "Schema check",
       "text": "%pyspark\n\ndf.printSchema()\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:37:45.985",
+      "dateUpdated": "2021-11-23 11:53:02.165",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -317,8 +363,8 @@
       "jobName": "paragraph_1637592560967_162616024",
       "id": "20211122-144920_1820730068",
       "dateCreated": "2021-11-22 14:49:20.967",
-      "dateStarted": "2021-11-22 15:37:46.000",
-      "dateFinished": "2021-11-22 15:37:46.383",
+      "dateStarted": "2021-11-23 11:53:02.179",
+      "dateFinished": "2021-11-23 11:53:02.327",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -326,41 +372,7 @@
       "title": "Ingested sampled spectrum check",
       "text": "%pyspark\n\n# read in and reformat the data\ndfs \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(interim_xp_sampled_mean_spectrum_schema).csv(\u0027file:////user/nch/XP_SAMPLED_RAW.csv\u0027)\ndfs \u003d cast_all_arrays(dfs, xp_sampled_mean_spectrum_schema)\ndfs.show()\n\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 15:38:08.251",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/python",
-        "title": true,
-        "editorHide": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "apps": [],
-      "jobName": "paragraph_1637593241268_384832499",
-      "id": "20211122-150041_968328741",
-      "dateCreated": "2021-11-22 15:00:41.269",
-      "dateStarted": "2021-11-22 15:33:41.171",
-      "dateFinished": "2021-11-22 15:33:41.739",
-      "status": "FINISHED",
-      "errorMessage": "",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "title": "Example plots of sampled spectra",
-      "text": "%pyspark\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nn \u003d 10\n\nsample \u003d dfs.select(\"source_id\", \"flux\", \"flux_error\").toPandas()\nf, axes \u003d plt.subplots(n, 1, sharex\u003dTrue, figsize\u003d(8, 2*n))\n\nfor i in range(n):\n    flux \u003d np.array(sample.loc[i, \"flux\"])\n    error \u003d np.array(sample.loc[i, \"flux_error\"])\n    x \u003d np.arange(335.0, 335.0 +2.0*flux.size,2.0)\n    axes[i].plot(x, flux)\n    axes[i].fill_between(x, flux - error, flux + error, color\u003d\u0027gray\u0027, alpha\u003d0.2)\n    axes[i].set_title(\u0027source_id \u0027 + str(sample.loc[i, \"source_id\"]))\n",
-      "user": "nch",
-      "dateUpdated": "2021-11-22 15:50:00.649",
+      "dateUpdated": "2021-11-23 11:53:05.045",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -385,6 +397,48 @@
         "msg": [
           {
             "type": "TEXT",
+            "data": "+-------------------+-------------------+------------------+-------------------+--------------------+--------------------+\n|          source_id|        solution_id|                ra|                dec|                flux|          flux_error|\n+-------------------+-------------------+------------------+-------------------+--------------------+--------------------+\n|6030020833890693248|4545469030156206081|256.45814992197637|-28.452514787516083|[1.0889408E-17, 4...|[4.304545E-18, 3....|\n|6030020838301512192|4545469030156206081|256.47191317296966|-28.448841222359025|[1.1643161E-17, 3...|[3.5305727E-18, 2...|\n|6030020868250061312|4545469030156206081| 256.4803664471802| -28.43609033156031|[1.9678005E-17, 1...|[3.4442275E-18, 2...|\n|6030108077645263232|4545469030156206081|255.52089898401047|-28.374972736031303|[-1.4788831E-18, ...|[2.6169958E-18, 1...|\n|6030020872661249152|4545469030156206081|256.48344636534773|-28.441737213223597|[1.7946276E-17, 1...|[5.344963E-18, 3....|\n|6030108141985317760|4545469030156206081|255.55374907836546|-28.359745976710734|[6.0126944E-18, 5...|[3.0698606E-18, 2...|\n|6030020936969572096|4545469030156206081|256.46353922927096|-28.427610777426512|[1.448913E-17, 8....|[4.117422E-18, 3....|\n|6030108146364749568|4545469030156206081|255.55798242984343| -28.35397084866027|[1.330313E-17, 7....|[2.8492946E-18, 2...|\n|6030020975740465920|4545469030156206081|256.49260767247574| -28.43329800632626|[9.461836E-18, 5....|[5.9275428E-18, 4...|\n|6030020975740468864|4545469030156206081|256.48791637335205|-28.431981473944134|[2.78523E-18, 3.6...|[4.076407E-18, 2....|\n+-------------------+-------------------+------------------+-------------------+--------------------+--------------------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1637593241268_384832499",
+      "id": "20211122-150041_968328741",
+      "dateCreated": "2021-11-22 15:00:41.269",
+      "dateStarted": "2021-11-23 11:53:05.059",
+      "dateFinished": "2021-11-23 11:53:05.393",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Example plots of sampled spectra",
+      "text": "%pyspark\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nn \u003d 10\n\nsample \u003d dfs.select(\"source_id\", \"flux\", \"flux_error\").toPandas()\nfig, axes \u003d plt.subplots(n, 1, sharex\u003dTrue, figsize\u003d(8, 2*n))\n\nfor i in range(n):\n    flux \u003d np.array(sample.loc[i, \"flux\"])\n    error \u003d np.array(sample.loc[i, \"flux_error\"])\n    x \u003d np.arange(335.0, 335.0 +2.0*flux.size,2.0)\n    axes[i].plot(x, flux)\n    axes[i].fill_between(x, flux - error, flux + error, color\u003d\u0027gray\u0027, alpha\u003d0.2)\n    axes[i].set_title(\u0027source_id \u0027 + str(sample.loc[i, \"source_id\"]))\n",
+      "user": "nch",
+      "dateUpdated": "2021-11-23 11:53:18.109",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "title": true,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
             "data": "\u003cFigure size 576x1440 with 10 Axes\u003e\n"
           },
           {
@@ -397,16 +451,16 @@
       "jobName": "paragraph_1637594282783_1940315919",
       "id": "20211122-151802_1597974986",
       "dateCreated": "2021-11-22 15:18:02.783",
-      "dateStarted": "2021-11-22 15:36:04.936",
-      "dateFinished": "2021-11-22 15:36:06.163",
+      "dateStarted": "2021-11-23 11:53:18.153",
+      "dateFinished": "2021-11-23 11:53:19.466",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Similarity function (continuous representation)",
-      "text": "%pyspark\n\n# UDF to find spectra similar to a given template\ndef find_similar_continuous_spectra(data_frame : DataFrame, template : DataFrame):\n    \"\"\"\n    \"\"\"\n    \n    # define a filter clause based on relevant template attributes\n    filter_clause \u003d \u0027bp_n_relevant_bases \u003d %d and rp_n_relevant_bases \u003d %d and \u0027%(TODO)\n    \n    # get a temporary set having the same representation\n    temp_df \u003d data_frame.filter(filter_clause)\n    \n    # get any spectra that have the same basis coefficients within the combined uncertainties TODO\n    return temp_df.\n\n# we want this source as the template\nwant_id \u003d 6030020833890693248\n\n# get the relevant attributes for this\ntemplate_df \u003d df.filter(\u0027source_id \u003d 6030020833890693248\u0027)\n\n# get any that are similar\nsimilar_df \u003d find_similar_continuous_spectra(df, template_df).show()\n\n",
+      "text": "%pyspark\n\nfrom pyspark.sql.types import FloatType\nfrom pyspark.sql.functions import udf\nfrom pyspark.sql import functions\nfrom math import sqrt\nfrom pyspark.sql.functions import asc, lit, array\n\n# UDF to find spectra similar to a given template\ndef is_bp_similar(bp_coefficients, n_relevant, template_bp_coefficients, template_n_relevant):\n    return udf(lambda )    \n    return udf(lambda flux: getRmsError(flux, prototypeFlux), FloatType())\n\n\n\ndef find_similar_continuous_spectra(data_frame : DataFrame, template : DataFrame):\n    \"\"\"\n    The idea: check for similarity in the coninuous representation. The template is defined by\n    it\u0027s relevant basis coefficients so check for any other spectrum whose relevant basis\n    coefficients match those of the template up to the Nth coefficient in BP and RP independently, \n    where N is whichever is the smaller out of the relevant bases in the template and the\n    relevant bases in the source under test.\n    \"\"\"\n    \n    # add in the BP similarity flag\n    data_frame \u003d data_frame.withColumn(\u0027bp_similar\u0027, is_bp_similar(\u0027bp_coefficients\u0027, \u0027bp_n_relevant_bases\u0027, ), BooleanType())\n    \n    # return the subset where both BP and RP are similar\n    return data_frame.filter(\u0027bp_similar \u003d True AND rp_similar \u003d True\u0027)\n\n\n# we want this source as the template\nwant_id \u003d 6030020833890693248\n\n# get the relevant attributes for this\ntemplate_df \u003d df.filter(\u0027source_id \u003d 6030020833890693248\u0027)\n\n# get any that are similar\nsimilar_df \u003d find_similar_continuous_spectra(df, template_df).show()\n\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 16:54:35.178",
+      "dateUpdated": "2021-11-23 11:39:49.865",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -444,18 +498,95 @@
       "progressUpdateIntervalMs": 500
     },
     {
+      "title": "Similar sampled spectrum example UDF",
+      "text": "%pyspark\n\nfrom pyspark.sql.types import FloatType\nfrom pyspark.sql.functions import udf\nfrom pyspark.sql import functions\nfrom math import sqrt\n\n# Define a similarity function\ndef getRmsError(x, x0):\n    accum \u003d 0;\n    n \u003d len(x0);\n    for i in range(0, n):\n        accum +\u003d (x[i]-x0[i])**2\n    return sqrt(accum/n)\n\n# Function to generate an UDF based on the prototype flux that can be called on each element of the DataFrame\ndef rmse(prototypeFlux):\n    return udf(lambda flux: getRmsError(flux, prototypeFlux), FloatType())\n\n",
+      "user": "nch",
+      "dateUpdated": "2021-11-23 11:55:38.226",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1637599419369_-607852594",
+      "id": "20211122-164339_1088469008",
+      "dateCreated": "2021-11-22 16:43:39.370",
+      "dateStarted": "2021-11-23 11:54:42.157",
+      "dateFinished": "2021-11-23 11:54:42.252",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Test the above UDF",
+      "text": "%pyspark\n\nfrom pyspark.sql.functions import asc\n\nprototype \u003d dfs.filter(\"source_id \u003d 6030020833890693248\").limit(1).toPandas()\nprototypeFlux \u003d np.array(prototype.loc[0, \"flux\"])\n\nsimilar \u003d dfs \\\n    .withColumn(\"rmse\", rmse(prototypeFlux)(\"flux\")) \\\n    .select(\"source_id\", \"rmse\", \"flux\") \\\n    .sort(asc(\"rmse\")) \\\n    .limit(5) \\\n    .toPandas() # Return Pandas dataframe rather than Spark dataframe\n\n# Please note different API of pandas dataframe\nprint(similar[[\"source_id\", \"rmse\"]])",
+      "user": "nch",
+      "dateUpdated": "2021-11-23 11:56:43.600",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "             source_id          rmse\n0  6030020833890693248  0.000000e+00\n1  6030108077645263232  1.713664e-17\n2  6030020936969572096  1.996424e-17\n3  6030020838301512192  2.062282e-17\n4  6030108146364749568  2.213388e-17\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1637668173737_1369895872",
+      "id": "20211123-114933_1476090305",
+      "dateCreated": "2021-11-23 11:49:33.737",
+      "dateStarted": "2021-11-23 11:56:15.858",
+      "dateFinished": "2021-11-23 11:56:16.191",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
       "text": "%pyspark\n",
       "user": "nch",
-      "dateUpdated": "2021-11-22 16:43:39.370",
+      "dateUpdated": "2021-11-23 11:54:52.937",
       "config": {},
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1637599419369_-607852594",
-      "id": "20211122-164339_1088469008",
-      "dateCreated": "2021-11-22 16:43:39.370",
+      "jobName": "paragraph_1637668492936_1541973812",
+      "id": "20211123-115452_1007415194",
+      "dateCreated": "2021-11-23 11:54:52.936",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }
