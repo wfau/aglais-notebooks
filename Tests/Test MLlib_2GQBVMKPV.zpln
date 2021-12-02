@@ -1,0 +1,72 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\n\nfrom pyspark.mllib.tree import RandomForest, RandomForestModel\nfrom pyspark.mllib.util import MLUtils\n\n# Load and parse the data file into an RDD of LabeledPoint.\ndata \u003d MLUtils.loadLibSVMFile(sc, \u0027data/mllib/sample_libsvm_data.txt\u0027)\n# Split the data into training and test sets (30% held out for testing)\n(trainingData, testData) \u003d data.randomSplit([0.7, 0.3])\n\n# Train a RandomForest model.\n#  Empty categoricalFeaturesInfo indicates all features are continuous.\n#  Note: Use larger numTrees in practice.\n#  Setting featureSubsetStrategy\u003d\"auto\" lets the algorithm choose.\nmodel \u003d RandomForest.trainClassifier(trainingData, numClasses\u003d2, categoricalFeaturesInfo\u003d{},\n                                     numTrees\u003d3, featureSubsetStrategy\u003d\"auto\",\n                                     impurity\u003d\u0027gini\u0027, maxDepth\u003d4, maxBins\u003d32)\n\n# Evaluate model on test instances and compute test error\npredictions \u003d model.predict(testData.map(lambda x: x.features))\nlabelsAndPredictions \u003d testData.map(lambda lp: lp.label).zip(predictions)\ntestErr \u003d labelsAndPredictions.filter(\n    lambda lp: lp[0] !\u003d lp[1]).count() / float(testData.count())\nprint(\u0027Test Error \u003d \u0027 + str(testErr))\nprint(\u0027Learned classification forest model:\u0027)\nprint(model.toDebugString())\n\n# Save and load model\nmodel.save(sc, \"target/tmp/myRandomForestClassificationModel\")\nsameModel \u003d RandomForestModel.load(sc, \"target/tmp/myRandomForestClassificationModel\")",
+      "user": "gaiauser",
+      "dateUpdated": "2021-12-02 10:12:08.930",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "org.apache.thrift.transport.TTransportException\n\tat org.apache.thrift.transport.TIOStreamTransport.read(TIOStreamTransport.java:132)\n\tat org.apache.thrift.transport.TTransport.readAll(TTransport.java:86)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readAll(TBinaryProtocol.java:429)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readI32(TBinaryProtocol.java:318)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readMessageBegin(TBinaryProtocol.java:219)\n\tat org.apache.thrift.TServiceClient.receiveBase(TServiceClient.java:69)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.recv_interpret(RemoteInterpreterService.java:274)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:258)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:233)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:229)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:135)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1638439928930_1661282119",
+      "id": "20201015-113722_472819975",
+      "dateCreated": "2021-12-02 10:12:08.930",
+      "status": "READY"
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "gaiauser",
+      "dateUpdated": "2021-12-02 10:12:08.930",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1638439928930_1986121321",
+      "id": "20201015-113740_2030586146",
+      "dateCreated": "2021-12-02 10:12:08.930",
+      "status": "READY"
+    }
+  ],
+  "name": "Test MLlib",
+  "id": "2GQBVMKPV",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

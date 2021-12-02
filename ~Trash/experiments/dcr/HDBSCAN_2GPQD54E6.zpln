@@ -1,0 +1,32 @@
+{
+  "paragraphs": [
+    {
+      "user": "admin",
+      "dateUpdated": "2021-12-02 09:56:37.042",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1638438997042_9207477",
+      "id": "20210922-151150_1228972577",
+      "dateCreated": "2021-12-02 09:56:37.042",
+      "status": "READY"
+    }
+  ],
+  "name": "HDBSCAN",
+  "id": "2GPQD54E6",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
