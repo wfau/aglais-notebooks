@@ -47,7 +47,7 @@
       "title": "Raw sample query definition",
       "text": "%pyspark\n\n# initial query on the entire catalogue: predicates come from Kounkel \u0026 Covery (2019) Section 2:\nquery \u003d \u0027select designation, source_id, ra, ra_error, dec, dec_error, parallax, parallax_error, parallax_over_error, pmra, pmra_error, pmdec, pmdec_error, l, b \u0027 + \\\n        \u0027from gaia_source where \u0027 + \\\n        \u0027abs(b) \u003c 30.0 AND parallax \u003e 1.0 and parallax_over_error \u003e 10.0 AND phot_g_mean_flux_over_error \u003e 36.19 AND astrometric_sigma5d_max \u003c 0.3 and \u0027 + \\\n        \u0027visibility_periods_used \u003e 8 and (astrometric_excess_noise \u003c 1 OR (astrometric_excess_noise \u003e 1 AND astrometric_excess_noise_sig \u003c 2))\u0027\n    \n# define a data frame using the query string\ndf \u003d spark.sql(query)\n",
       "user": "dcr",
-      "dateUpdated": "2021-09-28 10:51:19.429",
+      "dateUpdated": "2021-12-09 06:35:36.750",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -61,7 +61,8 @@
         },
         "editorMode": "ace/mode/python",
         "title": true,
-        "editorHide": true
+        "editorHide": false,
+        "tableHide": false
       },
       "settings": {
         "params": {},
@@ -266,7 +267,7 @@
   "angularObjects": {
     "md:shared_process": [],
     "sh:shared_process": [],
-    "spark:dcr:": []
+    "spark:zrq:": []
   },
   "config": {
     "isZeppelinNotebookCronEnable": false

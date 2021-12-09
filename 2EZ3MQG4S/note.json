@@ -3,7 +3,7 @@
     {
       "text": "%pyspark\n\n# define the data frame source on the given column selection only (we don\u0027t want to read the whole thing!)\ndf \u003d spark.read.parquet(\"file:///data/gaia/dr2/*.parquet\").select(\"source_id\",\"parallax_error\").where(\"parallax_error is not null\")\n# note also we have to exclude the null values resulting from 2-paramater astrometric solutions (this wasn\u0027t necessary in TGAS by definition)\n\n# debug: physical execution plan and resulting schema\ndf.explain()\ndf.show()\ndf.schema\n",
       "user": "gaiauser",
-      "dateUpdated": "2021-01-22 19:18:39.612",
+      "dateUpdated": "2021-11-18 12:38:22.020",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -15,7 +15,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -42,7 +43,7 @@
     {
       "text": "%pyspark\n# column schema check:\n#dfbig \u003d sqlContext.read.parquet(\"/hadoop/gaia/parquet/gdr2/gaia_source/*.parquet\")\n#dfbig.printSchema()\n",
       "user": "admin",
-      "dateUpdated": "2020-11-30 21:23:42.792",
+      "dateUpdated": "2021-11-18 12:38:30.905",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -54,7 +55,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -76,7 +78,7 @@
     {
       "text": "%pyspark\n\n# create an RDD from the data frame\nrdd \u003d df.rdd\nprint (\u0027RDD created from Data Frame has %d partitions by default\u0027 % (rdd.getNumPartitions()))\n\n# map at HEALPix level 5\nhealpix_level_5 \u003d rdd.map(lambda x: (x[0] \u003e\u003e 49, x[1])) \n\n# repartition the data (no partitioning function \u003d default hash partitioner) - we cannot assume that all occurences of a given key are confined to one partition\n# (this step would not be necessary if the data were partitioned by HEALPix at this level or higher)\nrepartitioned_rdd \u003d healpix_level_5.partitionBy(64)\n# for now match the number of partitions to the number of cores ... note that in Jan 2020 deployment this step takes 15 to 20 mins.\n\n# debug:\nvalues_per_key \u003d repartitioned_rdd.map(lambda x: (x[0], 1)).reduceByKey(lambda a,b: a+b)\nprint(\"Number of unique keys in repartitioned RDD: \",values_per_key.count())\nprint(\"Number of partitions: \", repartitioned_rdd.getNumPartitions())\nprint(values_per_key.sample(False, 0.001).collect())",
       "user": "admin",
-      "dateUpdated": "2020-11-30 21:23:50.781",
+      "dateUpdated": "2021-11-18 12:38:32.626",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -88,7 +90,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -149,7 +152,7 @@
     {
       "text": "%pyspark\n\n# remedian class\nclass Remedian():\n    \u0027\u0027\u0027\n    classdocs TODO\n    \u0027\u0027\u0027\n    \n    # fixed buffer size must always be an odd integer in this implementation\n    bufferSize \u003d 11\n    \n    def __init__(self):\n        \u0027\u0027\u0027\n        Constructor.\n        \u0027\u0027\u0027\n        self.values \u003d []\n        self.numInArray \u003d []\n        self.numAccumulated \u003d 0\n        self.addNewList()\n        self.merged \u003d set()\n        \n    def add(self, value):\n        self.append(value, 0)\n        self.numAccumulated +\u003d 1\n    \n    def append(self, value, index):\n\n        # convenience references\n        array \u003d self.values[index]\n        num \u003d self.numInArray[index]\n\n        if num \u003d\u003d self.bufferSize:\n            \n            # need to determine the median of this array\n            array.sort()\n            median \u003d array[int(self.bufferSize / 2)]\n            \n            # create a new accumulation array if needed\n            if len(self.values) - 1 \u003d\u003d index: self.addNewList()\n            \n            # and append to the next array accumulation\n            self.append(median, index + 1)\n            num \u003d 0\n            self.numInArray[index] \u003d num\n            \n        # finally add in the original new value\n        array[num] \u003d value\n        self.numInArray[index] \u003d num + 1\n    \n    def getMedian(self):\n        \n        # default if the method cannot return a valid resut\n        value \u003d float(\"nan\")\n        \n        # get the lowest level array accumulation\n        array \u003d self.values[-1]\n        n \u003d self.numInArray[-1]\n        \n        # derive the median\n        if n \u003d\u003d 1:\n            value \u003d array[0]\n        elif n \u003e 1:\n            # copy active elements and sort the array:\n            copy \u003d array[0:n]\n            copy.sort()\n            if n % 2 \u003d\u003d 0:\n                i \u003d int(n/2) - 1\n                value \u003d (copy[i] + copy[i + 1]) / 2.0\n            else:\n                value \u003d copy[int(n / 2)]\n                \n        return value\n    \n    def addNewList(self):\n        \n        # append new list of buffer length\n        self.values.append([0.0] * self.bufferSize)\n        self.numInArray.append(0)\n    \n    def getNumberAccumulated(self):\n        return self.numAccumulated\n        \n# utility generator function for the class\nfrom collections import defaultdict\n\ndef remedian(iterator):\n    \n    remedians \u003d defaultdict(lambda: Remedian())\n    for k,v in iterator: remedians[k].add(v)\n        \n    yield [(k, remedian.getMedian()) for k, remedian in remedians.items()]",
       "user": "gaiauser",
-      "dateUpdated": "2020-01-14 09:46:21.611",
+      "dateUpdated": "2021-11-18 12:38:38.836",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -162,7 +165,8 @@
           "completionSupport": true
         },
         "editorMode": "ace/mode/python",
-        "lineNumbers": true
+        "lineNumbers": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -223,7 +227,7 @@
     {
       "text": "%pyspark\n\n# plot the results\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport healpy as hp\n\n# healpy constants\nNSIDE \u003d 32\nNPIX \u003d hp.nside2npix(NSIDE)\n\n# do the visualisation\narray_like \u003d np.empty(NPIX)\nfor item in result.collect(): array_like[item[0]] \u003d item[1]\nhp.mollview(array_like, nest\u003dTrue, title\u003d\"Median parallax uncertainty [mas]\")\nhp.graticule(coord\u003d\"E\", color\u003d\"white\")",
       "user": "gaiauser",
-      "dateUpdated": "2020-01-14 09:52:36.129",
+      "dateUpdated": "2021-11-18 12:38:42.866",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -235,7 +239,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -266,7 +271,7 @@
     {
       "text": "%pyspark\n\n# Some Apache Spark 101 stuff\n\nrdd \u003d df.rdd\nprint (\u0027RDD created from Data Frame has %d partitions by default\u0027 % (rdd.getNumPartitions()))\n\n# by default spark creates one partition per (default) block size of file storage. If this default is 128Mbyte, then 5985 partitions means a total data size of 766GB here.\n# Jobs are then distributed across the available worker nodes in parallel, one partition per worker at a time, concurrently across the workers to achieve parallelism, \n# until the job has run over all the partitions",
       "user": "gaiauser",
-      "dateUpdated": "2020-12-02 10:00:41.997",
+      "dateUpdated": "2021-11-18 12:38:46.802",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -278,7 +283,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -305,7 +311,7 @@
     {
       "text": "%pyspark\n\n# row counts by partition:\n\nfrom pyspark.sql.functions  import spark_partition_id\npartition_info \u003d df.withColumn(\"partitionId\", spark_partition_id()).groupBy(\"partitionId\").count()\n\n# cache it in memory to make the subsequent cells speedy\npartition_info.cache()\n\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-12-02 10:26:36.692",
+      "dateUpdated": "2021-11-18 12:38:51.276",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -317,7 +323,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -344,7 +351,7 @@
     {
       "text": "%pyspark\n\npartition_info.show()\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-12-02 10:26:51.957",
+      "dateUpdated": "2021-11-18 12:38:53.755",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -356,7 +363,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -383,7 +391,7 @@
     {
       "text": "%pyspark\n\n# check data skew\n# type(partition_info)\n\ncounts \u003d list(partition_info.select(\u0027count\u0027).toPandas()[\u0027count\u0027])\n\ntotal \u003d 0\nfor i in range(len(counts)): total \u003d total + counts[i]\nprint(\u0027Total rows across all partitions is %d\u0027%(total))\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-12-02 11:50:55.923",
+      "dateUpdated": "2021-11-18 12:39:00.472",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -395,7 +403,8 @@
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/python",
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -420,18 +429,57 @@
       "progressUpdateIntervalMs": 500
     },
     {
+      "text": "%pyspark\ngaia_source_schema\n\n",
+      "user": "nch",
+      "dateUpdated": "2021-11-17 16:51:44.490",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "StructType(List(StructField(solution_id,LongType,true),StructField(designation,StringType,true),StructField(source_id,LongType,false),StructField(random_index,LongType,true),StructField(ref_epoch,DoubleType,true),StructField(ra,DoubleType,true),StructField(ra_error,FloatType,true),StructField(dec,DoubleType,true),StructField(dec_error,FloatType,true),StructField(parallax,DoubleType,true),StructField(parallax_error,FloatType,true),StructField(parallax_over_error,FloatType,true),StructField(pm,FloatType,true),StructField(pmra,DoubleType,true),StructField(pmra_error,FloatType,true),StructField(pmdec,DoubleType,true),StructField(pmdec_error,FloatType,true),StructField(ra_dec_corr,FloatType,true),StructField(ra_parallax_corr,FloatType,true),StructField(ra_pmra_corr,FloatType,true),StructField(ra_pmdec_corr,FloatType,true),StructField(dec_parallax_corr,FloatType,true),StructField(dec_pmra_corr,FloatType,true),StructField(dec_pmdec_corr,FloatType,true),StructField(parallax_pmra_corr,FloatType,true),StructField(parallax_pmdec_corr,FloatType,true),StructField(pmra_pmdec_corr,FloatType,true),StructField(astrometric_n_obs_al,ShortType,true),StructField(astrometric_n_obs_ac,ShortType,true),StructField(astrometric_n_good_obs_al,ShortType,true),StructField(astrometric_n_bad_obs_al,ShortType,true),StructField(astrometric_gof_al,FloatType,true),StructField(astrometric_chi2_al,FloatType,true),StructField(astrometric_excess_noise,FloatType,true),StructField(astrometric_excess_noise_sig,FloatType,true),StructField(astrometric_params_solved,ByteType,true),StructField(astrometric_primary_flag,ByteType,true),StructField(nu_eff_used_in_astrometry,FloatType,true),StructField(pseudocolour,FloatType,true),StructField(pseudocolour_error,FloatType,true),StructField(ra_pseudocolour_corr,FloatType,true),StructField(dec_pseudocolour_corr,FloatType,true),StructField(parallax_pseudocolour_corr,FloatType,true),StructField(pmra_pseudocolour_corr,FloatType,true),StructField(pmdec_pseudocolour_corr,FloatType,true),StructField(astrometric_matched_transits,ShortType,true),StructField(visibility_periods_used,ShortType,true),StructField(astrometric_sigma5d_max,FloatType,true),StructField(matched_transits,ShortType,true),StructField(new_matched_transits,ShortType,true),StructField(matched_transits_removed,ShortType,true),StructField(ipd_gof_harmonic_amplitude,FloatType,true),StructField(ipd_gof_harmonic_phase,FloatType,true),StructField(ipd_frac_multi_peak,ByteType,true),StructField(ipd_frac_odd_win,ByteType,true),StructField(ruwe,FloatType,true),StructField(scan_direction_strength_k1,FloatType,true),StructField(scan_direction_strength_k2,FloatType,true),StructField(scan_direction_strength_k3,FloatType,true),StructField(scan_direction_strength_k4,FloatType,true),StructField(scan_direction_mean_k1,FloatType,true),StructField(scan_direction_mean_k2,FloatType,true),StructField(scan_direction_mean_k3,FloatType,true),StructField(scan_direction_mean_k4,FloatType,true),StructField(duplicated_source,ByteType,true),StructField(phot_g_n_obs,ShortType,true),StructField(phot_g_mean_flux,DoubleType,true),StructField(phot_g_mean_flux_error,FloatType,true),StructField(phot_g_mean_flux_over_error,FloatType,true),StructField(phot_g_mean_mag,FloatType,true),StructField(phot_bp_n_obs,ShortType,true),StructField(phot_bp_mean_flux,DoubleType,true),StructField(phot_bp_mean_flux_error,FloatType,true),StructField(phot_bp_mean_flux_over_error,FloatType,true),StructField(phot_bp_mean_mag,FloatType,true),StructField(phot_rp_n_obs,ShortType,true),StructField(phot_rp_mean_flux,DoubleType,true),StructField(phot_rp_mean_flux_error,FloatType,true),StructField(phot_rp_mean_flux_over_error,FloatType,true),StructField(phot_rp_mean_mag,FloatType,true),StructField(phot_bp_rp_excess_factor,FloatType,true),StructField(phot_bp_n_contaminated_transits,ShortType,true),StructField(phot_bp_n_blended_transits,ShortType,true),StructField(phot_rp_n_contaminated_transits,ShortType,true),StructField(phot_rp_n_blended_transits,ShortType,true),StructField(phot_proc_mode,ByteType,true),StructField(bp_rp,FloatType,true),StructField(bp_g,FloatType,true),StructField(g_rp,FloatType,true),StructField(radial_velocity,FloatType,true),StructField(radial_velocity_error,FloatType,true),StructField(rv_method_used,ByteType,true),StructField(rv_nb_transits,ShortType,true),StructField(rv_nb_deblended_transits,ShortType,true),StructField(rv_visibility_periods_used,ShortType,true),StructField(rv_expected_sig_to_noise,FloatType,true),StructField(rv_renormalised_gof,FloatType,true),StructField(rv_chisq_pvalue,FloatType,true),StructField(rv_time_duration,FloatType,true),StructField(rv_amplitude_robust,FloatType,true),StructField(rv_template_teff,FloatType,true),StructField(rv_template_logg,FloatType,true),StructField(rv_template_fe_h,FloatType,true),StructField(rv_atm_param_origin,ShortType,true),StructField(vbroad,FloatType,true),StructField(vbroad_error,FloatType,true),StructField(vbroad_nb_transits,ShortType,true),StructField(grvs_mag,FloatType,true),StructField(grvs_mag_error,FloatType,true),StructField(grvs_mag_nb_transits,ShortType,true),StructField(rvs_spec_sig_to_noise,FloatType,true),StructField(phot_variable_flag,StringType,true),StructField(l,DoubleType,true),StructField(b,DoubleType,true),StructField(ecl_lon,DoubleType,true),StructField(ecl_lat,DoubleType,true),StructField(qso,ByteType,true),StructField(galaxy,ByteType,true),StructField(non_single_star,ShortType,true),StructField(has_xp_continuous,ByteType,true),StructField(has_xp_sampled,ByteType,true),StructField(has_rvs,ByteType,true),StructField(has_epoch_photometry,ByteType,true),StructField(has_epoch_rv,ByteType,true),StructField(has_mcmc_gspphot,ByteType,true),StructField(has_mcmc_msc,ByteType,true),StructField(in_andromeda_survey,ByteType,true),StructField(classprob_dsc_combmod_quasar,FloatType,true),StructField(classprob_dsc_combmod_galaxy,FloatType,true),StructField(classprob_dsc_combmod_star,FloatType,true),StructField(classprob_dsc_combmod_whitedwarf,FloatType,true),StructField(classprob_dsc_combmod_binarystar,FloatType,true),StructField(teff_gspphot,FloatType,true),StructField(teff_gspphot_lower,FloatType,true),StructField(teff_gspphot_upper,FloatType,true),StructField(logg_gspphot,FloatType,true),StructField(logg_gspphot_lower,FloatType,true),StructField(logg_gspphot_upper,FloatType,true),StructField(mh_gspphot,FloatType,true),StructField(mh_gspphot_lower,FloatType,true),StructField(mh_gspphot_upper,FloatType,true),StructField(distance_gspphot,FloatType,true),StructField(distance_gspphot_lower,FloatType,true),StructField(distance_gspphot_upper,FloatType,true),StructField(azero_gspphot,FloatType,true),StructField(azero_gspphot_lower,FloatType,true),StructField(azero_gspphot_upper,FloatType,true),StructField(ag_gspphot,FloatType,true),StructField(ag_gspphot_lower,FloatType,true),StructField(ag_gspphot_upper,FloatType,true),StructField(ebpminrp_gspphot,FloatType,true),StructField(ebpminrp_gspphot_lower,FloatType,true),StructField(ebpminrp_gspphot_upper,FloatType,true),StructField(libname_gspphot,StringType,true)))"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1637167863432_-276974862",
+      "id": "20211117-165103_1684779498",
+      "dateCreated": "2021-11-17 16:51:03.432",
+      "dateStarted": "2021-11-17 16:51:44.515",
+      "dateFinished": "2021-11-17 16:51:44.610",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
       "text": "%pyspark\n",
-      "user": "gaiauser",
-      "dateUpdated": "2020-12-02 10:11:57.410",
+      "user": "nch",
+      "dateUpdated": "2021-11-17 16:51:44.491",
       "config": {},
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1606903917409_-1486933681",
-      "id": "20201202-101157_492000031",
-      "dateCreated": "2020-12-02 10:11:57.409",
+      "jobName": "paragraph_1637167904490_-172599335",
+      "id": "20211117-165144_2092996165",
+      "dateCreated": "2021-11-17 16:51:44.490",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }
@@ -441,7 +489,9 @@
   "noteParams": {},
   "noteForms": {},
   "angularObjects": {
-    "spark:shared_process": []
+    "md:shared_process": [],
+    "spark:nch:": [],
+    "sh:shared_process": []
   },
   "config": {
     "isZeppelinNotebookCronEnable": false,

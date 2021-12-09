@@ -517,7 +517,7 @@
     {
       "text": "%spark.pyspark\nimport random\n\nNUM_SAMPLES \u003d 1000000000\n\ndef inside(p):\n    x, y \u003d random.random(), random.random()\n    return x*x + y*y \u003c 1\n\ncount \u003d sc.parallelize(xrange(0, NUM_SAMPLES)) \\\n             .filter(inside).count()\nprint \"Pi is roughly %f\" % (4.0 * count / NUM_SAMPLES)\n\n",
       "user": "gaiauser",
-      "dateUpdated": "2020-06-01 13:20:21.856",
+      "dateUpdated": "2021-11-02 17:07:55.896",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -535,14 +535,22 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[0;36m  File \u001b[0;32m\"/tmp/ipykernel_35964/1895788059.py\"\u001b[0;36m, line \u001b[0;32m11\u001b[0m\n\u001b[0;31m    print \"Pi is roughly %f\" % (4.0 * count / NUM_SAMPLES)\u001b[0m\n\u001b[0m                           ^\u001b[0m\n\u001b[0;31mSyntaxError\u001b[0m\u001b[0;31m:\u001b[0m invalid syntax\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1588249894230_-878383906",
       "id": "20200430-120425_1459560607",
       "dateCreated": "2020-04-30 12:31:34.230",
-      "dateStarted": "2020-06-01 13:20:21.889",
-      "dateFinished": "2020-06-01 13:21:04.002",
-      "status": "FINISHED",
-      "errorMessage": "",
+      "dateStarted": "2021-11-02 17:07:55.924",
+      "dateFinished": "2021-11-02 17:08:22.884",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -631,9 +639,8 @@
   "noteForms": {},
   "angularObjects": {
     "md:shared_process": [],
-    "python:shared_process": [],
-    "angular:shared_process": [],
-    "spark:shared_process": []
+    "sh:shared_process": [],
+    "spark:gaiauser:": []
   },
   "config": {
     "isZeppelinNotebookCronEnable": false

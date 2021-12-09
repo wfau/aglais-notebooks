@@ -47,7 +47,7 @@
       "title": "Database and table details",
       "text": "%pyspark\n\n# show the database(s) available within the context\nspark.sql(\"show databases\").show()\n\n# show the contents of the catalogue store that has been set up\nprint(\"Tables available:\")\nfor line in spark.catalog.listTables(): print (line)\n\n# show the first 20 records from the Gaia source catalogue\nprint(\"\\nFirst 20 entries in gaia_source:\")\nspark.sql(\"select * from gaia_source\").show()\n",
       "user": "nch",
-      "dateUpdated": "2021-06-28 12:28:34.345",
+      "dateUpdated": "2021-12-09 06:37:50.363",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -60,7 +60,7 @@
           "completionSupport": true
         },
         "editorMode": "ace/mode/python",
-        "editorHide": true,
+        "editorHide": false,
         "title": true,
         "tableHide": false
       },
@@ -321,7 +321,7 @@
   "angularObjects": {
     "md:shared_process": [],
     "sh:shared_process": [],
-    "spark:shared_process": []
+    "spark:zrq:": []
   },
   "config": {
     "isZeppelinNotebookCronEnable": false
