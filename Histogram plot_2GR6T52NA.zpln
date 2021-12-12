@@ -1,0 +1,149 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\n\n# define the data source\ngs_df \u003d sqlContext.read.parquet(\"/hadoop/gaia/parquet/gdr2/gaia_source/*.parquet\")\n\n# register as SQL-queryable \ngs_df.createOrReplaceTempView(\"gaia_source\")\n\n# make the query\ncolname \u003d \"astrometric_n_bad_obs_al\"\nsql_df \u003d spark.sql(\"SELECT \" + colname + \", COUNT(*) AS n FROM gaia_source GROUP BY \" + colname)\n",
+      "user": "gaiauser",
+      "dateUpdated": "2021-12-12 21:48:24.532",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1639345704532_2032211395",
+      "id": "20200825-153408_1365825530",
+      "dateCreated": "2021-12-12 21:48:24.532",
+      "status": "READY"
+    },
+    {
+      "text": "%spark.pyspark\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\n# there has to be a more elegant way of doing this unpacking:\nnrows \u003d sql_df.count()\nx \u003d np.empty(nrows)\nheight \u003d np.empty(nrows)\ni \u003d 0\nfor item in sql_df.rdd.collect(): \n    x[i] \u003d item[0]\n    height[i] \u003d item[1]\n    i \u003d i + 1\n\n# plot the histogram:\nplt.bar(x, height, width \u003d 1.0, log \u003d True)\nplt.xlabel(colname)\nplt.ylabel(\"Count\")",
+      "user": "gaiauser",
+      "dateUpdated": "2021-12-12 21:48:24.532",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Text(0, 0.5, \u0027Count\u0027)\u003cFigure size 432x288 with 1 Axes\u003e\n"
+          },
+          {
+            "type": "IMG",
+            "data": "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\u003d\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1639345704532_718638174",
+      "id": "20200825-153643_1683187515",
+      "dateCreated": "2021-12-12 21:48:24.532",
+      "status": "READY"
+    },
+    {
+      "text": "%spark.pyspark\n\nfor i in range(nrows):\n    if x[i] \u003c 10.0: print (x[i], height[i])",
+      "user": "gaiauser",
+      "dateUpdated": "2021-12-12 21:48:24.533",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "1.0 521032315.0\n6.0 9210845.0\n3.0 105601701.0\n5.0 18941268.0\n9.0 3225133.0\n4.0 43510829.0\n8.0 3723537.0\n7.0 5225023.0\n2.0 250811802.0\n0.0 723486086.0\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1639345704533_1899879261",
+      "id": "20200826-084659_2004758641",
+      "dateCreated": "2021-12-12 21:48:24.533",
+      "status": "READY"
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "gaiauser",
+      "dateUpdated": "2021-12-12 21:48:24.533",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1639345704533_384365086",
+      "id": "20200826-105547_769430697",
+      "dateCreated": "2021-12-12 21:48:24.533",
+      "status": "READY"
+    }
+  ],
+  "name": "Histogram plot",
+  "id": "2GR6T52NA",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
