@@ -340,9 +340,9 @@
       "status": "FINISHED"
     },
     {
-      "text": "%pyspark\n\n# define a data frame against the full parquet-backed data set\ndfp \u003d spark.sql(\u0027select * from xp_continuous_mean_spectrum\u0027)\n\n# set up the template spectrum as the first of those ingested\ntemplate_df \u003d dfp.filter(\u0027source_id \u003d 6030020833890693248\u0027)\n\n# get any that are similar and show them: should yield the template and it\u0027s duplicate.\nsimilar_df \u003d find_similar_continuous_spectra(dfp, template_df).show()",
+      "text": "%pyspark\n\n# define a data frame against the full parquet-backed data set\ndfp \u003d spark.sql(\u0027select * from xp_continuous_mean_spectrum\u0027)\n\n# set up the template spectrum as the first of those ingested\ntemplate_df \u003d dfp.filter(\u0027source_id \u003d 6030020833890693248\u0027)\n\n# get any that are similar and show them: should yield the template and it\u0027s duplicate.\nsimilar_df \u003d find_similar_continuous_spectra(dfp, template_df)\n\n# look-see to sanity check\nsimilar_df.show()\n",
       "user": "nch",
-      "dateUpdated": "2022-02-28 09:42:22.236",
+      "dateUpdated": "2022-02-28 09:58:31.205",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -379,22 +379,22 @@
           "group": "spark",
           "values": [
             {
-              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d0"
+              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d6"
             },
             {
-              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d1"
+              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d7"
             },
             {
-              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d2"
+              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d8"
             },
             {
-              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d3"
+              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d9"
             },
             {
-              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d4"
+              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d10"
             },
             {
-              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d5"
+              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d11"
             }
           ],
           "interpreterSettingId": "spark"
@@ -404,17 +404,18 @@
       "jobName": "paragraph_1646041106954_1321861113",
       "id": "paragraph_1645630193953_1666630424",
       "dateCreated": "2022-02-28 09:38:26.954",
-      "dateStarted": "2022-02-28 09:42:22.238",
-      "dateFinished": "2022-02-28 09:42:53.879",
+      "dateStarted": "2022-02-28 09:58:31.207",
+      "dateFinished": "2022-02-28 09:59:13.433",
       "status": "FINISHED"
     },
     {
       "title": "Plot results",
       "text": "%pyspark\n\n# GaiaXPy utilities\nfrom gaiaxpy import plot_spectra, convert\n\n# Spark data frame to Pandas \ncontinuous_spectra \u003d similar_df.toPandas()\n\n# convert to sampled form:\nmean_spectra, sampling \u003d convert(continuous_spectra, save_file \u003d False)\n    \n# plot to sanity check:\nplot_spectra(mean_spectra, sampling \u003d sampling, multi\u003dFalse, show_plot\u003dTrue, save_path\u003dNone, legend\u003dTrue)\n\n",
       "user": "nch",
-      "dateUpdated": "2022-02-28 09:50:33.259",
+      "dateUpdated": "2022-02-28 09:59:57.831",
       "progress": 0,
       "config": {
+        "lineNumbers": true,
         "editorSetting": {
           "language": "python",
           "editOnDblClick": false,
@@ -432,12 +433,58 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Processing data [50%]\r                              \rProcessing data [100%]\r                              \r"
+          },
+          {
+            "type": "TEXT",
+            "data": "Fail to execute line 10: mean_spectra, sampling \u003d convert(continuous_spectra, save_file \u003d False)\nTraceback (most recent call last):\n  File \"/tmp/1646040770994-0/zeppelin_python.py\", line 153, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 10, in \u003cmodule\u003e\n  File \"/usr/local/lib/python3.7/site-packages/gaiaxpy/converter/converter.py\", line 83, in convert\n    spectra_type \u003d _get_spectra_type(spectra_list)\n  File \"/usr/local/lib/python3.7/site-packages/gaiaxpy/core/generic_functions.py\", line 70, in _get_spectra_type\n    spectrum \u003d spectra[0]\nIndexError: list index out of range\n"
+          }
+        ]
+      },
       "apps": [],
-      "runtimeInfos": {},
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://zeppelin:4041/jobs/job?id\u003d12"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
       "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1646041106955_13519125",
       "id": "paragraph_1645630491662_917281413",
       "dateCreated": "2022-02-28 09:38:26.955",
+      "dateStarted": "2022-02-28 09:59:57.834",
+      "dateFinished": "2022-02-28 10:00:09.529",
+      "status": "ERROR"
+    },
+    {
+      "text": "%pyspark\n",
+      "user": "nch",
+      "dateUpdated": "2022-02-28 09:51:18.867",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041878867_1050718162",
+      "id": "paragraph_1646041878867_1050718162",
+      "dateCreated": "2022-02-28 09:51:18.867",
       "status": "READY"
     }
   ],
