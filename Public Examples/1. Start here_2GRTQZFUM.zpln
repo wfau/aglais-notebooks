@@ -45,13 +45,13 @@
       "dateFinished": "2022-03-04T14:24:30+0000",
       "status": "FINISHED",
       "focus": true,
-      "$$hashKey": "object:47240"
+      "$$hashKey": "object:15677"
     },
     {
       "title": "Familiarisation",
-      "text": "%md\n\n<br>\nThe best way to familiarise yourself with the platform is to examine the example notebooks that come bundled with it. These are:\n\n* \"Start here\" (this notebook);\n* Data holdings: a description of the data hosted on the platform;\n* Source counts over the sky: a simple example of querying and plotting;\n* Mean proper motions over the sky: another simple example\n* __TODO__ Working with Gaia XP spectra: demonstrates trawling the large XP spectral dataset, and plotting of the spectra\n* __TODO__ Analyses involving cross-match surveys: using Gaia data in conjunction with optical and infrared survey data\n* Good astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\n* Tips and tricks: some further usage tips and technical aspects of the platform including interactions and plotting\n\nTo load a notebook, click on the \"Notebook\" tab (above left) and select. Newcomers are advised to work through at least the first four notebooks before attempting to use the system. Also have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface. ",
+      "text": "%md\n\nThe best way to familiarise yourself with the platform is to examine the example notebooks that come bundled with it. These are:\n\n1. \"Start here\" (this notebook);\n1. Data holdings: a description of the data hosted on the platform;\n1. Source counts over the sky: a simple example of querying and plotting;\n1. Mean proper motions over the sky: another simple example;\n1. __TODO__ Working with Gaia XP spectra: demonstrates trawling the large XP spectral dataset, and plotting of the spectra;\n1. __TODO__ Analyses involving cross-match surveys: using Gaia data in conjunction with optical and infrared survey data;\n1. Good astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;\n1. __TODO__ 5d kinematic sample selection and clustering via unsupervised machine learning;\n1. Tips and tricks: some further usage tips and technical aspects of the platform including interactions and plotting.\n\nTo load a notebook, click on the \"Notebook\" tab (above left) and select. Newcomers are advised to work through at least the first four notebooks before attempting to use the system. Also have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface. ",
       "user": "nch",
-      "dateUpdated": "2022-03-04T14:09:32+0000",
+      "dateUpdated": "2022-03-09T15:09:02+0000",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -78,7 +78,7 @@
         "msg": [
           {
             "type": "HTML",
-            "data": "<div class=\"markdown-body\">\n<br>\nThe best way to familiarise yourself with the platform is to examine the example notebooks that come bundled with it. These are:\n<ul>\n<li>&ldquo;Start here&rdquo; (this notebook);</li>\n<li>Data holdings: a description of the data hosted on the platform;</li>\n<li>Source counts over the sky: a simple example of querying and plotting;</li>\n<li>Mean proper motions over the sky: another simple example</li>\n<li><strong>TODO</strong> Working with Gaia XP spectra: demonstrates trawling the large XP spectral dataset, and plotting of the spectra</li>\n<li><strong>TODO</strong> Analyses involving cross-match surveys: using Gaia data in conjunction with optical and infrared survey data</li>\n<li>Good astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;</li>\n<li>Tips and tricks: some further usage tips and technical aspects of the platform including interactions and plotting</li>\n</ul>\n<p>To load a notebook, click on the &ldquo;Notebook&rdquo; tab (above left) and select. Newcomers are advised to work through at least the first four notebooks before attempting to use the system. Also have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface.</p>\n\n</div>"
+            "data": "<div class=\"markdown-body\">\n<p>The best way to familiarise yourself with the platform is to examine the example notebooks that come bundled with it. These are:</p>\n<ol>\n<li>&ldquo;Start here&rdquo; (this notebook);</li>\n<li>Data holdings: a description of the data hosted on the platform;</li>\n<li>Source counts over the sky: a simple example of querying and plotting;</li>\n<li>Mean proper motions over the sky: another simple example;</li>\n<li><strong>TODO</strong> Working with Gaia XP spectra: demonstrates trawling the large XP spectral dataset, and plotting of the spectra;</li>\n<li><strong>TODO</strong> Analyses involving cross-match surveys: using Gaia data in conjunction with optical and infrared survey data;</li>\n<li>Good astrometric solutions via ML Random Forest classifier: a more complex workflow demonstrating use of the Spark ML library in supervised machine learning;</li>\n<li><strong>TODO</strong> 5d kinematic sample selection and clustering via unsupervised machine learning;</li>\n<li>Tips and tricks: some further usage tips and technical aspects of the platform including interactions and plotting.</li>\n</ol>\n<p>To load a notebook, click on the &ldquo;Notebook&rdquo; tab (above left) and select. Newcomers are advised to work through at least the first four notebooks before attempting to use the system. Also have a quick look at the Zeppelin link in the previous cell first to get oriented in the User Interface.</p>\n\n</div>"
           }
         ]
       },
@@ -88,10 +88,10 @@
       "jobName": "paragraph_1639345822509_1138439081",
       "id": "20210507-152628_446700578",
       "dateCreated": "2021-12-12T21:50:22+0000",
-      "dateStarted": "2022-03-04T14:09:32+0000",
-      "dateFinished": "2022-03-04T14:09:32+0000",
+      "dateStarted": "2022-03-09T15:09:02+0000",
+      "dateFinished": "2022-03-09T15:09:02+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:47241"
+      "$$hashKey": "object:15678"
     },
     {
       "title": "Zeppelin notebooks",
@@ -137,7 +137,7 @@
       "dateStarted": "2022-03-04T14:25:00+0000",
       "dateFinished": "2022-03-04T14:25:00+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:47242"
+      "$$hashKey": "object:15679"
     },
     {
       "title": "PySpark SQL",
@@ -183,7 +183,7 @@
       "dateStarted": "2022-03-04T14:29:28+0000",
       "dateFinished": "2022-03-04T14:29:28+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:47243"
+      "$$hashKey": "object:15680"
     },
     {
       "title": "Example code from previous cell",
@@ -233,19 +233,19 @@
           "values": [
             {
               "jobUrl": "http://zeppelin:4041/jobs/job?id=4",
-              "$$hashKey": "object:47671"
+              "$$hashKey": "object:16108"
             },
             {
               "jobUrl": "http://zeppelin:4041/jobs/job?id=5",
-              "$$hashKey": "object:47672"
+              "$$hashKey": "object:16109"
             },
             {
               "jobUrl": "http://zeppelin:4041/jobs/job?id=6",
-              "$$hashKey": "object:47673"
+              "$$hashKey": "object:16110"
             },
             {
               "jobUrl": "http://zeppelin:4041/jobs/job?id=7",
-              "$$hashKey": "object:47674"
+              "$$hashKey": "object:16111"
             }
           ],
           "interpreterSettingId": "spark"
@@ -258,13 +258,13 @@
       "dateStarted": "2022-03-04T14:32:12+0000",
       "dateFinished": "2022-03-04T14:32:12+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:47244"
+      "$$hashKey": "object:15681"
     },
     {
       "title": "Spark aspects",
-      "text": "%md\n\nThe operating model of Spark as actioned via a workflow expressed in a notebook will be unfamiliar to many. Users should be aware of the following basic facts from the outset:\n\n__Lazy Evaluation:__ Spark employs \"lazy evaluation\" of jobs: nothing happens until the last possible point in the workflow. For example, a notebook cell may contain a data frame defined by a query \n\n    df = spark.sql(\"select * from gaia_source\")\n\nbut as far as Spark is concerned this is simply a definiton, or \"transformation\", of a data resource. If nothing is done with the data frame defined by that query in the cell, then the cell will appear to run instantaneously. Only if an \"action\" is made on the data frame subsequently will physical execution take place. This means, for example, that if a cell contains a run-time error this may not show up until a later cell is executed with the exception trace explaining the error appearing in that later cell's output (as opposed to any output associated with the cell containing the source of the error). Note also that the statement above, on it's own, will not result in the entire billon+ row, ~100 column, tera-byte scale data set being loaded into memory. Whatever is expressed in subsequent transformations (e.g. SQL \"where\" clauses) and actions (e.g. aggregations) will define \"filter push-down\" optimisations that result in only those data needed to action the process being read into memory and processed.  \n\n__Caching:__ Actions expressed in a cell may need to be re-executed if needed as part of the execution plan for actions in a subsequent cell. This may result in expensive operations being repeatedly executed when developing notebook workflows and working on cells in isolation. You can tell Spark to cache a data frame explicitly to avoid this and speed-up significantly subsequent cell operations\n\n    df = spark.sql(\"select column_1, column_2, ... from gaia_source where ...\").cache()\n    \nbut obviously this should only be done within reason and with due regard to the amount of local memory/disk required by the worker nodes: make sure you only cache what you really need. For further details see [this useful article on best practice with Spark caching](https://towardsdatascience.com/best-practices-for-caching-in-spark-sql-b22fb0f02d34). Some of the example notebooks provided use caching to expedite the execution of cells that re-use data frames.\n\n__Indexing:__ The data hosted on this platform are arranged by gaia_source.source_id as the primary unique identifier in Gaia Data Releases. This key should be employed when joining distinct data sets, e.g. pre-computed best neighbours from external survey catalogues - see the \"Data holdings\" notebook. It can also be used to pull out specific records quickly:\n\n    spark.sql(\"select * from gaia_source where source_id = ...\").show()\n   \nOtherwise, the general RDBMS paradigm employing SQL indexes to optimise execution plans of queries predicated on certain columns has no equivalent here. It is worth noting however that the combination of \"filter push-down\" and the underlying storage format ([Parquet](http://parquet.apache.org/documentation/latest/)) result in only those data that are needed being read from disk on this patform. This is in contrast to RDBMS where columns are generally read from pages within disk files regardless of need unless covered by an index employed as part of an optimised execution plan. This is one of the ways in which Spark achieves much faster performance in \"big data\" analysis.\n\n__Distributed processing model:__ Fast performance in handling very large data sets is achieved via cluster parallelism with actions split up and optimised for execution on concurrent workers. This is achievable only if the user's processing works with the Spark data frame which in turn encapsulates a Spark Resilient Distributed Dataset (RDD). Note that issuing a `sparkDataFrame.collect()`, or `sparkDataFrame.toPandas()` for example, retrieves the distributed components of the Spark data frame to a single driver process and subsequent actions will be no longer distributed over the cluster of workers. Care should be taken in the final stages of work flows to avoid Out Of Memory exceptions by collecting too large a results set to the driver process.\n\n",
+      "text": "%md\n\nThe operating model of Spark as actioned via a workflow expressed in a notebook will be unfamiliar to many. Users should be aware of the following basic facts from the outset:\n\n__Lazy Evaluation:__ Spark employs \"lazy evaluation\" of jobs: nothing happens until the last possible point in the workflow. For example, a notebook cell may contain a data frame defined by a query \n\n    df = spark.sql(\"select * from gaia_source\")\n\nbut as far as Spark is concerned this is simply a definiton, or \"transformation\", of a data resource. If nothing is done with the data frame defined by that query in the cell, then the cell will appear to run instantaneously. Only if an \"action\" is made on the data frame subsequently will physical execution take place. This means, for example, that if a cell contains a run-time error this may not show up until a later cell is executed with the exception trace explaining the error appearing in that later cell's output (as opposed to any output associated with the cell containing the source of the error). Note also that the statement above, on it's own, will not result in the entire billon+ row, ~100 column, tera-byte scale data set being loaded into memory. Whatever is expressed in subsequent transformations (e.g. SQL \"where\" clauses) and actions (e.g. aggregations) will define \"filter push-down\" optimisations that result in only those data needed to action the process being read into memory and processed.  \n\n__Caching:__ Actions expressed in a cell may need to be re-executed if needed as part of the execution plan for actions in a subsequent cell. This may result in expensive operations being repeatedly executed when developing notebook workflows and working on cells in isolation. You can tell Spark to cache a data frame explicitly to avoid this and speed-up significantly subsequent cell operations\n\n    df = spark.sql(\"select column_1, column_2, ... from gaia_source where ...\").cache()\n    \nbut obviously this should only be done within reason and with due regard to the amount of local memory/disk required by the worker nodes: make sure you only cache what you really need. For further details see [this useful article on best practice with Spark caching](https://towardsdatascience.com/best-practices-for-caching-in-spark-sql-b22fb0f02d34). Some of the example notebooks provided use caching to expedite the execution of cells that re-use data frames.\n\n__Indexing:__ The data hosted on this platform are arranged by gaia_source.source_id as the primary unique identifier in Gaia Data Releases. This key should be employed when joining distinct data sets, e.g. pre-computed best neighbours from external survey catalogues - see the \"Data holdings\" notebook. It can also be used to pull out specific records quickly:\n\n    spark.sql(\"select * from gaia_source where source_id = ...\").show()\n   \nOtherwise, the general RDBMS paradigm employing SQL indexes to optimise execution plans of queries predicated on certain columns has no equivalent here. It is worth noting however that the combination of \"filter push-down\" and the underlying storage format ([Parquet](http://parquet.apache.org/documentation/latest/)) result in only those data that are needed being read from disk on this platform. This is in contrast to RDBMS where columns are generally read from pages within disk files regardless of need unless covered by an index employed as part of an optimised execution plan. This is one of the ways in which Spark achieves much faster performance in \"big data\" analysis.\n\n__Distributed processing model:__ Fast performance in handling very large data sets is achieved via cluster parallelism with actions split up and optimised for execution on concurrent workers. This is achievable only if the user's processing works with the Spark data frame which in turn encapsulates a Spark Resilient Distributed Dataset (RDD). Note that issuing a `sparkDataFrame.collect()`, or `sparkDataFrame.toPandas()` for example, retrieves the distributed components of the Spark data frame to a single driver process and subsequent actions will be no longer distributed over the cluster of workers. Care should be taken in the final stages of work flows to avoid Out Of Memory exceptions by collecting too large a results set to the driver process.\n\n",
       "user": "nch",
-      "dateUpdated": "2022-03-04T14:48:10+0000",
+      "dateUpdated": "2022-03-09T15:04:02+0000",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -291,7 +291,7 @@
         "msg": [
           {
             "type": "HTML",
-            "data": "<div class=\"markdown-body\">\n<p>The operating model of Spark as actioned via a workflow expressed in a notebook will be unfamiliar to many. Users should be aware of the following basic facts from the outset:</p>\n<p><strong>Lazy Evaluation:</strong> Spark employs &ldquo;lazy evaluation&rdquo; of jobs: nothing happens until the last possible point in the workflow. For example, a notebook cell may contain a data frame defined by a query</p>\n<pre><code>df = spark.sql(&quot;select * from gaia_source&quot;)\n</code></pre>\n<p>but as far as Spark is concerned this is simply a definiton, or &ldquo;transformation&rdquo;, of a data resource. If nothing is done with the data frame defined by that query in the cell, then the cell will appear to run instantaneously. Only if an &ldquo;action&rdquo; is made on the data frame subsequently will physical execution take place. This means, for example, that if a cell contains a run-time error this may not show up until a later cell is executed with the exception trace explaining the error appearing in that later cell&rsquo;s output (as opposed to any output associated with the cell containing the source of the error). Note also that the statement above, on it&rsquo;s own, will not result in the entire billon+ row, ~100 column, tera-byte scale data set being loaded into memory. Whatever is expressed in subsequent transformations (e.g. SQL &ldquo;where&rdquo; clauses) and actions (e.g. aggregations) will define &ldquo;filter push-down&rdquo; optimisations that result in only those data needed to action the process being read into memory and processed.</p>\n<p><strong>Caching:</strong> Actions expressed in a cell may need to be re-executed if needed as part of the execution plan for actions in a subsequent cell. This may result in expensive operations being repeatedly executed when developing notebook workflows and working on cells in isolation. You can tell Spark to cache a data frame explicitly to avoid this and speed-up significantly subsequent cell operations</p>\n<pre><code>df = spark.sql(&quot;select column_1, column_2, ... from gaia_source where ...&quot;).cache()\n</code></pre>\n<p>but obviously this should only be done within reason and with due regard to the amount of local memory/disk required by the worker nodes: make sure you only cache what you really need. For further details see <a href=\"https://towardsdatascience.com/best-practices-for-caching-in-spark-sql-b22fb0f02d34\">this useful article on best practice with Spark caching</a>. Some of the example notebooks provided use caching to expedite the execution of cells that re-use data frames.</p>\n<p><strong>Indexing:</strong> The data hosted on this platform are arranged by gaia_source.source_id as the primary unique identifier in Gaia Data Releases. This key should be employed when joining distinct data sets, e.g. pre-computed best neighbours from external survey catalogues - see the &ldquo;Data holdings&rdquo; notebook. It can also be used to pull out specific records quickly:</p>\n<pre><code>spark.sql(&quot;select * from gaia_source where source_id = ...&quot;).show()\n</code></pre>\n<p>Otherwise, the general RDBMS paradigm employing SQL indexes to optimise execution plans of queries predicated on certain columns has no equivalent here. It is worth noting however that the combination of &ldquo;filter push-down&rdquo; and the underlying storage format (<a href=\"http://parquet.apache.org/documentation/latest/\">Parquet</a>) result in only those data that are needed being read from disk on this patform. This is in contrast to RDBMS where columns are generally read from pages within disk files regardless of need unless covered by an index employed as part of an optimised execution plan. This is one of the ways in which Spark achieves much faster performance in &ldquo;big data&rdquo; analysis.</p>\n<p><strong>Distributed processing model:</strong> Fast performance in handling very large data sets is achieved via cluster parallelism with actions split up and optimised for execution on concurrent workers. This is achievable only if the user&rsquo;s processing works with the Spark data frame which in turn encapsulates a Spark Resilient Distributed Dataset (RDD). Note that issuing a <code>sparkDataFrame.collect()</code>, or <code>sparkDataFrame.toPandas()</code> for example, retrieves the distributed components of the Spark data frame to a single driver process and subsequent actions will be no longer distributed over the cluster of workers. Care should be taken in the final stages of work flows to avoid Out Of Memory exceptions by collecting too large a results set to the driver process.</p>\n\n</div>"
+            "data": "<div class=\"markdown-body\">\n<p>The operating model of Spark as actioned via a workflow expressed in a notebook will be unfamiliar to many. Users should be aware of the following basic facts from the outset:</p>\n<p><strong>Lazy Evaluation:</strong> Spark employs &ldquo;lazy evaluation&rdquo; of jobs: nothing happens until the last possible point in the workflow. For example, a notebook cell may contain a data frame defined by a query</p>\n<pre><code>df = spark.sql(&quot;select * from gaia_source&quot;)\n</code></pre>\n<p>but as far as Spark is concerned this is simply a definiton, or &ldquo;transformation&rdquo;, of a data resource. If nothing is done with the data frame defined by that query in the cell, then the cell will appear to run instantaneously. Only if an &ldquo;action&rdquo; is made on the data frame subsequently will physical execution take place. This means, for example, that if a cell contains a run-time error this may not show up until a later cell is executed with the exception trace explaining the error appearing in that later cell&rsquo;s output (as opposed to any output associated with the cell containing the source of the error). Note also that the statement above, on it&rsquo;s own, will not result in the entire billon+ row, ~100 column, tera-byte scale data set being loaded into memory. Whatever is expressed in subsequent transformations (e.g. SQL &ldquo;where&rdquo; clauses) and actions (e.g. aggregations) will define &ldquo;filter push-down&rdquo; optimisations that result in only those data needed to action the process being read into memory and processed.</p>\n<p><strong>Caching:</strong> Actions expressed in a cell may need to be re-executed if needed as part of the execution plan for actions in a subsequent cell. This may result in expensive operations being repeatedly executed when developing notebook workflows and working on cells in isolation. You can tell Spark to cache a data frame explicitly to avoid this and speed-up significantly subsequent cell operations</p>\n<pre><code>df = spark.sql(&quot;select column_1, column_2, ... from gaia_source where ...&quot;).cache()\n</code></pre>\n<p>but obviously this should only be done within reason and with due regard to the amount of local memory/disk required by the worker nodes: make sure you only cache what you really need. For further details see <a href=\"https://towardsdatascience.com/best-practices-for-caching-in-spark-sql-b22fb0f02d34\">this useful article on best practice with Spark caching</a>. Some of the example notebooks provided use caching to expedite the execution of cells that re-use data frames.</p>\n<p><strong>Indexing:</strong> The data hosted on this platform are arranged by gaia_source.source_id as the primary unique identifier in Gaia Data Releases. This key should be employed when joining distinct data sets, e.g. pre-computed best neighbours from external survey catalogues - see the &ldquo;Data holdings&rdquo; notebook. It can also be used to pull out specific records quickly:</p>\n<pre><code>spark.sql(&quot;select * from gaia_source where source_id = ...&quot;).show()\n</code></pre>\n<p>Otherwise, the general RDBMS paradigm employing SQL indexes to optimise execution plans of queries predicated on certain columns has no equivalent here. It is worth noting however that the combination of &ldquo;filter push-down&rdquo; and the underlying storage format (<a href=\"http://parquet.apache.org/documentation/latest/\">Parquet</a>) result in only those data that are needed being read from disk on this platform. This is in contrast to RDBMS where columns are generally read from pages within disk files regardless of need unless covered by an index employed as part of an optimised execution plan. This is one of the ways in which Spark achieves much faster performance in &ldquo;big data&rdquo; analysis.</p>\n<p><strong>Distributed processing model:</strong> Fast performance in handling very large data sets is achieved via cluster parallelism with actions split up and optimised for execution on concurrent workers. This is achievable only if the user&rsquo;s processing works with the Spark data frame which in turn encapsulates a Spark Resilient Distributed Dataset (RDD). Note that issuing a <code>sparkDataFrame.collect()</code>, or <code>sparkDataFrame.toPandas()</code> for example, retrieves the distributed components of the Spark data frame to a single driver process and subsequent actions will be no longer distributed over the cluster of workers. Care should be taken in the final stages of work flows to avoid Out Of Memory exceptions by collecting too large a results set to the driver process.</p>\n\n</div>"
           }
         ]
       },
@@ -301,10 +301,10 @@
       "jobName": "paragraph_1639345822509_289019187",
       "id": "20210507-152746_1171284722",
       "dateCreated": "2021-12-12T21:50:22+0000",
-      "dateStarted": "2022-03-04T14:48:10+0000",
-      "dateFinished": "2022-03-04T14:48:10+0000",
+      "dateStarted": "2022-03-09T15:04:02+0000",
+      "dateFinished": "2022-03-09T15:04:02+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:47245"
+      "$$hashKey": "object:15682"
     },
     {
       "title": "Further reading and resources",
@@ -337,10 +337,10 @@
       "id": "20210510-090543_1039599855",
       "dateCreated": "2021-12-12T21:50:22+0000",
       "status": "READY",
-      "$$hashKey": "object:47246"
+      "$$hashKey": "object:15683"
     }
   ],
-  "name": "AAA Start here",
+  "name": "1. Start here",
   "id": "2GRTQZFUM",
   "defaultInterpreterGroup": "spark",
   "version": "0.10.0",
@@ -361,8 +361,5 @@
     "personalizedMode": "false"
   },
   "info": {},
-  "path": "/Public Examples/AAA Start here",
-  "checkpoint": {
-    "message": "Further work"
-  }
+  "path": "/Public Examples/1. Start here"
 }
