@@ -1,0 +1,975 @@
+﻿{
+  "paragraphs": [
+    {
+      "title": "Data structure definition",
+      "text": "%pyspark\n\n# structure definitions: true, compact internal format, and interim format with arrays expressed as string data\n\nfrom pyspark.sql.types import *\n\ninterim_xp_continuous_mean_spectrum_schema = StructType([\n    StructField('source_id', LongType(), False), # Unique source identifier (unique within a particular Data Release)\n    StructField('solution_id', LongType(), True), # Solution Identifier\n    StructField('bp_basis_function_id', ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField('bp_degrees_of_freedom', ShortType(), True), # Degrees of freedom for the BP spectrum representation\n    StructField('bp_n_parameters', ByteType(), True), # Number of parameters for the BP spectrum representation\n    StructField('bp_n_measurements', ShortType(), True), # Number of measurements used for the BP spectrum generation\n    StructField('bp_n_rejected_measurements', ShortType(), True), # Number of rejected measurements in the BP spectrum generation\n    StructField('bp_standard_deviation', FloatType(), True), # Standard deviation for the BP spectrum representation\n    StructField('bp_chi_squared', FloatType(), True), # Chi squared for the BP spectrum representation\n    StructField('bp_coefficients', StringType(), True), # Basis function coefficients for the BP spectrum representation\n    StructField('bp_coefficient_errors', StringType(), True), # Basis function coefficient errors for the BP spectrum representation\n    StructField('bp_coefficient_correlations', StringType(), True), # Correlation matrix for BP coefficients\n    StructField('bp_n_relevant_bases', ShortType(), True), # Number of bases that are relevant for the representation of this mean BP spectrum\n    StructField('bp_relative_shrinking', FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean BP spectrum\n    StructField('rp_basis_function_id', ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField('rp_degrees_of_freedom', ShortType(), True), # Degrees of freedom for the RP spectrum representation\n    StructField('rp_n_parameters', ByteType(), True), # Number of parameters for the RP spectrum representation\n    StructField('rp_n_measurements', ShortType(), True), # Number of measurements used for the RP spectrum generation\n    StructField('rp_n_rejected_measurements', ShortType(), True), # Number of rejected measurements in the RP spectrum generation\n    StructField('rp_standard_deviation', FloatType(), True), # Standard deviation for the RP spectrum representation\n    StructField('rp_chi_squared', FloatType(), True), # Chi squared for the RP spectrum representation\n    StructField('rp_coefficients', StringType(), True), # Basis function coefficients for the RP spectrum representation\n    StructField('rp_coefficient_errors', StringType(), True), # Basis function coefficient errors for the RP spectrum representation\n    StructField('rp_coefficient_correlations', StringType(), True), # Correlation matrix for RP coefficients\n    StructField('rp_n_relevant_bases', ShortType(), True), # Number of bases that are relevant for the representation of this mean RP spectrum\n    StructField('rp_relative_shrinking', FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean RP spectrum\n])\n\nxp_continuous_mean_spectrum_schema = StructType([\n    StructField('source_id', LongType(), False), # Unique source identifier (unique within a particular Data Release)\n    StructField('solution_id', LongType(), True), # Solution Identifier\n    StructField('bp_basis_function_id', ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField('bp_degrees_of_freedom', ShortType(), True), # Degrees of freedom for the BP spectrum representation\n    StructField('bp_n_parameters', ByteType(), True), # Number of parameters for the BP spectrum representation\n    StructField('bp_n_measurements', ShortType(), True), # Number of measurements used for the BP spectrum generation\n    StructField('bp_n_rejected_measurements', ShortType(), True), # Number of rejected measurements in the BP spectrum generation\n    StructField('bp_standard_deviation', FloatType(), True), # Standard deviation for the BP spectrum representation\n    StructField('bp_chi_squared', FloatType(), True), # Chi squared for the BP spectrum representation\n    StructField('bp_coefficients', ArrayType(DoubleType()), True), # Basis function coefficients for the BP spectrum representation\n    StructField('bp_coefficient_errors', ArrayType(FloatType()), True), # Basis function coefficient errors for the BP spectrum representation\n    StructField('bp_coefficient_correlations', ArrayType(FloatType()), True), # Correlation matrix for BP coefficients\n    StructField('bp_n_relevant_bases', ShortType(), True), # Number of bases that are relevant for the representation of this mean BP spectrum\n    StructField('bp_relative_shrinking', FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean BP spectrum\n    StructField('rp_basis_function_id', ShortType(), True), # Identifier defining the set of basis functions for the BP spectrum representation\n    StructField('rp_degrees_of_freedom', ShortType(), True), # Degrees of freedom for the RP spectrum representation\n    StructField('rp_n_parameters', ByteType(), True), # Number of parameters for the RP spectrum representation\n    StructField('rp_n_measurements', ShortType(), True), # Number of measurements used for the RP spectrum generation\n    StructField('rp_n_rejected_measurements', ShortType(), True), # Number of rejected measurements in the RP spectrum generation\n    StructField('rp_standard_deviation', FloatType(), True), # Standard deviation for the RP spectrum representation\n    StructField('rp_chi_squared', FloatType(), True), # Chi squared for the RP spectrum representation\n    StructField('rp_coefficients', ArrayType(DoubleType()), True), # Basis function coefficients for the RP spectrum representation\n    StructField('rp_coefficient_errors', ArrayType(FloatType()), True), # Basis function coefficient errors for the RP spectrum representation\n    StructField('rp_coefficient_correlations', ArrayType(FloatType()), True), # Correlation matrix for RP coefficients\n    StructField('rp_n_relevant_bases', ShortType(), True), # Number of bases that are relevant for the representation of this mean RP spectrum\n    StructField('rp_relative_shrinking', FloatType(), True), # Measure of the relative shrinking of the coefficient vector when truncation is applied for the mean RP spectrum\n])\n",
+      "user": "nch",
+      "dateUpdated": "2022-03-01T16:35:22+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041106953_1729370410",
+      "id": "paragraph_1645200680356_1929445425",
+      "dateCreated": "2022-02-28T09:38:26+0000",
+      "dateStarted": "2022-02-28T09:39:49+0000",
+      "dateFinished": "2022-02-28T09:39:49+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:13057"
+    },
+    {
+      "title": "Utility function definitions",
+      "text": "%pyspark\n\nfrom pyspark.sql import functions as f\nfrom pyspark.sql import *\n\ndef cast_to_array(data_frame : DataFrame, column_name : str, data_type : DataType):\n    \"\"\"\n    Casts the specified string column in the given data frame into an\n    array with the specified data type. Assumes the string column contains\n    comma-separated values in plain text delimited by braces (which are\n    ignored). The array column is appended to the existing column set while \n    the original string column is removed. The resulting data frame will\n    contain an array column with the same name as the original string\n    data column.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    column_name : str\n        The column name that contains the array data as a plain text string of \n        comma-separated values\n    data_type : DataType()\n        The PySpark data structure data type which should be ArrayType(SomeType())\n        \n    Returns:\n    --------\n    a new data frame containing the requested modification\n    \"\"\"\n    \n    # a temporary working column name for the array\n    temporary_column_name = column_name + '_array_data'\n    \n    # reformat the string csv data as an array of the specified type\n    data_frame = data_frame.withColumn(temporary_column_name, f.split(f.col(column_name).substr(f.lit(2), f.length(f.col(column_name)) - 2), ',').cast(data_type))\n    \n    # drop the original string column to save space\n    data_frame = data_frame.drop(column_name)\n    \n    # rename the temporary column with the original column name\n    data_frame = data_frame.withColumnRenamed(temporary_column_name, column_name)\n    \n    return data_frame\n    \n    \ndef reorder_columns(data_frame : DataFrame, data_structure : StructType):\n    \"\"\"\n    Reorder the columns according to the Gaia archive public schema and so that\n    the parquet files can be re-attached against that standard schema.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    data_structure : StructType()\n        The PySpark data structure containing the required schema definition\n    \"\"\"\n    \n    # use the schema to define the column order\n    ordered_columns = [field.name for field in data_structure]\n    \n    # give it back in the schema-driven order\n    return data_frame.select(ordered_columns)\n    \n\ndef cast_all_arrays(data_frame : DataFrame, data_structure : StructType):\n    \"\"\"\n    Given an interim data frame read from csv and containing arrays in\n    plain text string representation, cycles over the schema transforming\n    all strings associated with arrays into the required primitive type.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        The PySpark data frame instance to be operated on\n    data_structure : StructType()\n        The PySpark data structure containing the required schema definition\n    \"\"\"\n    \n    # cycle over the defined fields looking for arrays\n    for field in data_structure:\n        \n        # if it's an array type then transmogrify:\n        if type(field.dataType) == ArrayType: \n            data_frame = cast_to_array(data_frame, field.name, field.dataType)\n    \n    # finally reorder according to the original specification\n    return reorder_columns(data_frame, data_structure)\n    \n\n# number of buckets for our platform\nNUM_BUCKETS = 2048\n\n# Save a dataframe to a set of bucketed parquet files, repartitioning beforehand and sorting by source UID within the buckets:\ndef saveToBinnedParquet(df, outputParquetPath, name, mode = \"error\", nBuckets = NUM_BUCKETS):\n    df = df.repartition(nBuckets, \"source_id\")\n    df.write.format(\"parquet\") \\\n            .mode(mode) \\\n            .bucketBy(nBuckets, \"source_id\") \\\n            .sortBy(\"source_id\") \\\n            .option(\"path\", outputParquetPath) \\\n            .saveAsTable(name)\n\n# and to re-establish the resource in a new (or reset) spark context:\ndef reattachParquetFileResourceToSparkContext(table_name, file_path, *schema_structures):\n    \"\"\"\n    Creates a Spark (in-memory) meta-record for the table resource specified for querying \n    through the PySpark SQL API.\n    \n    Assumes that the table contains the Gaia source_id attribute and that the files have \n    been previously partitioned, bucketed and sorted on this field in parquet format\n    - see function saveToBinnedParquet().  If the table name specified already exists in the\n    catalogue IT WILL BE REMOVED (but the underlying data, assumed external, will remain).\n    \n    Parameters\n    ----------\n    table_name : str\n        The table name to be used as the identifier in SQL queries etc.\n    file_path : str\n        The full disk file system path name to the folder containing the parquet file set. \n    schema_structures : StructType\n        One or more schema structures expressed as a StructType object containing a list of\n        StructField(field_name : str, type : data_type : DataType(), nullable : boolean)\n    \"\"\"\n\n    # put in the columns and their data types ...\n    table_create_statement = \"CREATE TABLE `\" + table_name + \"` (\"\n    for schema_structure in schema_structures:\n        for field in schema_structure:\n            table_create_statement += \"`\" + field.name + \"` \" + field.dataType.simpleString() + \",\"\n    # ... zapping that extraneous comma at the end\n    table_create_statement = table_create_statement[:-1]\n        \n    # append the organisational details \n    table_create_statement += \") USING parquet OPTIONS (path '\" + file_path + \"') \"\n    table_create_statement += \"CLUSTERED BY (source_id) SORTED BY (source_id) INTO %d\"%(NUM_BUCKETS) + \" BUCKETS\"\n    \n    # sanity check\n    print(table_create_statement)\n    \n    # scrub any existing record - N.B. tables defined in this way are EXTERNAL, so this statement will not scrub\n    # the underlying file data set. Also if the table doesn't exist, this will silently do nothing (no exception\n    # will be thrown).\n    spark.sql(\"DROP TABLE IF EXISTS \" + table_name)\n    \n    # create the table resource\n    spark.sql(table_create_statement)\n    ",
+      "user": "nch",
+      "dateUpdated": "2022-02-28T13:58:04+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041106954_1281481478",
+      "id": "paragraph_1645200756171_1791658125",
+      "dateCreated": "2022-02-28T09:38:26+0000",
+      "dateStarted": "2022-02-28T09:39:55+0000",
+      "dateFinished": "2022-02-28T09:39:55+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:13058"
+    },
+    {
+      "title": "Data frame definition from csv files",
+      "text": "%pyspark\n\ndf = sqlContext.read.option('mode','failfast').option('header', 'true').schema(interim_xp_continuous_mean_spectrum_schema).csv('file:////user/nch/CSV/XPSIMS/*.csv')\n\ndf.show()\n\ndf.printSchema()\n\n",
+      "user": "nch",
+      "dateUpdated": "2022-02-28T13:58:08+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041106954_1906935201",
+      "id": "paragraph_1645200828185_143931439",
+      "dateCreated": "2022-02-28T09:38:26+0000",
+      "status": "READY",
+      "$$hashKey": "object:13059"
+    },
+    {
+      "title": "Transform the relevant array data from strings",
+      "text": "%pyspark\n\ndf = cast_all_arrays(df, xp_continuous_mean_spectrum_schema)\n\ndf.show()\n\n",
+      "user": "nch",
+      "dateUpdated": "2022-02-28T13:58:14+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041106954_827666732",
+      "id": "paragraph_1645201009212_694127635",
+      "dateCreated": "2022-02-28T09:38:26+0000",
+      "status": "READY",
+      "$$hashKey": "object:13060"
+    },
+    {
+      "title": "Write out to parquet",
+      "text": "%pyspark\n\ntable_name = 'xp_continuous_mean_spectrum'\nspark.sql('DROP TABLE IF EXISTS %s'%(table_name))\nsaveToBinnedParquet(df, 'file:////user/nch/PARQUET/SOURCEID_BUCKETS/XPSIMS', name = table_name, mode = 'overwrite')\n\n",
+      "user": "nch",
+      "dateUpdated": "2022-02-28T13:58:23+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041106954_1254019241",
+      "id": "paragraph_1645201180487_1126252860",
+      "dateCreated": "2022-02-28T09:38:26+0000",
+      "status": "READY",
+      "$$hashKey": "object:13061"
+    },
+    {
+      "title": "Sanity checks",
+      "text": "%pyspark\n\n# show the catalogue schema\nspark.sql(\"SHOW TABLES\").show()\n",
+      "user": "nch",
+      "dateUpdated": "2022-02-28T09:38:26+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------+--------------------+-----------+\n|database|           tableName|isTemporary|\n+--------+--------------------+-----------+\n| default|xp_continuous_mea...|      false|\n+--------+--------------------+-----------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041106954_2138440536",
+      "id": "paragraph_1645202543451_408289300",
+      "dateCreated": "2022-02-28T09:38:26+0000",
+      "status": "READY",
+      "$$hashKey": "object:13062"
+    },
+    {
+      "title": "Similarity functions (continuous representation)",
+      "text": "%pyspark\n\nfrom pyspark.sql.types import BooleanType\nfrom pyspark.sql.functions import udf\nimport numpy as np\n\n# core function that checks for similarity between coefficients\ndef checkSimilarity(coeffs, errors, n_relevant, t_coeffs, t_errors, t_n_relevant):\n    \"\"\"\n    The idea: check for similarity in the coninuous representation. The template is defined by\n    it's relevant basis coefficients so check for any other spectrum whose relevant basis\n    coefficients match (within 1-sigma) those of the template up to the Nth coefficient, \n    where N is whichever is the smaller out of the relevant bases in the template and the\n    relevant bases in the source under test.\n    \n    Parameters:\n    -----------\n    coeffs : array\n        the XP basis coefficients of the continuous represention for the source under test\n    errors : array\n        the errors on XP basis coefficients of the continuous represention for the source under test\n    n_relevant : int\n        the number of basis coefficients that are relevant for the source\n    t_coeffs : array\n        the XP basis coefficients of the continuous represention for the template \n    t_errors : array\n        the errors on XP basis coefficients of the continuous represention for the template\n    t_n_relevant : int\n        the number of basis coefficients that are relevant for in the template\n    return : boolean\n        True if the relevant coefficients all match within 1-sigma; false otherwise\n    \"\"\"\n    \n    # initiate\n    similar = True\n    imax = min(n_relevant, t_n_relevant)\n    \n    # iterate over the coefficients, stopping as soon as a significant difference is found\n    # (which will be by far the most common situation)\n    for i in range(0, imax):\n        var = errors[i]*errors[i] + t_errors[i]*t_errors[i]\n        diff = coeffs[i] - t_coeffs[i]\n        d2 = diff*diff\n        if d2 > var:\n            similar = False\n            break\n        \n    # give back the result\n    return similar\n\n# UDF to find spectra similar to a given template\ndef is_similar(template_coefficients, template_coefficient_errors, template_n_relevant):\n    return udf(lambda c,s,n: checkSimilarity(c, s, n, template_coefficients, template_coefficient_errors, template_n_relevant), BooleanType()) \n\n\ndef find_similar_continuous_spectra(data_frame : DataFrame, template_df : DataFrame):\n    \"\"\"\n    Given data frames defining a large set of XP spectra in continuous representation, \n    and a single template example also in continuous representation in a data frame,\n    search the former for cases of the latter. The similarity condition is that the\n    relevant basis coefficients in both BP and RP are similar within 1-sigma.\n    \n    Parameters:\n    -----------\n    data_frame : DataFrame()\n        the data frame encapsulating the set of XP continuous representation spectra to be searched\n    template_df : DataFrame()\n        the template, also in XP continuous representation encapsulated in a data frame.\n        \n    return : DataFrame()\n        a new data frame containing all matches to the template.\n    \"\"\"\n    \n    # convenience reference to template as a Row object:\n    template_row = template_df.collect()[0]\n    \n    # extract the BP template arrays\n    template_coefficients = np.array(template_row['bp_coefficients']).reshape(-1)\n    template_coefficient_errors = np.array(template_row['bp_coefficient_errors']).reshape(-1)\n    template_n_relevant_bases = template_row['bp_n_relevant_bases']\n    \n    # add in the BP similarity flag\n    data_frame = data_frame.withColumn('bp_similar', is_similar(template_coefficients, template_coefficient_errors, template_n_relevant_bases)('bp_coefficients', 'bp_coefficient_errors', 'bp_n_relevant_bases'))\n    \n    # extract the RP template arrays\n    template_coefficients = np.array(template_row['rp_coefficients']).reshape(-1)\n    template_coefficient_errors = np.array(template_row['rp_coefficient_errors']).reshape(-1)\n    template_n_relevant_bases = template_row['rp_n_relevant_bases']\n\n    # add in the RP similarity flag\n    data_frame = data_frame.withColumn('rp_similar', is_similar(template_coefficients, template_coefficient_errors, template_n_relevant_bases)('rp_coefficients', 'rp_coefficient_errors', 'rp_n_relevant_bases'))\n    \n    # return the subset where both BP and RP are similar\n    return data_frame.filter('bp_similar = True AND rp_similar = True')\n",
+      "user": "nch",
+      "dateUpdated": "2022-03-02T12:07:18+0000",
+      "progress": 0,
+      "config": {
+        "lineNumbers": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041106954_202262597",
+      "id": "paragraph_1645202735766_555754277",
+      "dateCreated": "2022-02-28T09:38:26+0000",
+      "dateStarted": "2022-02-28T09:42:15+0000",
+      "dateFinished": "2022-02-28T09:42:15+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:13063"
+    },
+    {
+      "title": "Demo trawl (csv source)",
+      "text": "%pyspark\n\n# This uses the data frame defined on the csv files and does not read from parquet!\n\n#df.show()\n\n# set up the template spectrum as the first of those ingested\ntemplate_df = df.filter('source_id = 6030020833890693248')\n\n# get any that are similar and show them: should yield the template and it's duplicate.\nsimilar_df = find_similar_continuous_spectra(df, template_df).show()\n",
+      "user": "nch",
+      "dateUpdated": "2022-02-28T13:58:54+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041106954_92830299",
+      "id": "paragraph_1645528175697_189526490",
+      "dateCreated": "2022-02-28T09:38:26+0000",
+      "status": "READY",
+      "$$hashKey": "object:13064"
+    },
+    {
+      "title": "Attach parquet files as data resource",
+      "text": "%pyspark\n\n# number of buckets for our platform\nNUM_BUCKETS = 2048\n\n# and to re-establish the resource in a new (or reset) spark context:\ndef reattachParquetFileResourceToSparkContext(table_name, file_path, *schema_structures):\n    \"\"\"\n    Creates a Spark (in-memory) meta-record for the table resource specified for querying \n    through the PySpark SQL API.\n    \n    Assumes that the table contains the Gaia source_id attribute and that the files have \n    been previously partitioned, bucketed and sorted on this field in parquet format\n    - see function saveToBinnedParquet().  If the table name specified already exists in the\n    catalogue IT WILL BE REMOVED (but the underlying data, assumed external, will remain).\n    \n    Parameters\n    ----------\n    table_name : str\n        The table name to be used as the identifier in SQL queries etc.\n    file_path : str\n        The full disk file system path name to the folder containing the parquet file set. \n    schema_structures : StructType\n        One or more schema structures expressed as a StructType object containing a list of\n        StructField(field_name : str, type : data_type : DataType(), nullable : boolean)\n    \"\"\"\n\n    # put in the columns and their data types ...\n    table_create_statement = \"CREATE TABLE `\" + table_name + \"` (\"\n    for schema_structure in schema_structures:\n        for field in schema_structure:\n            table_create_statement += \"`\" + field.name + \"` \" + field.dataType.simpleString() + \",\"\n    # ... zapping that extraneous comma at the end\n    table_create_statement = table_create_statement[:-1]\n        \n    # append the organisational details \n    table_create_statement += \") USING parquet OPTIONS (path '\" + file_path + \"') \"\n    table_create_statement += \"CLUSTERED BY (source_id) SORTED BY (source_id) INTO %d\"%(NUM_BUCKETS) + \" BUCKETS\"\n    \n    # sanity check\n    print(table_create_statement)\n    \n    # scrub any existing record - N.B. tables defined in this way are EXTERNAL, so this statement will not scrub\n    # the underlying file data set. Also if the table doesn't exist, this will silently do nothing (no exception\n    # will be thrown).\n    spark.sql(\"DROP TABLE IF EXISTS \" + table_name)\n    \n    # create the table resource\n    spark.sql(table_create_statement)\n    \n# database name to create\ndatabase = \"gaiadr3\"\n\n# root data store path: TODO change this to the official one when established.\n#data_store = \"file:////data/gaia/GEDR3/\" # \"file:////user/nch/PARQUET/REPARTITIONED/\"\ndata_store = \"file:////user/nch/PARQUET/SOURCEID_BUCKETS/XPSIMS\"\n\n# create the database and switch the current SQL database context to it (from default)\n#spark.sql(\"create database \" + database)\nspark.sql(\"use \" + database)\n\n# create the table against corresponding file set and schema\nreattachParquetFileResourceToSparkContext(\"xp_continuous_mean_spectrum\", data_store, xp_continuous_mean_spectrum_schema)\n\n# show the catalogue schema\nspark.sql(\"SHOW TABLES\").show()\n",
+      "user": "nch",
+      "dateUpdated": "2022-02-28T13:35:24+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "CREATE TABLE `xp_continuous_mean_spectrum` (`source_id` bigint,`solution_id` bigint,`bp_basis_function_id` smallint,`bp_degrees_of_freedom` smallint,`bp_n_parameters` tinyint,`bp_n_measurements` smallint,`bp_n_rejected_measurements` smallint,`bp_standard_deviation` float,`bp_chi_squared` float,`bp_coefficients` array<double>,`bp_coefficient_errors` array<float>,`bp_coefficient_correlations` array<float>,`bp_n_relevant_bases` smallint,`bp_relative_shrinking` float,`rp_basis_function_id` smallint,`rp_degrees_of_freedom` smallint,`rp_n_parameters` tinyint,`rp_n_measurements` smallint,`rp_n_rejected_measurements` smallint,`rp_standard_deviation` float,`rp_chi_squared` float,`rp_coefficients` array<double>,`rp_coefficient_errors` array<float>,`rp_coefficient_correlations` array<float>,`rp_n_relevant_bases` smallint,`rp_relative_shrinking` float) USING parquet OPTIONS (path 'file:////user/nch/PARQUET/SOURCEID_BUCKETS/XPSIMS') CLUSTERED BY (source_id) SORTED BY (source_id) INTO 2048 BUCKETS\n+--------+--------------------+-----------+\n|database|           tableName|isTemporary|\n+--------+--------------------+-----------+\n| gaiadr3|xp_continuous_mea...|      false|\n+--------+--------------------+-----------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041106954_636934898",
+      "id": "paragraph_1645623866598_1070152100",
+      "dateCreated": "2022-02-28T09:38:26+0000",
+      "dateStarted": "2022-02-28T09:41:08+0000",
+      "dateFinished": "2022-02-28T09:41:09+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:13065"
+    },
+    {
+      "text": "%pyspark\n\n# define a data frame against the full parquet-backed data set\ndfp = spark.sql('select * from xp_continuous_mean_spectrum')\n\n# set up the template spectrum as the first of those ingested\ntemplate_df = dfp.filter('source_id = 6030020833890693248')\n\n# get any that are similar and show them: should yield the template and it's duplicate.\nsimilar_df = find_similar_continuous_spectra(dfp, template_df)\n\n# look-see to sanity check\nsimilar_df.show()\n",
+      "user": "nch",
+      "dateUpdated": "2022-02-28T09:58:31+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+----------+----------+\n|          source_id|        solution_id|bp_basis_function_id|bp_degrees_of_freedom|bp_n_parameters|bp_n_measurements|bp_n_rejected_measurements|bp_standard_deviation|bp_chi_squared|     bp_coefficients|bp_coefficient_errors|bp_coefficient_correlations|bp_n_relevant_bases|bp_relative_shrinking|rp_basis_function_id|rp_degrees_of_freedom|rp_n_parameters|rp_n_measurements|rp_n_rejected_measurements|rp_standard_deviation|rp_chi_squared|     rp_coefficients|rp_coefficient_errors|rp_coefficient_correlations|rp_n_relevant_bases|rp_relative_shrinking|bp_similar|rp_similar|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+----------+----------+\n|6030020833890693248|4545469030156206081|                  56|                 2146|             55|             2201|                        14|            1.0583289|      2403.649|[850.769352327487...| [1.1296523, 0.969...|       [0.4637005, 0.042...|                 53|           0.99999994|                  57|                 2434|             55|             2489|                        20|            1.0511642|      2689.439|[3475.74320956029...| [1.7000587, 1.518...|       [0.083734974, 0.1...|                 14|           0.99999577|      true|      true|\n|2938630264764932224|4545469030156206081|                  56|                 2146|             55|             2201|                        14|            1.0583289|      2403.649|[850.769352327487...| [1.1296523, 0.969...|       [0.4637005, 0.042...|                 53|           0.99999994|                  57|                 2434|             55|             2489|                        20|            1.0511642|      2689.439|[3475.74320956029...| [1.7000587, 1.518...|       [0.083734974, 0.1...|                 14|           0.99999577|      true|      true|\n+-------------------+-------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+--------------------+---------------------+---------------+-----------------+--------------------------+---------------------+--------------+--------------------+---------------------+---------------------------+-------------------+---------------------+----------+----------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://zeppelin:4041/jobs/job?id=6",
+              "$$hashKey": "object:13361"
+            },
+            {
+              "jobUrl": "http://zeppelin:4041/jobs/job?id=7",
+              "$$hashKey": "object:13362"
+            },
+            {
+              "jobUrl": "http://zeppelin:4041/jobs/job?id=8",
+              "$$hashKey": "object:13363"
+            },
+            {
+              "jobUrl": "http://zeppelin:4041/jobs/job?id=9",
+              "$$hashKey": "object:13364"
+            },
+            {
+              "jobUrl": "http://zeppelin:4041/jobs/job?id=10",
+              "$$hashKey": "object:13365"
+            },
+            {
+              "jobUrl": "http://zeppelin:4041/jobs/job?id=11",
+              "$$hashKey": "object:13366"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041106954_1321861113",
+      "id": "paragraph_1645630193953_1666630424",
+      "dateCreated": "2022-02-28T09:38:26+0000",
+      "dateStarted": "2022-02-28T09:58:31+0000",
+      "dateFinished": "2022-02-28T09:59:13+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:13066"
+    },
+    {
+      "title": "Plot results",
+      "text": "%pyspark\n\n# GaiaXPy utilities\nfrom gaiaxpy import plot_spectra, convert\n\n# Enable Apache Arrow-based columnar data transfers: \n# This is required to get ArrayTypes in the Spark DF into corresponding NumPy arrays of numeric types in the Pandas DF\n# (they will get converted to scalar strings otherwise!)\nspark.conf.set(\"spark.sql.execution.arrow.enabled\", \"true\")\n#spark.conf.get('spark.sql.execution.arrow.enabled') # by default this is false.\n\n# Spark data frame to Pandas \ncontinuous_spectra = similar_df.toPandas()\n\n# convert to sampled form:\nsampled_spectra, sampling = convert(continuous_spectra, save_file = False)\n    \n# plot to sanity check:\nplot_spectra(sampled_spectra, sampling = sampling, multi=False, show_plot=True, save_path=None, legend=True)\n\n",
+      "user": "nch",
+      "dateUpdated": "2022-03-02T11:54:29+0000",
+      "progress": 0,
+      "config": {
+        "lineNumbers": false,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Processing data [50%]\r                              \rProcessing data [100%]\r                              \r\n"
+          },
+          {
+            "type": "ANGULAR",
+            "data": "<div style='width:auto;height:auto'><img src={{figure_859c6bb2ea0a46239a5ff26cf9560836}} style='width=auto;height:auto'><div>\n<div style='width:auto;height:auto'><img src={{figure_2b8d5d87b8f141b89d61b92ec2f7487a}} style='width=auto;height:auto'><div>\n<div style='width:auto;height:auto'><img src={{figure_35c4c2812c0e44b0b6ed907664366433}} style='width=auto;height:auto'><div>\n<div style='width:auto;height:auto'><img src={{figure_57fa3cc0d7984aefbf8d245a02b731b5}} style='width=auto;height:auto'><div>\n"
+          },
+          {
+            "type": "ANGULAR",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://zeppelin:4041/jobs/job?id=25",
+              "$$hashKey": "object:13399"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646041106955_13519125",
+      "id": "paragraph_1645630491662_917281413",
+      "dateCreated": "2022-02-28T09:38:26+0000",
+      "dateStarted": "2022-03-02T11:54:29+0000",
+      "dateFinished": "2022-03-02T11:54:50+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:13067"
+    },
+    {
+      "text": "%pyspark\n\ncontinuous_spectra.to_csv('/home/fedora/continuous_spectra.csv', index = False)\n\ncontinuous_spectra.",
+      "user": "nch",
+      "dateUpdated": "2022-03-02T12:07:42+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646046788407_971055300",
+      "id": "paragraph_1646046788407_971055300",
+      "dateCreated": "2022-02-28T11:13:08+0000",
+      "dateStarted": "2022-02-28T11:36:52+0000",
+      "dateFinished": "2022-02-28T11:36:52+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:13068"
+    },
+    {
+      "text": "%pyspark\n\nz.show(continuous_spectra)\n\n",
+      "user": "nch",
+      "dateUpdated": "2022-03-02T14:13:57+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {
+                    "columns": [
+                      {
+                        "name": "source_id0",
+                        "visible": true,
+                        "width": 177,
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "solution_id1",
+                        "visible": true,
+                        "width": 197,
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_basis_function_id2",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_degrees_of_freedom3",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_n_parameters4",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_n_measurements5",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_n_rejected_measurements6",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_standard_deviation7",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_chi_squared8",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_coefficients9",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_coefficient_errors10",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_coefficient_correlations11",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_n_relevant_bases12",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_relative_shrinking13",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_basis_function_id14",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_degrees_of_freedom15",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_n_parameters16",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_n_measurements17",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_n_rejected_measurements18",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_standard_deviation19",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_chi_squared20",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_coefficients21",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_coefficient_errors22",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_coefficient_correlations23",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_n_relevant_bases24",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_relative_shrinking25",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bp_similar26",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "rp_similar27",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      }
+                    ],
+                    "scrollFocus": {},
+                    "selection": [],
+                    "grouping": {
+                      "grouping": [],
+                      "aggregations": [],
+                      "rowExpandedStates": {}
+                    },
+                    "treeView": {},
+                    "pagination": {
+                      "paginationCurrentPage": 1,
+                      "paginationPageSize": 250
+                    }
+                  },
+                  "tableColumnTypeState": {
+                    "names": {
+                      "source_id": "string",
+                      "solution_id": "string",
+                      "bp_basis_function_id": "string",
+                      "bp_degrees_of_freedom": "string",
+                      "bp_n_parameters": "string",
+                      "bp_n_measurements": "string",
+                      "bp_n_rejected_measurements": "string",
+                      "bp_standard_deviation": "string",
+                      "bp_chi_squared": "string",
+                      "bp_coefficients": "string",
+                      "bp_coefficient_errors": "string",
+                      "bp_coefficient_correlations": "string",
+                      "bp_n_relevant_bases": "string",
+                      "bp_relative_shrinking": "string",
+                      "rp_basis_function_id": "string",
+                      "rp_degrees_of_freedom": "string",
+                      "rp_n_parameters": "string",
+                      "rp_n_measurements": "string",
+                      "rp_n_rejected_measurements": "string",
+                      "rp_standard_deviation": "string",
+                      "rp_chi_squared": "string",
+                      "rp_coefficients": "string",
+                      "rp_coefficient_errors": "string",
+                      "rp_coefficient_correlations": "string",
+                      "rp_n_relevant_bases": "string",
+                      "rp_relative_shrinking": "string",
+                      "bp_similar": "string",
+                      "rp_similar": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "source_id\tsolution_id\tbp_basis_function_id\tbp_degrees_of_freedom\tbp_n_parameters\tbp_n_measurements\tbp_n_rejected_measurements\tbp_standard_deviation\tbp_chi_squared\tbp_coefficients\tbp_coefficient_errors\tbp_coefficient_correlations\tbp_n_relevant_bases\tbp_relative_shrinking\trp_basis_function_id\trp_degrees_of_freedom\trp_n_parameters\trp_n_measurements\trp_n_rejected_measurements\trp_standard_deviation\trp_chi_squared\trp_coefficients\trp_coefficient_errors\trp_coefficient_correlations\trp_n_relevant_bases\trp_relative_shrinking\tbp_similar\trp_similar\n6030020833890693248\t4545469030156206081\t56\t2146\t55\t2201\t14\t1.0583288669586182\t2403.64892578125\t[ 8.50769352e+02  1.75120489e+02  2.58779874e+00  4.97786190e+00   3.08878724e+00  9.47885031e+00 -2.46588067e-02  2.05485731e+00  -3.88583617e+00 -3.57594846e+00 -9.97414619e-01  1.40536808e+00   2.19166257e+00 -2.93836488e+00  1.73297552e+00 -1.53664840e+00  -1.34594074e+00 -1.22433321e+00 -4.26395104e-01 -1.41264598e+00   1.90450409e-01 -1.30261319e+00 -7.22973199e-01 -4.09749927e-01   4.03092610e-01 -5.95467440e-01 -1.47849900e+00  1.15364660e-01   8.14456465e-02 -2.99814267e-01  1.29210722e+00 -5.63824438e-01  -1.90528773e-01 -4.36410987e-01  1.87242018e-01  4.61941870e-01  -8.70681284e-02  3.62818846e-01 -8.64979510e-01 -7.87987596e-02  -3.56865304e-01  1.01314814e-01 -2.47054122e-01  2.10523890e-01   1.23273668e-01 -5.48761978e-02  3.02187231e-01 -2.97400012e-03   4.02373896e-01  1.89883913e-01  1.52700512e-01  9.48526735e-02  -3.05380716e-01 -2.89603688e-01  1.02431912e-01]\t[1.1296523  0.9696949  1.10534    0.985752   1.0450492  0.7512854  0.87178093 2.0011854  1.0330544  1.015705   1.0950403  0.99004173  0.89637065 0.9534114  0.9332283  0.84862566 0.69953775 0.73921525  0.61818403 0.5581789  0.68047    0.5466601  0.5955659  0.5587793  0.56400937 0.5441916  0.5371753  0.55784124 0.51027    0.48163167  0.49359202 0.5063969  0.5663332  0.50655955 0.5276592  0.52185726  0.52921736 0.4946024  0.45264482 0.5069624  0.413723   0.43551153  0.39677894 0.3382379  0.35442054 0.30049545 0.30727163 0.32217878  0.30399328 0.22962315 0.2131265  0.17984909 0.12841265 0.13402665  0.05429372]\t[ 0.4637005   0.04270257  0.4218905  ... -0.13182431 -0.06859783   0.2723352 ]\t53\t0.9999999403953552\t57\t2434\t55\t2489\t20\t1.051164150238037\t2689.43896484375\t[ 3.47574321e+03  7.59872170e+02  9.31474996e+01  9.98501509e+00  -4.35274517e+01 -4.90011204e+00  8.63192009e+00 -2.43630269e+01  -6.07649765e-01 -1.23013647e+01  1.05407572e+01  3.54357932e+00   3.60109326e+00  9.96048572e+00 -3.97293894e+00 -1.95913149e+00  -6.69646445e-01 -2.72180049e-02 -5.23533764e+00 -1.64068419e+00   3.39252271e+00  6.48648593e-01 -1.66879281e+00 -2.93171966e+00  -8.51320691e-03 -1.93607048e+00  2.71083847e+00 -3.12663106e-01  -3.08920366e+00  9.14613453e-01 -1.61686780e+00 -1.65399222e+00  -1.15147998e+00 -9.19856551e-03 -3.79248324e-01  8.98051087e-01   1.93859347e-01  3.22761894e-01 -1.39161932e+00 -3.27820537e-01  -1.31245001e+00  2.90724681e-01 -4.62844975e-01 -2.51439101e-01  -4.35807499e-03 -1.68617413e-01  2.87042714e-02  5.03462820e-01  -2.44704763e-02 -4.36059320e-01  2.93131826e-01 -3.73628451e-01  -3.57921564e-01  8.75113132e-02 -1.52809839e-02]\t[1.7000587  1.5184724  1.5832199  1.7249929  1.6631985  1.5143893  1.6574128  1.5442882  1.5652888  1.6425952  1.5250558  1.5406222  1.1927607  1.5515307  1.4474218  1.6314292  1.6433166  1.5908601  1.7039981  1.5843909  1.3113664  1.5130807  1.3758343  1.340045  1.3582729  1.2832497  1.2297508  1.1672237  1.2228264  1.1568872  1.103184   1.0696588  1.0246911  0.97207403 0.9327389  0.8802728  0.91073865 0.79276395 0.845504   0.8164542  0.85618734 0.74612856  0.7012407  0.7517342  0.6714071  0.6325738  0.60486543 0.45649654  0.46192133 0.53183085 0.4163683  0.41055757 0.37073126 0.17895459  0.10565309]\t[ 0.08373497  0.19128835 -0.05937039 ... -0.02994842  0.04592408   0.05592569]\t14\t0.999995768070221\tTrue\tTrue\n2938630264764932224\t4545469030156206081\t56\t2146\t55\t2201\t14\t1.0583288669586182\t2403.64892578125\t[ 8.50769352e+02  1.75120489e+02  2.58779874e+00  4.97786190e+00   3.08878724e+00  9.47885031e+00 -2.46588067e-02  2.05485731e+00  -3.88583617e+00 -3.57594846e+00 -9.97414619e-01  1.40536808e+00   2.19166257e+00 -2.93836488e+00  1.73297552e+00 -1.53664840e+00  -1.34594074e+00 -1.22433321e+00 -4.26395104e-01 -1.41264598e+00   1.90450409e-01 -1.30261319e+00 -7.22973199e-01 -4.09749927e-01   4.03092610e-01 -5.95467440e-01 -1.47849900e+00  1.15364660e-01   8.14456465e-02 -2.99814267e-01  1.29210722e+00 -5.63824438e-01  -1.90528773e-01 -4.36410987e-01  1.87242018e-01  4.61941870e-01  -8.70681284e-02  3.62818846e-01 -8.64979510e-01 -7.87987596e-02  -3.56865304e-01  1.01314814e-01 -2.47054122e-01  2.10523890e-01   1.23273668e-01 -5.48761978e-02  3.02187231e-01 -2.97400012e-03   4.02373896e-01  1.89883913e-01  1.52700512e-01  9.48526735e-02  -3.05380716e-01 -2.89603688e-01  1.02431912e-01]\t[1.1296523  0.9696949  1.10534    0.985752   1.0450492  0.7512854  0.87178093 2.0011854  1.0330544  1.015705   1.0950403  0.99004173  0.89637065 0.9534114  0.9332283  0.84862566 0.69953775 0.73921525  0.61818403 0.5581789  0.68047    0.5466601  0.5955659  0.5587793  0.56400937 0.5441916  0.5371753  0.55784124 0.51027    0.48163167  0.49359202 0.5063969  0.5663332  0.50655955 0.5276592  0.52185726  0.52921736 0.4946024  0.45264482 0.5069624  0.413723   0.43551153  0.39677894 0.3382379  0.35442054 0.30049545 0.30727163 0.32217878  0.30399328 0.22962315 0.2131265  0.17984909 0.12841265 0.13402665  0.05429372]\t[ 0.4637005   0.04270257  0.4218905  ... -0.13182431 -0.06859783   0.2723352 ]\t53\t0.9999999403953552\t57\t2434\t55\t2489\t20\t1.051164150238037\t2689.43896484375\t[ 3.47574321e+03  7.59872170e+02  9.31474996e+01  9.98501509e+00  -4.35274517e+01 -4.90011204e+00  8.63192009e+00 -2.43630269e+01  -6.07649765e-01 -1.23013647e+01  1.05407572e+01  3.54357932e+00   3.60109326e+00  9.96048572e+00 -3.97293894e+00 -1.95913149e+00  -6.69646445e-01 -2.72180049e-02 -5.23533764e+00 -1.64068419e+00   3.39252271e+00  6.48648593e-01 -1.66879281e+00 -2.93171966e+00  -8.51320691e-03 -1.93607048e+00  2.71083847e+00 -3.12663106e-01  -3.08920366e+00  9.14613453e-01 -1.61686780e+00 -1.65399222e+00  -1.15147998e+00 -9.19856551e-03 -3.79248324e-01  8.98051087e-01   1.93859347e-01  3.22761894e-01 -1.39161932e+00 -3.27820537e-01  -1.31245001e+00  2.90724681e-01 -4.62844975e-01 -2.51439101e-01  -4.35807499e-03 -1.68617413e-01  2.87042714e-02  5.03462820e-01  -2.44704763e-02 -4.36059320e-01  2.93131826e-01 -3.73628451e-01  -3.57921564e-01  8.75113132e-02 -1.52809839e-02]\t[1.7000587  1.5184724  1.5832199  1.7249929  1.6631985  1.5143893  1.6574128  1.5442882  1.5652888  1.6425952  1.5250558  1.5406222  1.1927607  1.5515307  1.4474218  1.6314292  1.6433166  1.5908601  1.7039981  1.5843909  1.3113664  1.5130807  1.3758343  1.340045  1.3582729  1.2832497  1.2297508  1.1672237  1.2228264  1.1568872  1.103184   1.0696588  1.0246911  0.97207403 0.9327389  0.8802728  0.91073865 0.79276395 0.845504   0.8164542  0.85618734 0.74612856  0.7012407  0.7517342  0.6714071  0.6325738  0.60486543 0.45649654  0.46192133 0.53183085 0.4163683  0.41055757 0.37073126 0.17895459  0.10565309]\t[ 0.08373497  0.19128835 -0.05937039 ... -0.02994842  0.04592408   0.05592569]\t14\t0.999995768070221\tTrue\tTrue\n"
+          },
+          {
+            "type": "ANGULAR",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646054677500_768982206",
+      "id": "paragraph_1646054677500_768982206",
+      "dateCreated": "2022-02-28T13:24:37+0000",
+      "dateStarted": "2022-03-02T11:56:22+0000",
+      "dateFinished": "2022-03-02T11:56:22+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:13069"
+    },
+    {
+      "text": "%python.ipython\n",
+      "user": "nch",
+      "dateUpdated": "2022-03-02T12:18:03+0000",
+      "progress": 0,
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646223483543_86647846",
+      "id": "paragraph_1646223483543_86647846",
+      "dateCreated": "2022-03-02T12:18:03+0000",
+      "status": "READY",
+      "$$hashKey": "object:13070"
+    }
+  ],
+  "name": "DR3 XP continuous spectra ingest test",
+  "id": "2GXWQESPT",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/Users/nch/DR3 XP continuous spectra ingest test"
+}
