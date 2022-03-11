@@ -959,9 +959,9 @@
       "status": "FINISHED"
     },
     {
-      "text": "%pyspark\ndef run_HDBSCAN(cluster_cols, save \u003d False, xmin \u003d -1000, ymin \u003d -1000, zmin \u003d -1000, step \u003d 1000):\n    \n    # Get data\n    df \u003d spark.sql(f\u0027SELECT * FROM dcr_tmp WHERE X_pc between {xmin} AND {xmin+step} AND Y_pc between {ymin} AND {ymin+step} AND Z_pc between {zmin} AND {zmin+step}\u0027)\n    count \u003d df.count()\n    if count \u003c 12000000: # Current limit for node size.\n        filename \u003d f\u0027{user_home}/HDBSCAN/looped/X{xmin}_Y{ymin}_Z{zmin}\u0027\n        os.mkdir(filename)\n        os.mkdir(f\u0027{filename}/model/\u0027)\n        os.mkdir(f\u0027{filename}/results/\u0027)\n        df \u003d df.select(cluster_cols).toPandas() # Move to Pandas for HDBSCAN\n        # Apply HDBSCAN for full data with prediction ON.\n        clusterer \u003d hdbscan.HDBSCAN(min_cluster_size\u003d40, min_samples\u003d25, prediction_data\u003dTrue, allow_single_cluster\u003dFalse, memory \u003d f\u0027{filename}/model\u0027,\n                                    cluster_selection_method\u003d\u0027leaf\u0027, gen_min_span_tree\u003dTrue).fit(df[cluster_cols[-5:]])\n                \n        # add clusters to data and get cluster persistance\n        df, persistance \u003d clustering_info(clusterer, add_to_data \u003d True, df \u003d df)\n        \n        if save:\n            if not dev_run:\n                df.to_csv(f\"{filename}/results/data_{save}.csv\", index \u003d False)\n                persistance.to_csv(f\"{filename}/results/cluster_{save}.csv\", index \u003d False)\n                # df.write.mode(\u0027overwrite\u0027).save(f\"{filename}/results/data_{save}.parquet\", format\u003d\"parquet\")\n                # persistance.write.mode(\u0027overwrite\u0027).).save(f\"{filename}/results/cluster_{save}.csv\", format\u003d\"csv\")\n                print(f\u0027data saved at f\"{filename}/results/{save}\u0027)\n        return clusterer\n    else:\n        print(f\u0027X{xmin}_Y{ymin}_Z{zmin} Contains Too Many Samles.\u0027)\n            \nclusterer \u003d run_HDBSCAN(cluster_cols \u003d cluster_cols, save \u003d \u0027test\u0027, xmin \u003d -1000, ymin \u003d -1000, zmin \u003d -1000, step \u003d 1000)\n    ",
+      "text": "%pyspark\nos.listdir(\u0027/user/dcr//HDBSCAN/looped/\u0027)",
       "user": "dcr",
-      "dateUpdated": "2022-03-11 10:21:46.205",
+      "dateUpdated": "2022-03-11 11:31:22.218",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -980,6 +980,56 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "[\u0027X-1000_Y-1000_Z-1000\u0027, \u0027X-1000_Y-1000_Z0\u0027, \u0027X-1000_Y-1000_Z-500\u0027, \u0027X-1000_Y-500_Z0\u0027, \u0027X-1000_Y0_Z-1000\u0027, \u0027X-1000_Y-500_Z-500\u0027]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646998251905_1517292124",
+      "id": "paragraph_1646998251905_1517292124",
+      "dateCreated": "2022-03-11 11:30:51.905",
+      "dateStarted": "2022-03-11 11:31:22.239",
+      "dateFinished": "2022-03-11 11:31:22.247",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\ndef run_HDBSCAN(cluster_cols, save \u003d False, xmin \u003d -1000, ymin \u003d -1000, zmin \u003d -1000, step \u003d 1000):\n    \n    # Get data\n    df \u003d spark.sql(f\u0027SELECT * FROM dcr_tmp WHERE X_pc between {xmin} AND {xmin+step} AND Y_pc between {ymin} AND {ymin+step} AND Z_pc between {zmin} AND {zmin+step}\u0027)\n    count \u003d df.count()\n    if count \u003c 12000000: # Current limit for node size.\n        filename \u003d f\u0027{user_home}/HDBSCAN/looped/X{xmin}_Y{ymin}_Z{zmin}\u0027\n        if f\u0027X{xmin}_Y{ymin}_Z{zmin}\u0027 not in os.listdir(f\u0027{user_home}/HDBSCAN/looped/\u0027):\n            os.mkdir(filename)\n            os.mkdir(f\u0027{filename}/model/\u0027)\n            os.mkdir(f\u0027{filename}/results/\u0027)\n        df \u003d df.select(cluster_cols).toPandas() # Move to Pandas for HDBSCAN\n        # Apply HDBSCAN for full data with prediction ON.\n        clusterer \u003d hdbscan.HDBSCAN(min_cluster_size\u003d40, min_samples\u003d25, prediction_data\u003dTrue, allow_single_cluster\u003dFalse, memory \u003d f\u0027/user/dcr//HDBSCAN/looped/X{xmin}_Y{ymin}_Z{zmin}/model\u0027,\n                                    cluster_selection_method\u003d\u0027leaf\u0027, gen_min_span_tree\u003dTrue).fit(df[cluster_cols[-5:]])\n                \n        # add clusters to data and get cluster persistance\n        df, persistance \u003d clustering_info(clusterer, add_to_data \u003d True, df \u003d df)\n        \n        if save:\n            if not dev_run:\n                df.to_csv(f\"{filename}/results/data_{save}.csv\", index \u003d False)\n                persistance.to_csv(f\"{filename}/results/cluster_{save}.csv\", index \u003d False)\n                # df.write.mode(\u0027overwrite\u0027).save(f\"{filename}/results/data_{save}.parquet\", format\u003d\"parquet\")\n                # persistance.write.mode(\u0027overwrite\u0027).).save(f\"{filename}/results/cluster_{save}.csv\", format\u003d\"csv\")\n                print(f\u0027data saved at f\"{filename}/results/{save}\u0027)\n        return clusterer\n    else:\n        print(f\u0027X{xmin}_Y{ymin}_Z{zmin} Contains Too Many Samles.\u0027)\n            \nclusterer \u003d run_HDBSCAN(cluster_cols \u003d cluster_cols, save \u003d \u0027test\u0027, xmin \u003d -1000, ymin \u003d -1000, zmin \u003d -1000, step \u003d 1000)\n    ",
+      "user": "dcr",
+      "dateUpdated": "2022-03-11 11:31:52.371",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Fail to execute line 32: clusterer \u003d run_HDBSCAN(cluster_cols \u003d cluster_cols, save \u003d \u0027test\u0027, xmin \u003d -1000, ymin \u003d -1000, zmin \u003d -1000, step \u003d 1000)\nTraceback (most recent call last):\n  File \"/tmp/1646993873165-0/zeppelin_python.py\", line 158, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 32, in \u003cmodule\u003e\n  File \"\u003cstdin\u003e\", line 9, in run_HDBSCAN\nFileNotFoundError: [Errno 2] No such file or directory: \u0027file:///user/dcr//HDBSCAN/looped/\u0027\n"
+          }
+        ]
+      },
       "apps": [],
       "runtimeInfos": {
         "jobUrl": {
@@ -989,7 +1039,7 @@
           "group": "spark",
           "values": [
             {
-              "jobUrl": "http://zeppelin:4040/jobs/job?id\u003d11"
+              "jobUrl": "http://zeppelin:4040/jobs/job?id\u003d13"
             }
           ],
           "interpreterSettingId": "spark"
@@ -999,9 +1049,9 @@
       "jobName": "paragraph_1646907714561_557952954",
       "id": "paragraph_1646907714561_557952954",
       "dateCreated": "2022-03-10 10:21:54.561",
-      "dateStarted": "2022-03-11 10:21:46.226",
-      "dateFinished": "2022-03-11 10:20:58.160",
-      "status": "RUNNING"
+      "dateStarted": "2022-03-11 11:31:52.393",
+      "dateFinished": "2022-03-11 11:39:28.592",
+      "status": "ERROR"
     },
     {
       "text": "%pyspark\n# clusterer.condensed_tree_.plot()",
