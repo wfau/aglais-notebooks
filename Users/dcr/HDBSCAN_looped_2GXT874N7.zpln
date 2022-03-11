@@ -4,7 +4,7 @@
       "title": "Introduction",
       "text": "%md\n\nThis notebook provides an illustrative workflow that follows the [Kounkel and Covey (2019)](https://ui.adsabs.harvard.edu/abs/2019AJ....158..122K/abstract) kinematic analysis of Gaia DR2 which used unsupervised ML techniques to identify kinematic structures in five-dimensional parameter space. Steps in the analysis illustrated are:\n\n* Initial broad-brush selection from gaia_source from 1.7 billion rows to around 20 million;\n* further filtering of this selection on velocity with respect to the Local Standard of Rest via kinematic transformations expressed in user-defined functions;\n* transformation from Spark to Pandas data frame for input into a third-party implementation of the unsupervised ML clustering algorithm (HDBSCAN \u003d \"hierarchical density-based clustering and noise\").\n\n## To Do:\n* Add LSR cut to the good sources (FIX the LSR cut causing issues?)\n* Create a series of plots to show the clustering\n* Select known and \"predicted\" white dwarfs and isolate the clusters containing these examples.",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:26:13.009",
+      "dateUpdated": "2022-03-11 10:20:01.154",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -38,18 +38,18 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006279_2004974373",
+      "jobName": "paragraph_1646827009557_1248980272",
       "id": "20210510-142316_655474866",
-      "dateCreated": "2021-12-12 21:53:26.279",
-      "dateStarted": "2022-03-07 11:26:13.010",
-      "dateFinished": "2022-03-07 11:26:13.015",
+      "dateCreated": "2022-03-09 11:56:49.557",
+      "dateStarted": "2022-03-11 10:20:01.178",
+      "dateFinished": "2022-03-11 10:20:01.183",
       "status": "FINISHED"
     },
     {
       "title": "Set up",
-      "text": "%pyspark\n\nimport sys\nimport time\nimport string\nimport hdbscan\nimport numpy as np\nimport pandas as pd\nimport pyspark.ml as ml\nfrom scipy.stats import kde\nfrom math import pi, cos as mcos, sin as msin\nimport matplotlib.pylab as plt\nfrom collections import Counter\nfrom pyspark.ml.feature import VectorAssembler\nfrom pyspark.sql.types import ArrayType, DoubleType\nfrom pyspark.sql.functions import lit, col, when, udf, greatest, log10, cos, sin\n\nspark.conf.set(\"spark.sql.execution.arrow.pyspark.enabled\", \"true\")\n\ndev_run \u003d False",
+      "text": "%pyspark\n\nimport os\nimport sys\nimport time\nimport string\nimport hdbscan\nimport numpy as np\nimport pandas as pd\nimport pyspark.ml as ml\nfrom scipy.stats import kde\nfrom math import pi, cos as mcos, sin as msin\nimport matplotlib.pylab as plt\nfrom collections import Counter\nfrom pyspark.ml.feature import VectorAssembler\nfrom pyspark.sql.types import ArrayType, DoubleType\nfrom pyspark.sql.functions import lit, col, when, udf, greatest, log10, cos, sin\n\nspark.conf.set(\"spark.sql.execution.arrow.pyspark.enabled\", \"true\")\n\nuser_home \u003d \u0027file:///user/dcr/\u0027\ndev_run \u003d False",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:26:28.447",
+      "dateUpdated": "2022-03-11 10:20:01.277",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -76,17 +76,17 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006279_670465715",
+      "jobName": "paragraph_1646827009558_1331913923",
       "id": "20210922-153459_2139306293",
-      "dateCreated": "2021-12-12 21:53:26.279",
-      "dateStarted": "2022-03-07 11:26:28.469",
-      "dateFinished": "2022-03-07 11:26:29.227",
+      "dateCreated": "2022-03-09 11:56:49.558",
+      "dateStarted": "2022-03-11 10:20:01.299",
+      "dateFinished": "2022-03-11 10:20:02.408",
       "status": "FINISHED"
     },
     {
       "text": "%pyspark\nimport databricks.koalas as ks",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:26:39.903",
+      "dateUpdated": "2022-03-11 10:20:02.499",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -107,62 +107,28 @@
       },
       "results": {
         "code": "SUCCESS",
-        "msg": []
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "WARNING:root:\u0027PYARROW_IGNORE_TIMEZONE\u0027 environment variable was not set. It is required to set this environment variable to \u00271\u0027 in both driver and executor sides if you use pyarrow\u003e\u003d2.0.0. Koalas will set it for you but it does not work if there is a Spark context already launched.\n"
+          }
+        ]
       },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1646131540729_1768687455",
+      "jobName": "paragraph_1646827009558_1071335591",
       "id": "paragraph_1646131540729_1768687455",
-      "dateCreated": "2022-03-01 10:45:40.729",
-      "dateStarted": "2022-03-07 11:26:39.928",
-      "dateFinished": "2022-03-07 11:26:39.934",
+      "dateCreated": "2022-03-09 11:56:49.558",
+      "dateStarted": "2022-03-11 10:20:02.520",
+      "dateFinished": "2022-03-11 10:20:02.679",
       "status": "FINISHED"
     },
     {
       "title": "save functions",
       "text": "%spark.pyspark\ndef savefigs(filename, dpi \u003d 450, drop_pdf \u003d False):\n    plt.savefig(f\u0027/user/dcr/HDBSCAN/plots/{filename}.png\u0027,\n                dpi\u003ddpi, bbox_inches \u003d \u0027tight\u0027)\n    if not drop_pdf:\n        plt.savefig(f\u0027/user/dcr/HDBSCAN/plots/{filename}.pdf\u0027,\n                    dpi\u003ddpi, bbox_inches \u003d \u0027tight\u0027)\n                \ndef savetxt(df, filename):\n    if type(df) \u003d\u003d list:\n        import json\n        with open(f\u0027/user/dcr/HDBSCAN/plots/data/{filename}.json\u0027, \u0027w\u0027) as f:\n            json.dump(df, f, indent\u003d2)\n            \ndef opentxt(filename):\n    if filename.split(\u0027.\u0027)[-1] \u003d\u003d \u0027json\u0027:\n        import json\n        with open(filename, \u0027r\u0027) as f:\n            score \u003d json.load(f)",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:26:41.620",
-      "progress": 0,
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9.0,
-        "editorHide": true,
-        "title": true,
-        "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006279_339537302",
-      "id": "20210923-091022_133423620",
-      "dateCreated": "2021-12-12 21:53:26.279",
-      "dateStarted": "2022-03-07 11:26:41.641",
-      "dateFinished": "2022-03-07 11:26:41.648",
-      "status": "FINISHED"
-    },
-    {
-      "title": "Return columns",
-      "text": "%pyspark\ndef return_columns(how \u003d \u0027list\u0027):\n    if how \u003d\u003d \u0027list\u0027:\n        return [\u0027source_id\u0027, \u0027parallax\u0027, \u0027ra\u0027, \u0027dec\u0027, \u0027l\u0027, \u0027b\u0027, \u0027pmra\u0027, \u0027pmdec\u0027,\n                \u0027phot_g_mean_mag\u0027, \u0027phot_bp_mean_mag\u0027, \u0027phot_rp_mean_mag\u0027, \u0027g_rp\u0027]\n    elif how \u003d\u003d\u0027str\u0027:\n        return \u0027source_id, parallax, ra, dec, l, b, pmra, pmdec, \\\n                phot_g_mean_mag, phot_bp_mean_mag, phot_rp_mean_mag, g_rp\u0027",
-      "user": "dcr",
-      "dateUpdated": "2022-03-07 11:26:45.022",
+      "dateUpdated": "2022-03-11 10:20:02.720",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -190,18 +156,57 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006279_1002832164",
+      "jobName": "paragraph_1646827009558_749873121",
+      "id": "20210923-091022_133423620",
+      "dateCreated": "2022-03-09 11:56:49.558",
+      "dateStarted": "2022-03-11 10:20:02.741",
+      "dateFinished": "2022-03-11 10:20:02.747",
+      "status": "FINISHED"
+    },
+    {
+      "title": "Return columns",
+      "text": "%pyspark\ndef return_columns(how \u003d \u0027list\u0027):\n    if how \u003d\u003d \u0027list\u0027:\n        return [\u0027source_id\u0027, \u0027parallax\u0027, \u0027ra\u0027, \u0027dec\u0027, \u0027l\u0027, \u0027b\u0027, \u0027pmra\u0027, \u0027pmdec\u0027,\n                \u0027phot_g_mean_mag\u0027, \u0027phot_bp_mean_mag\u0027, \u0027phot_rp_mean_mag\u0027, \u0027g_rp\u0027]\n    elif how \u003d\u003d\u0027str\u0027:\n        return \u0027source_id, parallax, ra, dec, l, b, pmra, pmdec, \\\n                phot_g_mean_mag, phot_bp_mean_mag, phot_rp_mean_mag, g_rp\u0027",
+      "user": "dcr",
+      "dateUpdated": "2022-03-11 10:20:02.840",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646827009558_1191234542",
       "id": "20210923-090743_592184010",
-      "dateCreated": "2021-12-12 21:53:26.279",
-      "dateStarted": "2022-03-07 11:26:45.043",
-      "dateFinished": "2022-03-07 11:26:45.049",
+      "dateCreated": "2022-03-09 11:56:49.558",
+      "dateStarted": "2022-03-11 10:20:02.861",
+      "dateFinished": "2022-03-11 10:20:02.866",
       "status": "FINISHED"
     },
     {
       "title": "Make spurious sources queryable",
       "text": "%spark.pyspark\n\ndef vector_to_array(col):\n    def to_array_(v):\n        return v.toArray().tolist()\n    # Important: asNondeterministic requires Spark 2.3 or later\n    # It can be safely removed i.e.\n    # return udf(to_array_, ArrayType(DoubleType()))(col)\n    # but at the cost of decreased performance\n    return udf(to_array_, ArrayType(DoubleType())).asNondeterministic()(col)\n    \n    \ndef queryableSpuriousSources(filename):\n    \u0027\u0027\u0027opens result from ML_cuts and makes queryable \u0027\u0027\u0027\n\n    QC_cuts \u003d spark.read.parquet(\u0027file:///user/dcr//ML_cuts/results/allDataMatchPS1.parquet\u0027)\n    QC_cuts \u003d QC_cuts.withColumn(\"probability\", vector_to_array(col(\"probability\")))\\\n                       .select([\u0027source_id\u0027, \u0027prediction\u0027] + [col(\"probability\")[i] for i in range(2)])\\\n                        .withColumn(\u0027confidence\u0027, greatest(col(\u0027probability[0]\u0027), col(\u0027probability[1]\u0027)))\\\n                        .select([\u0027source_id\u0027, \u0027prediction\u0027, \u0027confidence\u0027])\\\n                        .withColumnRenamed(\u0027prediction\u0027, \u0027is_good\u0027)\n     \n    QC_cuts.createOrReplaceTempView(\u0027dcr_spurious_sources\u0027)\n\nqueryableSpuriousSources(filename \u003d \u0027file:///user/dcr//ML_cuts/results/allDataMatchPS1.parquet\u0027, )\n# source_id \u003d\u003d gaia edr3 source id\n#   is_good \u003d\u003d flag for good astrometric sources (0.0 \u003d bad, 1.0 \u003d good)\n# confidence \u003d\u003d confidence in prediction.\n\nspark.catalog.listTables()\n",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:26:46.422",
+      "dateUpdated": "2022-03-11 10:20:02.960",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -240,40 +245,40 @@
           "group": "spark",
           "values": [
             {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d9"
+              "jobUrl": "http://zeppelin:4040/jobs/job?id\u003d4"
             },
             {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d10"
+              "jobUrl": "http://zeppelin:4040/jobs/job?id\u003d5"
             },
             {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d11"
+              "jobUrl": "http://zeppelin:4040/jobs/job?id\u003d6"
             },
             {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d12"
+              "jobUrl": "http://zeppelin:4040/jobs/job?id\u003d7"
             },
             {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d13"
+              "jobUrl": "http://zeppelin:4040/jobs/job?id\u003d8"
             },
             {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d14"
+              "jobUrl": "http://zeppelin:4040/jobs/job?id\u003d9"
             }
           ],
           "interpreterSettingId": "spark"
         }
       },
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006279_1955514438",
+      "jobName": "paragraph_1646827009558_35162264",
       "id": "20210922-152950_1679523845",
-      "dateCreated": "2021-12-12 21:53:26.279",
-      "dateStarted": "2022-03-07 11:26:46.443",
-      "dateFinished": "2022-03-07 11:26:47.550",
+      "dateCreated": "2022-03-09 11:56:49.558",
+      "dateStarted": "2022-03-11 10:20:02.980",
+      "dateFinished": "2022-03-11 10:20:04.459",
       "status": "FINISHED"
     },
     {
       "title": "Select good sources",
       "text": "%pyspark\n\ndef initial_query(columns, how, limit \u003d None, tablename \u003d \u0027dcr_raw_sources\u0027, make_queryable \u003d False, \n                    return_table \u003d False, additional_cuts \u003d \u0027\u0027):\n    if how \u003d\u003d \u0027NoLimit\u0027:\n        raw_sources_df \u003d spark.sql(f\u0027SELECT {columns} \\\n                                     FROM gaia_source as a \\\n                                     WHERE {additional_cuts}\u0027)\n    elif how \u003d\u003d \u0027limited\u0027:\n        raw_sources_df \u003d spark.sql(f\u0027SELECT {columns} FROM gaia_source \\\n                                        WHERE {additional_cuts} \\\n                                        (1/parallax \u003c limit)\u0027)\n    elif how \u003d\u003d \u0027sampled\u0027:\n        sample_filter \u003d f\u0027 WHERE MOD(source_id, {limit}) \u003d 0\u0027\n        raw_sources_df \u003d spark.sql(f\u0027SELECT {columns} FROM gaia_source \\\n                                    {sample_filter} \\\n                                    AND {additional_cuts}\u0027)\n    elif how \u003d\u003d \u0027hard_limit\u0027:\n        sample_filter \u003d f\u0027 TAKE {limit}\u0027\n        raw_sources_df \u003d spark.sql(f\u0027SELECT {columns} FROM gaia_source \\\n                                    WHERE {additional_cuts} \\\n                                    {sample_filter}\u0027)\n\n    else: raise NameError(\u0027how must equal: [\"NoLimit\", \"limited\", \"sampled\", \"hard_limit]\u0027)\n    \n    if make_queryable:\n        raw_sources_df.createOrReplaceTempView(tablename)\n        # print(f\u0027data at: {tablename}\u0027)\n    if return_table:\n        return raw_sources_df\n        \ndef applyQualityControl(catalogue, QCcatalogue, threshold \u003d 0.0):\n    df \u003d spark.sql(f\u0027SELECT a.*, b.is_good, b.confidence \\\n                FROM {catalogue} as a, \\\n                {QCcatalogue} as b\\\n                WHERE (b.source_id \u003d\u003d a.source_id AND b.is_good \u003d\u003d 1.0 AND b.confidence \u003e {threshold})\u0027)\n    return df\n    \ndef addAbsoluteMag(df, passband \u003d \u0027g\u0027):\n    return df.withColumn(f\u0027m_{passband}\u0027, col(f\u0027phot_{passband}_mean_mag\u0027) \\\n                             + 5.0*log10(col(\u0027parallax\u0027)/100))\n        \ndef get_data(makeQueryable \u003d \u0027dcr_raw_sources\u0027, sampled \u003d False,\n             qualityControl \u003d False, limit \u003d 5000, threshold \u003d 0.0,\n             addAbsolute \u003d False, additional_cuts \u003d \u0027\u0027):\n    \u0027\u0027\u0027 Gets a subsample of eDR3 data and appends the wds. (labelled) \u0027\u0027\u0027\n    \n    if not sampled:\n        sampled \u003d \u0027sampled\u0027\n    \n    df \u003d initial_query(columns \u003d return_columns(how \u003d \u0027str\u0027), how \u003d sampled, limit \u003d limit, return_table \u003d True, additional_cuts \u003d additional_cuts)\n    \n    if addAbsolute:\n        df \u003d addAbsoluteMag(df \u003d df, passband \u003d \u0027g\u0027)\n    \n    if makeQueryable:\n        # print(f\u0027data queryable from {makeQueryable}\u0027)\n        df.createOrReplaceTempView(makeQueryable)\n        \n    if qualityControl:\n        if not makeQueryable:\n            raise nameError(\u0027For quality control makeQueryable must be True\u0027)\n        df \u003d applyQualityControl(catalogue \u003d makeQueryable, QCcatalogue \u003d \u0027dcr_spurious_sources\u0027, threshold \u003d threshold)\n        df.createOrReplaceTempView(makeQueryable)\n    return df",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:26:48.876",
+      "dateUpdated": "2022-03-11 10:20:04.481",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -285,7 +290,7 @@
         "colWidth": 12.0,
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
-        "editorHide": true,
+        "editorHide": false,
         "title": true,
         "results": {},
         "enabled": true
@@ -301,18 +306,18 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006279_687245638",
+      "jobName": "paragraph_1646827009558_2122804214",
       "id": "20210922-152605_2054633471",
-      "dateCreated": "2021-12-12 21:53:26.279",
-      "dateStarted": "2022-03-07 11:26:48.902",
-      "dateFinished": "2022-03-07 11:26:48.911",
+      "dateCreated": "2022-03-09 11:56:49.558",
+      "dateStarted": "2022-03-11 10:20:04.502",
+      "dateFinished": "2022-03-11 10:20:04.510",
       "status": "FINISHED"
     },
     {
       "title": "getData",
       "text": "%pyspark\n\n\nfor threshold in [0.5]:\n    additional_cuts \u003d \u0027ABS(b) \u003c 30 and 1/parallax \u003c 1\u0027 # 1/parallax \u003c max_distance in kpc\n    test_cuts \u003d \u0027ABS(b) \u003c 30 and 1/parallax \u003c 1\u0027 # 1/parallax \u003c max_distance in kpc\n\n    df \u003d get_data(makeQueryable \u003d \u0027dcr_HDBSCAN_sources\u0027, sampled \u003d \u0027NoLimit\u0027,  limit \u003d 0,\n             qualityControl \u003d True, threshold \u003d 0.7, addAbsolute \u003d False, \n             additional_cuts \u003d test_cuts).dropna()\n    # df \u003d df.limit(20000000)  # Note this creates one large partition.\n    # df \u003d df.repartition(2048)\n    df.createOrReplaceTempView(\u0027dcr_HDBSCAN_sources\u0027)\n    # df.count()\n    # print(f\u0027{df.count()} ources within 1kpc with Threshold \u003d {threshold}\u0027)\n    ",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:30:10.967",
+      "dateUpdated": "2022-03-11 10:20:04.601",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -339,17 +344,17 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006279_619009827",
+      "jobName": "paragraph_1646827009558_1385926249",
       "id": "20210922-153405_646865393",
-      "dateCreated": "2021-12-12 21:53:26.279",
-      "dateStarted": "2022-03-07 11:30:10.988",
-      "dateFinished": "2022-03-07 11:30:11.053",
+      "dateCreated": "2022-03-09 11:56:49.558",
+      "dateStarted": "2022-03-11 10:20:04.622",
+      "dateFinished": "2022-03-11 10:20:04.976",
       "status": "FINISHED"
     },
     {
       "text": "%pyspark\ndf \u003d df.repartition(2048)\n\n#  1,781,626 sources for test cuts when Threshold \u003d 0.8 (no limit)\n\n# Upper success limit 16,087,678 Sources, limit \u003d 5\n\n# 107,188,678 sources within 1kpc when Threshold \u003d 0.5. \n#  89,709,634 sources within 1kpc when Threshold \u003d 0.7.\n#  80,466,582 sources within 1kpc when Threshold \u003d 0.8.\n#  68,670,504 sources within 1kpc when Threshold \u003d 0.9.\n#  59,589,008 sources within 1kpc when Threshold \u003d 0.95. ",
       "user": "dcr",
-      "dateUpdated": "2022-02-28 16:19:51.303",
+      "dateUpdated": "2022-03-11 10:20:05.021",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -375,18 +380,18 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006279_572285551",
+      "jobName": "paragraph_1646827009558_1543767129",
       "id": "20211004-125223_667893781",
-      "dateCreated": "2021-12-12 21:53:26.279",
-      "dateStarted": "2022-02-28 14:38:10.368",
-      "dateFinished": "2022-02-28 14:45:26.962",
+      "dateCreated": "2022-03-09 11:56:49.558",
+      "dateStarted": "2022-03-11 10:20:05.042",
+      "dateFinished": "2022-03-11 10:20:05.052",
       "status": "FINISHED"
     },
     {
       "title": "def plotTypes",
       "text": "%spark.pyspark\ndef selectPlotType(x, y, plotType \u003d \u0027scatter\u0027, ax \u003d False, cmap \u003d None, color \u003d None,\n                  label \u003d None, s \u003d 1, white_nan \u003d False, bins \u003d 100, cbar \u003d True,\n                  alpha \u003d 1.0):\n    if plotType \u003d\u003d \u0027scatter\u0027:\n        scatter(x, y, ax \u003d ax,\n                color \u003d color, label \u003d label, s \u003d s, alpha \u003d alpha)\n    elif plotType \u003d\u003d \u0027kdeHeatmap\u0027:\n         kdeHeatmap(x, y, ax \u003d ax, cmap \u003d cmap, \n           white_nan \u003d True, bins \u003d bins, cbar \u003d cbar)\n    elif plotType \u003d\u003d \u00272Dhist\u0027:\n         hist2d(x,y, ax \u003d ax, cmap \u003d cmap, \n           white_nan \u003d True, bins \u003d bins, cbar \u003d cbar)\n    elif plotType \u003d\u003d \u00272DhistSub\u0027:\n         hist2dSubplots(x,y, ax \u003d ax, cmap \u003d cmap, \n           white_nan \u003d True, bins \u003d bins, cbar \u003d cbar)\n    else: raise nameError(\u0027plotType must be one of [\"scatter\", \"kdeHeatmap\", \"2Dhist\", 2DhistSub]\u0027)\n        \ndef kdeHeatmap(x,y, ax \u003d False, cmap \u003d \u0027cividis\u0027, white_nan \u003d False, bins \u003d 100, cbar \u003d True):\n    \u0027\u0027\u0027creates a kdeHeatmap\u0027\u0027\u0027\n    \n    if not ax:\n        ax \u003d plt.figure(111)\n    if white_nan:\n        cmap \u003d whiteNan(cmap)\n\n    # Evaluate a gaussian kde on a regular grid of nbins x nbins over data extents\n    nbins\u003dbins\n    k \u003d kde.gaussian_kde([x,y])\n    xi, yi \u003d np.mgrid[x.min():x.max():nbins*1j, y.min():y.max():nbins*1j]\n    zi \u003d k(np.vstack([xi.flatten(), yi.flatten()]))\n\n    # Make the plot\n    im \u003d ax.pcolormesh(xi, yi, zi.reshape(xi.shape), shading\u003d\u0027auto\u0027, cmap \u003d cmap)\n    \n#     if cbar:\n#         add_colorbar(cmap \u003d cmap, im \u003d im)\n    \ndef scatter(x,y, ax \u003d False, color \u003d None, label \u003d None, s \u003d 1, alpha \u003d 1.0):\n    \u0027\u0027\u0027creates a scatter plot\u0027\u0027\u0027\n    if not ax:\n        ax \u003d plt.figure(111)\n    ax.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d s, c \u003d color, label \u003d label, alpha \u003d alpha)\n    \n\ndef add_colorbar(cmap, im):\n    import matplotlib.pyplot as plt\n    h \u003d im[0]\n    sm \u003d plt.cm.ScalarMappable(cmap\u003dcmap, norm\u003dplt.Normalize(vmin\u003dnp.min(h), vmax\u003dnp.max(h)))\n    plt.colorbar(sm)\n    \ndef hist2dSubplots(x,y, ax \u003d False, cmap \u003d \u0027cividis\u0027, white_nan \u003d False, bins \u003d 100, cbar \u003d True):\n    \u0027\u0027\u0027creates a 2dhist plot\u0027\u0027\u0027\n    \n    if not ax:\n        ax \u003d plt.figure(111)\n    if white_nan:\n        cmap \u003d whiteNan(cmap)\n    im \u003d ax.hist2d(x, y, bins\u003dbins, cmap\u003dcmap)\n    if cbar:\n        addColorbarSubplots(cmap \u003d cmap, im \u003d im, ax \u003d ax)\n\ndef addColorbarSubplots(cmap, im, ax):\n    from mpl_toolkits.axes_grid1 import make_axes_locatable\n    h \u003d im[0]\n    divider \u003d make_axes_locatable(ax)\n    cax \u003d divider.append_axes(\u0027right\u0027, size\u003d\u00275%\u0027, pad\u003d0.05)\n    sm \u003d plt.cm.ScalarMappable(cmap\u003dcmap, norm\u003dplt.Normalize(vmin\u003dnp.min(h), vmax\u003dnp.max(h)))\n    plt.colorbar(sm, cax \u003d cax)\n    \n    \ndef hist2d(x,y, ax \u003d False, cmap \u003d \u0027cividis\u0027, white_nan \u003d False, bins \u003d 100, cbar \u003d True):\n    \u0027\u0027\u0027creates a 2dhist plot\u0027\u0027\u0027\n    \n    if not ax:\n        ax \u003d plt.figure(111)\n    if white_nan:\n        cmap \u003d whiteNan(cmap)\n    im \u003d ax.hist2d(x, y, bins\u003dbins, cmap\u003dcmap)\n    if cbar:\n        add_colorbar(cmap \u003d cmap, im \u003d im)\n    \ndef whiteNan(cmap):\n    \u0027\u0027\u0027adds white base for colormaps\u0027\u0027\u0027\n    \n    from matplotlib import cm\n    from matplotlib.colors import ListedColormap\n    \n    cmap \u003d cm.get_cmap(cmap, 256)\n    newcolors \u003d cmap(np.linspace(0, 1, 256))\n    white \u003d np.array([1, 1, 1, 0])\n    newcolors[:2, :] \u003d white\n    cmap \u003d ListedColormap(newcolors)\n    return cmap",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:27:43.060",
+      "dateUpdated": "2022-03-11 10:20:05.142",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -414,18 +419,18 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006279_1200365546",
+      "jobName": "paragraph_1646827009558_788050493",
       "id": "20210922-153725_802274472",
-      "dateCreated": "2021-12-12 21:53:26.279",
-      "dateStarted": "2022-03-07 11:27:43.087",
-      "dateFinished": "2022-03-07 11:28:34.139",
+      "dateCreated": "2022-03-09 11:56:49.558",
+      "dateStarted": "2022-03-11 10:20:05.162",
+      "dateFinished": "2022-03-11 10:20:05.171",
       "status": "FINISHED"
     },
     {
       "title": "def CAMD",
       "text": "%spark.pyspark\ndef CAMD(passbands, catalogues, colors \u003d [\u0027k\u0027, \u0027darkred\u0027, \u0027darkblue\u0027], ms \u003d 1, save \u003d False, colorbar \u003d False,\n         labels \u003d None, plotType \u003d \u0027scatter\u0027, cmap \u003d \u0027cividis\u0027, bins \u003d 100, limit \u003d 25000, title \u003d None):\n    \u0027\u0027\u0027plot an observational Hertzsprung-Russell diagram (aka colour / absolute magnitude diagram)\n    for the unclassified sample to show the problem,\n    include the photometric consistency filter to show the problem is astrometric in addition to photometric \u0027\u0027\u0027\n    \n    import matplotlib.pylab as plt\n    fig, ax \u003d plt.subplots(figsize \u003d (9.0, 9.0))\n    c \u003d -1\n    quick_plot_filter \u003d f\u0027 WHERE MOD(source_id, {limit}) \u003d 0\u0027\n    for i in catalogues:\n        c+\u003d1\n        if type(ms) \u003d\u003d list:\n            s \u003d ms[c]\n        else: s \u003d ms\n        if type(labels) \u003d\u003d type(None):\n            label \u003d i\n        else: label \u003d labels[c]\n            \n        if plotType \u003d\u003d \u0027scatter\u0027:\n            color \u003d colors[c]\n        else: color \u003d None\n        \n        tmp_df \u003d spark.sql(f\"SELECT phot_{passbands[0]}_mean_mag + 5.0*LOG10(parallax/100.0) AS m_{passbands[0]}, \\\n                            {passbands[1]} FROM {i} {quick_plot_filter}\")\n\n        tmp_df \u003d tmp_df.toPandas().dropna()\n        selectPlotType(x \u003d tmp_df[f\u0027{passbands[1]}\u0027], y \u003d tmp_df[f\u0027m_{passbands[0]}\u0027], \n                      plotType \u003d plotType, ax \u003d ax, cmap \u003d cmap, color \u003d color,\n                      label \u003d label, s \u003d s, white_nan \u003d True, bins \u003d bins, cbar \u003d colorbar)\n        \n    plt.ylim(18.0, -10.0)\n    plt.xlim(-0.5, 3)\n    plt.ylabel(\u0027Stellar brightness (absolute G magnitude) --\u003e\u0027, fontsize \u003d 16)\n    plt.xlabel(\u0027\u003c-- Stellar temperature (G - RP magnitude)\u0027, fontsize \u003d 16)\n    if plotType \u003d\u003d \u0027scatter\u0027:\n        lgnd \u003d plt.legend(fontsize \u003d 12, markerscale \u003d 1)\n        for i in range(len(catalogues)):\n            lgnd.legendHandles[i]._sizes \u003d [25]\n    else:\n        plt.title(title)\n        \n    if save:\n        if not dev_run:\n            savefigs(save)",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:27:44.630",
+      "dateUpdated": "2022-03-11 10:20:05.262",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -453,18 +458,18 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006279_179356267",
+      "jobName": "paragraph_1646827009559_1624666146",
       "id": "20210922-153752_1751222227",
-      "dateCreated": "2021-12-12 21:53:26.279",
-      "dateStarted": "2022-03-07 11:28:34.265",
-      "dateFinished": "2022-03-07 11:28:34.275",
+      "dateCreated": "2022-03-09 11:56:49.559",
+      "dateStarted": "2022-03-11 10:20:05.282",
+      "dateFinished": "2022-03-11 10:20:05.290",
       "status": "FINISHED"
     },
     {
       "title": "CAMD sources \u003c 1kpc",
       "text": "%spark.pyspark\nCAMD(passbands \u003d [\"g\", \"g_rp\"], catalogues \u003d [\"dcr_HDBSCAN_sources\"], colors \u003d [\"k\"], limit \u003d 20000, \n     labels \u003d [\u0027All Sources\u0027], plotType \u003d \u00272Dhist\u0027, cmap \u003d \u0027cividis\u0027, bins \u003d 1000, \n     title \u003d \u0027All Sources\u0027, colorbar \u003d True,)",
       "user": "dcr",
-      "dateUpdated": "2022-02-28 10:00:51.397",
+      "dateUpdated": "2022-03-11 10:20:05.382",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -479,49 +484,27 @@
         "editorHide": false,
         "title": true,
         "results": {},
-        "enabled": true
+        "enabled": false
       },
       "settings": {
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "HTML",
-            "data": "\u003cdiv style\u003d\u0027width:auto;height:auto\u0027\u003e\u003cimg src\u003ddata:image/png;base64,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\u003d style\u003d\u0027width\u003dauto;height:auto\u0027\u003e\u003cdiv\u003e\n\u003cdiv style\u003d\u0027width:auto;height:auto\u0027\u003e\u003cimg src\u003ddata:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAogAAAKICAYAAADzSQu6AAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjQuMiwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8rg+JYAAAACXBIWXMAAAsTAAALEwEAmpwYAACnxElEQVR4nOzdeXwTdf4/8NeQ0kCglLYptFBKQY4eVBHKISBWFFE8cEEUxAMBYVcFrV9vVwVWVn+6Lgq6CqtyqHgsqLhYLoWKoAgFYYG24EEpUIpNi7VtepAwvz+GGSZp0qZtkpkmr6ePPGgzk8k7aSVv3p/P5/0RRFEUQURERER0XiutAyAiIiIifWGCSEREREQOmCASERERkQMmiERERETkgAkiERERETlggkhEREREDpggEhEREZEDJohERERE5IAJIhERERE5YIJIRERERA6YIBIRERGRAyaIREREROSACSIREREROWCCSEREREQOmCASERERkQMmiERERETkgAkiERERETlggkhEREREDpggEhEREZEDJohERERE5IAJIhERERE5YIJIRERERA6YIBIRERGRAyaIREREROSACSIREREROWCCSEREREQOmCASERERkQMmiERERETkgAkiERERETlggkhEREREDpggEhEREZEDJohERERE5IAJIhERERE5YIJIRERERA6YIBIRERGRAyaIREREROSACSIREREROWCCSEREREQOmCASERERkQMmiERERETkgAkiERERETlggkhEREREDpggEhEREZEDJohERERE5IAJIhERERE5YIJIRERERA6YIBIRERGRAyaIREREROSACSIREREROWCCSEREREQOmCASERERkQMmiERERETkgAkiERERETlggkhEREREDpggEhEREZEDJohERERE5IAJIhERERE5YIJIRERERA6YIBIRERGRAyaIREREROSACSIREREROWCCSESYOnUq/vrXvwIAsrKyEBcXp3FERESkJSaIREEkPT0dERERqKmpafI11q5di/79+6NDhw4wm80YNWoUjh496sUoiYhIa0wQiYJEfn4+vv32WwiCgC+++KJJ1/j5559x11134ZVXXkFZWRmOHj2K+++/HwaDwcvRAna73evXJCIizzBBJAoSK1euxNChQzF16lSsWLGiSdfYt28fevTogauuugqCICAsLAwTJkxAfHw8AKCmpgYPPfQQunTpgi5duuChhx5SqpXLly/HiBEjHK4nCAJ+/vlnANIw91/+8heMHTsW7dq1w9atW3H8+HGMHz8e0dHRiIqKwgMPPKA89t1330VSUhIiIiIwZswYHDt2DAAgiiIyMjLQqVMndOjQAampqTh48GCTXi8RUbBigkgUJFauXIkpU6ZgypQp2LhxI06fPt3oawwYMAB5eXnIyMjA1q1bUVFR4XB8wYIF2LlzJ/bt24f9+/dj165deP755z2+/qpVq/D000+jvLwcl112GW644QZ0794d+fn5OHnyJCZNmgRAGub++9//jk8//RTFxcW4/PLLMXnyZADApk2bsG3bNhw5cgRlZWX45JNPEBUV1ejXSkQUzJggEgWB7du349ixY7j11lsxcOBAXHTRRVi1alWjr9OzZ09kZWXh5MmTuPXWW2E2mzF16lQlUfzggw/w7LPPolOnToiOjsZzzz2H9957z+Prjxs3DsOHD0erVq3wv//9D4WFhXj55ZfRrl07tGnTRqlAvvXWW3jyySeRlJSEkJAQPPXUU9i3bx+OHTuG1q1bo7y8HHl5eRBFEUlJSYiNjW30ayUiCmZMEImCwIoVK3DNNdfAbDYDAG6//fYmDzMPHToUn3zyCYqLi/Htt99i27ZtWLBgAQCgsLAQ3bt3V87t3r07CgsLPb52t27dlK+PHz+O7t27IyQkpM55x44dw4MPPoiOHTuiY8eOiIyMhCiKOHnyJEaNGoUHHngA999/Pzp16oSZM2fijz/+aNJrJSIKVkwQiQJcVVUVPvnkE3zzzTeIiYlBTEwMFi5ciP3792P//v3NuvagQYMwfvx4ZY5fly5dlLmAAFBQUIAuXboAANq1awer1aocKyoqqnM9QRCUr7t164aCggLYbLY653Xr1g1LlizB77//rtyqqqowbNgwAMCcOXOwZ88e5OTk4MiRI3j55Zeb9TqJiIINE0SiAPf555/DYDAgJycH+/btw759+5Cbm4vLL78cK1eubNS1tm/fjn//+9/47bffAAB5eXn44osvMHToUADA5MmT8fzzz6O4uBgWiwXz58/HHXfcAQC45JJLcOjQIezbtw/V1dWYO3duvc81ePBgxMbG4oknnkBlZSWqq6uxY8cOAMCf//xnvPDCCzh06BAAoKysDP/5z38AALt378YPP/yAs2fPKkPTrVrxrzoiosbg35pEAW7FihW45557EB8fr1QQY2Ji8MADD+CDDz5wWaFzp2PHjvjiiy+QmpqK9u3b49prr8Wf/vQnPPbYYwCAv/71r0hLS8PFF1+M1NRUDBgwQGnA3adPHzz77LO4+uqr0bt37zormp0ZDAb897//xc8//4z4+HjExcXh448/BgD86U9/wuOPP45JkyahQ4cO6NevH9avXw8A+OOPP3DvvfciIiIC3bt3R1RUFB599NGmvHVEREFLEEVR1DoIIiIiItIPVhCJiIiIyEFQJoj/+c9/kJKSglatWiE7O9vh2AsvvIBevXqhb9++2Lhxo0YREhERBZ5p06ahU6dO6Nevn3Lfvn37MHToUPTv3x9paWnYtWuXhhGSLCgTxH79+uHTTz/FyJEjHe7PycnBRx99hEOHDmHDhg247777uN0XERGRl0ydOhUbNmxwuO+xxx7Dc889h3379mH+/PnKnGbSVlAmiElJSejbt2+d+9euXYtJkybBaDSiR48e6NWrF/8lQ0RE5CUjR45EZGSkw32CICi9SsvKypTWWKStuh1og9jJkyeVdh0AEBcXh5MnT2oYERERUWB79dVXMWbMGDzyyCM4d+4cvvvuO61DIgRwgnj11Ve7bMS7YMECjBs3rtnXX7p0KZYuXQpA6gWXmJjY7GsSEVFwys/Ph8Vi8elzXDuqIywlnre1aooqW3e0bdtW+X7mzJmYOXNmvY958803sXDhQkyYMAGffPIJpk+fjq+++sqncVLDAjZBbMovV9euXXH8+HHl+xMnTqBr164uz1X/0qelpdVZ7EJEROSptLQ0nz+HpcSG3ZtSffocg64/2+jPwxUrVuC1114DAEycOBEzZszwRWjUSEE5B9Gdm266CR999BFqampw9OhR/PTTTxg8eLDWYREREXmBCJw759tbE3Tp0gXffPMNAGDLli3o3bu3N180NVHAVhDr89lnn2H27NkoLi7G9ddfj/79+2Pjxo1ISUnBrbfeiuTkZISEhOCNN96AwWDQOlwiIqKAMHnyZGRlZcFisSAuLg7z5s3Dv//9bzz44IOw2Wxo06aNMn2LtMWdVLyAQ8xERNQc/vgcSbukHXavT/Hpcwy66Rw/DwMEh5iJiIiIyEFQDjETEREFJQ4akodYQSQiIiIiB6wgEhERBQORBUTyHCuIREREROSAFUQiIqIgIYq+rgvZfXx98hcmiEREREFAhMAEkTzGIWYiIiIicsAKIhERUZA45/MKIgUK/qYQERERkQNWEImIiIKCP+YgUqDgbwoREREROWAFkYiIKBiI/mhzQ4GCvylERERE5IAVRCIioiAgAhBFQeswqIVgBZGIiIiIHLCCSEREFBS4ipk8x98UIiIiInLACiIREVGQOMc5iOQhVhCJiIiIyAEriEREREGCcxDJU/xNISIiIiIHrCASEREFAVFkH0TyHCuIREREROSAFUQiIqKgILCCSB5jBZGIiIiIHLCCSEREFCS4ipk8xd8UIiIiInLACiIREVGQ4BxE8hQriERERETkgBVEIiKiICCCFUTyHCuIREREROSAFUQiIqJgIAo4xwoieYgVRCIiIiJywAoiERFRkOAcRPIUK4hERERE5IAVRCIioiAhsi5EHuJvChERERE5YAWRiIgoCLAPIjUGK4hERERE5IAVRCIioqAgsIJIHmMFkYiIiIgcsIJIREQUJFhBJE8xQSQiIgoGIhNE8hyHmImIiIjIASuIREREQYIVRPIUK4hERETkF9OmTUOnTp3Qr18/h/sXL16MxMREpKSk4LHHHtMoOlJjBZGIiCgIiBBwTuMK4tSpU/HAAw/grrvuUu7bunUr1q5di/3798NoNOK3337TMEKSsYJIREREfjFy5EhERkY63Pfmm2/iiSeegNFoBAB06tRJi9DICRNEIiKiICGKgk9vTXHkyBF8++23GDJkCK644grs3r3by6+amoJDzEREROQVxcXFSEtLU76fOXMmZs6cWe9jbDYbSktLsXPnTuzevRu33norfv31VwgCF9RoiQkiERFRkPD1Kubo6GhkZ2c36jFxcXEYP348BEHA4MGD0apVK1gsFkRHR/soSvIEh5iJiIhIMzfffDO2bt0KQBpurq2thdls1jgqYgWRiIgoGOhgJ5XJkycjKysLFosFcXFxmDdvHqZNm4Zp06ahX79+CA0NxYoVKzi8rANMEImIiMgvPvzwQ5f3v//++36OhBrCBJGIiCgIiNC+gkgtB+cgEhEREZEDVhCJiIiChChqHQG1FKwgEhEREZEDVhCJiIiCggARnINInmEFkYiIiIgcsIJIREQUJLiKmTyl6wri/Pnz8Y9//EPrMIiIiIiCim4riIWFhZg/fz5CQ0Mxc+ZMdOjQQeuQiIiIWjRWEMlTuq0grlq1Cp06dYLRaMQnn3yidThEREREQUO3CeJ7772HyZMnY/z48Xjvvfe0DoeIiKhFE8/vxezLGwUOXQ4x/+9//8PBgwexfPlynDlzBtdccw2OHTuG7t27ax0aERERUcDTZQVx5cqVSEpKwqWXXoorr7wSsbGx+OCDD7QOi4iIqEU7J/r2RoFDdwniuXPnsGrVKkyZMgUAIAgCJk2ahJUrV2ocGREREVFw0F2C+NVXX+G3335TEkQAuOOOO3DkyBHs3r1bw8iIiIhaNs5BJE/pLkF87733MGzYMMTHxyv3XXLJJejXrx8XqxARERH5ga4SxMrKSnz22WcO1UPZ7bffjo8++gh2u12DyIiIiFo631YPWUEMLLpaxVxRUYE33ngD48ePr3NsxowZiI2NRXl5OTp27Oj/4IiIiIiChK4SxM6dO+Puu+92ecxsNrs9RkRERPUTwZ1UyHO6GmJ2paCgADabTeswiIiIiIKGrhNEu92OHj164H//+5/WoRAREbVsorybiu9uFDh0nSACgMjfOCIiIiK/0tUcRFcEgfMliIiIvEEEP1PJM6wgEhEREZEDXVcQDQYDjh49ii5dumgdChERUYvHVczkKd1XEL/55htUVFT45bnmzp2Lrl27on///ujfvz8yMzP98rxEREREeqLrCqLdbsc999yD3bt3IyIiwi/PmZGRgUceecQvz0VERORPrCCSp3SdIAKcg0hEROQNUqNsraOglkL3Q8z+9vrrr+Piiy/GtGnTcObMGa3DISIiIvI7XSeIgiCge/fuMBqNXrvm1VdfjX79+tW5rV27Fn/5y1/wyy+/YN++fYiNjcX//d//ub3O0qVLkZaWhrS0NBQXF3stPiIiIt8QIIq+vVHg0PUQc6tWrXD06FGvXvOrr77y6Lx7770XN9xwg9vjM2fOxMyZMwEAaWlpXomNiIiISA90XUH0t1OnTilff/bZZ+jXr5+G0RAREXkRt9qjRtB1BdHfHnvsMezbtw+CICAhIQFLlizROiQiIiIiv2OCqPLee+9pHQIREZHPcJ4geYpDzERERETkgBVEIiKiIMEKInmKFUQiIiIicqC7CuLOnTuxYcMG7Ny5E4WFhaiqqoLZbEbfvn1xxRVX4Oabb/bbtntERESBQgRwTusgqMXQTQVxxYoVSE1NxbBhw7Bw4UJYrVb07t0bQ4YMQUREBH744QfMmDEDXbt2xdSpU73eH5GIiIiIJLqoIF588cUoLi7GXXfdhZUrV6J///4QhLrzJMrKyrBu3Tp88MEHSE5OxvLly3HbbbdpEDEREVHLwzmI5CldJIjTp0/HrFmz0KZNm3rPCw8Px5QpUzBlyhTs378fRUVFfoqQiIiIKHjoIkF88MEHG/2YSy65BJdccokPoiEiIgpMrCCSp3QzB9GViooKHDt2DGfPntU6FCIiIqKgocsEcd26dRgwYADCw8Nx0UUX4cCBAwCAGTNmYNWqVRpHR0RE1AJxL2ZqBN0liJ9//jnGjRsHs9mM//f//h/OnbuwKL9Hjx5YsWKFhtERERERBT7dJYjz5s3DPffcg02bNuGhhx5yONavXz8cPHhQm8CIiIhaMBECRNG3NwocuksQc3NzldY1zq1uIiIiUFJSokVYREREREFDdwlihw4dYLFYXB7Lz89HdHS0nyMiIiIKDFrPQZw2bRo6deqEfv361Tn2yiuvQBAEtzkA+ZfuEsTRo0fjhRdewO+//67cJwgCampq8Prrr+O6667TLjgiIiJqsqlTp2LDhg117j9+/Dg2bdqE+Ph4DaIiV3SXIC5YsABFRUXo27cvZsyYAUEQ8OKLL6J///44ceIE5s6dq3WIRERELZLWcxBHjhyJyMjIOvdnZGTgpZdecrmLGmlDdwliQkIC9u7dixtuuAGbN2+GwWDAtm3bMHToUPzwww/o0qWL1iESERGRl6xduxZdu3bl5hc6o4udVJzFxcXhnXfe0ToMIiKigOLrVoXFxcVIS0tTvp85cyZmzpzp9nyr1Yq///3v2LRpk48jo8bSZYJIRERELU90dDSys7M9Pv+XX37B0aNHlerhiRMnMGDAAOzatQsxMTG+CpM8oIsEcdq0aR6fKwgCq4tERERNoLdehampqfjtt9+U7xMSEpCdnQ2z2axhVAToJEHcsmWLw8TU33//HWVlZQgJCUFUVBRKSkpgs9kQHh6OiIgIDSMlIiKippo8eTKysrJgsVgQFxeHefPmYfr06VqHRS7oIkHMz89Xvt6+fTsmT56MJUuWYMKECTAYDLDb7Vi9ejUeffRRvP/++9oFSkRE1ELpYb/kDz/8sN7j6nyAtKWLBFHt4YcfxpNPPolbb71Vuc9gMOC2226DxWLBQw89hF27dmkYIREREVFg012CeODAAfTq1cvlsd69e3MvZiIioibS2xxE0i/d9UGMiYnBJ5984vLYRx99hM6dO/s5IiIiIqLgorsK4kMPPYSMjAycOnUKEydOROfOnXH69Gl88skn2LhxI1599VWtQyQiImqRtJ6DSC2H7hLEBx98EO3bt8e8efOwfv165f5u3brh3//+d6Na4hARERFR4+kuQQSA6dOnY9q0aThx4gROnTqF2NhYxMXFcY9GIiKiZuAcRPKULhNEQGqI3a1bN3Tr1k3rUIiIiIiCiu4SxJUrVzZ4zl133eWHSIiIiAILpyCSp3SXIE6dOtXl/erhZSaIRCQTUmdBPLBE6zCIiAKK7hLEo0eP1rmvpKQE69atw6pVq7iTChE5YHJI5BkRAucgksd0lyB2797d5X0DBgyAKIr45z//iVWrVmkQGRERUQumg632qOXQXaPs+lx++eX48ssvtQ6DiIiIKKDproJYn507d6J9+/Zah0FERNQisYJIntJdgjh//vw699XW1uLgwYP48ssv8cADD2gQFREREVHw0F2COHfu3Dr3GY1GdO/eHU8//TSefPJJ/wdFREQUALhIhTyluwTx3LlzWodAREREFNR0t0hl27ZtqKiocHmsoqIC27Zt83NEREREgUEUfXujwKG7BPHKK69ETk6Oy2OHDx/GlVde6eeIiIiIiIKL7oaYxXr+CVJTUwODweDHaIiIiAKDCKlZNpEndJEg5ufn49dff1W+z87OrjPMXFVVhXfffRfx8fH+Do+IiIgoqOgiQVyxYgXmzZsHQRAgCAJmz57tUEkUBAGiKCIkJARvvPGGhpESERG1XJwnSJ7SRYI4depUpKenQxRFjBo1Cm+88QaSk5MdzjEajejTpw8iIyM1ipKIiIgoOOgiQezevbuyB/PWrVsxYMAAhIWFaRwVkf4JqbMgHliidRhE1BJwpTE1gi4SRLUrrrhC6xCIWgwmh0RE5Au6SBB79uyJzz77DJdccgl69OgBQXC/ykoQBPzyyy9+jI6IiCgwcCcV8pQuEsQrrrgCHTp0UL6uL0EkIiIiIt/SRYK4bNky5evly5drFwgREVGAEgGc4xxE8pDudlIhIiIiIm3pooLo7I8//kBmZiYKCgpQXV3tcEwQBDzzzDMaRUZERNRycScV8pTuEsQdO3bgxhtvxO+//+7yOBNEIiIiIt/S3RDzQw89hISEBOzevRvV1dU4d+6cw81ut2sdIhERUYskir69UeDQXQUxNzcXn3zyCQYOHKh1KERERERBSXcJYnx8PGpqarQOg4iIKOCwykee0t0Q83PPPYcXX3wRf/zxh9ahEBEREQUl3VUQ161bh9OnT6NHjx647LLLEBkZ6XBcEASsWLFCo+iIiIhaKFHgTirkMd0liNu3b4cgCOjQoQMOHTpU5zh3WSEiIiLyLd0liEePHtU6BCIiooAjgnMQyXO6m4NIRERERNrSXQWxoKDA7bFWrVohPDwcYWFhfoyIiIgoMLCCSJ7SXYKYkJDQ4DzDnj174rHHHsO9997rp6iCg5A6C+KBJVqHQURERBrTXYL41ltv4e9//zs6duyICRMmoHPnzigqKsKaNWtQVlaG++67D9u2bcOf//xntG7dGlOnTtU65IDB5JCIKLBxL2bylO4SxCNHjiAtLQ2rV692uP/ZZ5/FhAkTUFRUhHXr1uHOO+/Ea6+9xgSRiIiIyMt0t0jl/fffx4wZM1wemzFjBj744AMAwMSJE3H48GF/hkZERNSicS9m8pTuEsTy8nJYLBaXx4qLi1FRUQEA6NChAwwGgz9DIwoKQuosrUMgIiKN6S5BvOKKK/DUU09hz549DvdnZ2fj6aefxpVXXgkA+OmnnxAfH69FiESa8UfyxrmoRAHKx9VDVhADi+4SxDfeeAOtW7fG4MGD0aNHDwwZMkT502g0YvHixQCAiooK3H///RpHS+RfTN6IiMgfdLdIpUePHsjLy8OyZcvwww8/4NSpU+jXrx+GDh2KqVOnonXr1gCAjIwMjSMlIiJqOfSwk8q0adOwbt06dOrUCQcPHgQAPProo/jvf/+L0NBQXHTRRVi2bBk6duyobaCkvwoiALRu3RozZ87EO++8g8zMTLzzzju49957leSQiIiIGk8UBZ/eGjJ16lRs2LDB4b7Ro0fj4MGD+N///oc+ffrghRde8NXLp0bQZYJIREREgWfkyJGIjIx0uO+aa65BSIg0oDl06FCcOHFCi9DIie6GmAFg06ZNePPNN3H48GFUV1c7HBMEAb/88otGkREREbVcel9H8u677+K2227TOgyCDiuImZmZuO6662C1WpGXl4fExETEx8fj+PHjaNWqFUaOHKl1iEQO2BaGiEhSXFyMtLQ05bZ06VKPH7tgwQKEhIRgypQpPoyQPKW7CuLf/vY33H///Vi4cCFat26N559/HgMGDMCRI0cwZswYXHfddVqHSOTAHyuLuU82EXmDrxepREdHIzs7u9GPW758OdatW4evv/4agsDtAPVAdxXEvLw83HjjjWjVqhUEQYDNZgMA9OnTB3PnzsXf/vY3jSMkgFUzf2NySESBasOGDXjppZfwxRdfwGQyaR0Onae7BLFVq1YICQmBIAiIjo5GQUGBcqxLly6cf6gTTFiahwk2EWlB60bZkydPxmWXXYbDhw8jLi4O77zzDh544AGUl5dj9OjR6N+/P/785z/7/o2gBuluiLlv377Iz88HAKSlpeHVV1/F8OHDERISgldeeQUJCQmaxheMOLzpfXw/iSgYffjhh3Xumz59ugaRUEN0lyBOmTIFubm5AIB58+bh6quvRlxcHADAYDBg1apVWoYXlJjMEBG1fFKVj/P7yDO6SxDV2+cNHDgQBw4cwPr161FVVYWrr74aycnJGkZH5H2s0BIRkd7oLkF0FhcXh3vvvVfrMIIaExjf4ntLRP6i9z6IpB+6W6QiE0URhYWF+PXXX+vcfG3Dhg3o27cvevXqhRdffNHnz6d3TGCIiIiCi+4qiCUlJbj//vvx2WefKS1unNntdp89v91ux/3334/NmzcjLi4OgwYNwk033cShbfIbVmyJyFd83QeRAofuEsTp06dj69ateOCBB5CYmIjQ0FC/Pv+uXbvQq1cv9OzZEwAwadIkrF27lgmilzD5aRjfHyIi0pruEsStW7fitddew9SpUzV5/pMnT6Jbt27K93Fxcfjhhx80iSUQMflpGibWROQNrCCSp3Q3BzEyMhKdO3fWOowGLV26VNlrsri4WOtwKMD5Ojlk424iIlLTXYI4e/ZsvPXWWxA1+mdO165dcfz4ceX7EydOoGvXrnXOmzlzJrKzs5GdnY3o6Gh/hkjkdaxOEgU+EVIfRF/eKHDoboj54YcfRmFhIZKTk3H11VcjIiLC4bggCJg3b57Pnn/QoEH46aefcPToUXTt2hUfffQRm3MTERFRUNFdgpiZmYk33ngDNTU1OHz4cJ3jvk4QQ0JC8Prrr2PMmDGw2+2YNm0aUlJSfPZ8VFewzbdr7uuVHx9s7xsRNR7nIJKndJcgPvzwwxg0aBDeeOMNJCYmonXr1n6PYezYsRg7dqzfn5ckwZbkNPf1yo8PtveNiIh8R3dzEAsKCvDXv/4VqampmiSHRFrjghEi8hXRxzcKHLpLEC+99FIUFhZqHQY1gEmM77ASSEREWtNdgrho0SL84x//wI4dO7QOhc5zlQwyifGc+v1jYk1EmhGlOYi+vFHg0N0cxJtvvhl//PEHRo4ciXbt2qFjx44OxwVBwLFjx7QJLkgxGayfenGIu4UiUYMzUFpl5XtJREQtgu4SxKuuugqCwF5KLV0wrahVv07nRDGY3gci0j9W+chTuksQly9frnUI5AXBlhQ5J4KNXVnMRJKIiPREd3MQiVoi5+TOea5h1OCMRj3e3XWIiJpKhG93UeFOKoGFCSKRD8jDy7LSKiuAxid8rCoSEZEWmCBSs7hKeBqTBAVqhcz5dbGZNRHpAfsgkqeYIFKzuEp45OpZoCZ/nhAPLPF42Lih74mIiPxNd4tUKDB4WikLloqaehGKeqWz8znq40RE3sZVzOQpVhCJ/MBdpdV55XNjksP6Ko2sQhIRUXPopoJYXFyM1q1bOzTGfvfddx3OCQsLw8SJE/0cGfkC27pceA+c+yVGDc5Aya6FDT6+vvcv2N9bInKNFUTylC4SxG+++QajRo3CBx98gEmTJgEA7HY7ZsyYAUEQIJ7/jRYEAbGxsRgxYoSW4VIDPEn+GpPAeJowNSceLbjqmwhcWPFMRESkFV0MMb/77rsYNmyYkhyqffHFFzh69Ch+/fVX3HLLLXjnnXc0iJAaw9vJWGOTQ3criLXijQU7HDImombjXszUCLpIEHfs2IE777zT5bHY2Fh0794dCQkJmDBhArZv3+7n6Kil0TohdNaYuYXqRFD9td5eExERBTZdJIgnT55E3759He5r1aoVxowZg/DwcOW+mJgYnDx50t/hEXlVfdVAdTLp3GybiKg5RLCCSJ7TRYIYEhKCs2fPOtwnCALWr1+Piy66SLmvtrYWrVrpImQiB41J5Bralq++c5v6nERERI2hi2yrR48eyM7ObvC83bt3o2fPnn6IiBribig0WDVnCLiprW047ExEjSVC8OmNAocuEsQbb7wRr7/+OkpLS92eY7FY8MYbb+DGG2/0Y2TkjvMKXK2SxJaQnHozRiaFRNQcHGImT+kiQXz44YchiiKGDx+OL774AjU1NcqxmpoarF27FiNGjIAoinj44Yc1jJTc8XRbOV8+r16TRW+9N/L5zn8SERF5my76IEZFRWHjxo0YP348/vSnP8FgMCA6OhqAVDm02Wzo2bMnNmzYgKioKI2jpYY4byvnzS3k6rtWS6uuuUtu3b0O5636WtrrJSIdYJWPPKSLBBEA+vXrh5ycHKxevRpbtmzBiRMnAABxcXEYNWoUJkyYgNatW2scJXnCOXGpr4LWmPYvjd2KriUJ1NdFREQtk24SREBazTxp0iSXDbNJ3+QEzvnP+jQmcQzmBKqh99KbFVoiCmycJ0ie0sUcRGr5vDn82dTH6n1OXn3xNbXVjXycySEREXkTE0QKGHpfsFLfam8meETkD6KPbxQ4mCBSi9GcZtSNfR5fJZj+SAT1mBwTEVHLwgSRdK8xCU9zGnir5/K15IpeS46diHzH1z0QOb8xsDBBJN1oaPhV/rO+Cp8Wcx8boylJKyuCRETkb7pNEC0WC9atW4cVK1YoO6xUV1fj3LlzGkdGvuLtBM2T6+k9+XKuZuo9XiLSN1YQyVO6SxBFUcSjjz6KuLg43HTTTZg2bRry8/MBAOPGjcOCBQu0DZCaxV1FzPm+hlb1NpT8eZJIObeP8Ufy1dwkmMPHRETkD7pLEF944QW8/vrrePbZZ/HDDz9AVP2T5MYbb8S6des0jI6ay11y15S+h66Szcb0BJTPiRqc4fFjGorHW/yRrLIaSRR8WEEkT+kuQXz77bfx7LPP4qmnnsKAAQMcjvXq1Qu//PKLRpFRc/giGZGTTXfb1LlLIJ3vK9m1sFHP68n8x+a+Xn9UClmNJCIid3SXIJ48eRJDhw51eSw0NBSVlZV+joi8wTkZ8ebK5Mi2pjrHXVUSnbfr81XjaiIivWIfRPKU7hLErl274uDBgy6P7d+/Hz169PBzROQtzpU+T5PEhhIydQVQveK5qcPWnp5bH1cJMYd0iYiopdBdgjhx4kTMnz8fO3bsUO4TBAFHjhzBK6+8wn2aWzBXCZtzxc8Vd0PI9fEkGXOVpHpr8Yvzua4SViaMRORvWs9BnDZtGjp16oR+/fop95WWlmL06NHo3bs3Ro8ejTNnzvjwHSBP6S5BnDt3LhITEzFy5Ej07t0bgJQ0pqamonfv3njiiSc0jpC8ydW8vYaGiRvivDrZ+Zi7529svO6ura5iepoE6iVZ1EscRBSYpk6dig0bNjjc9+KLL+Kqq67CTz/9hKuuugovvviiRtGRmiCK+lt3ZLfbsWrVKmzcuBG//fYboqKicO2112LKlCkICQnROrw60tLSkJ2drXUYAStqcAZKq6yNSubkJLGhZDGyranRi1RcPY+3zyWi4OKPz5G4uFg8eP9Unz7Hx2s2N/g68vPzccMNNyjTyfr27YusrCzExsbi1KlTSE9Px+HDh30aJzVMdxVEADAYDLjzzjvx/vvvY9OmTfjwww9x99136zI5JN8SUmcpCVxjhnc9qfQB0vzF5lTNGpPweTs5ZLWPiALB6dOnERsbCwCIiYnB6dOnNY6IAB0miAaDAbt27XJ5bM+ePTAYDH6OiPzFVcKjTqqakmDJVUT1tSPbmhyqeY0ZCm5IfXMqvZ3QebIauzmYgBIFGD/sxVxcXIy0tDTltnTp0kaFKAgCBEHw0RtAjaG7BLG+EW+73c5fnABWX8Lj6apgT5LIkl0L6zxXQ0liY1dcu3otvmrE7athaw6HE1FjRUdHIzs7W7nNnDmzwcd07twZp06dAgCcOnUKnTp18nWY5AHdJIjnzp2D3W5Xvna+VVZWYv369TCbzRpHSr7UmHl66iTMXfIkX0/dK9HdNep7Xk+GrN2tXnZ3zNX39WHCRkTNpcc+iDfddBNWrFgBAFixYgXGjRvXxCuRN+kiQZw3bx5at26N0NBQCIKA4cOHo3Xr1g63Dh06YP78+Zg4caLW4ZIPNTY5lL92ThbViVfU4AyXC1GaW91ztWpZ/aer67uqXNZ3ba3pJQ4iCgyTJ0/GZZddhsOHDyMuLg7vvPMOnnjiCWzevBm9e/fGV199xW4lOqGLVR/p6ekApOHl+fPnY/r06YiLi3M4x2g0Ijk5GTfccIMGEZLeuKr4qe9ztb9ySvocHMpapJxb3/WcV0G7er6GVkk7U6/GbugxeqkW6iWOQMbV7eRPWvct+fDDD13e//XXX/s5EmqI7trczJs3DzNmzEDXrl21DsVjbHPjW+4+QD3pd+jucbLmtrnxNB490Ht8RMHML21uusbigfum+vQ5Vn/WcJsbahl0UUFUe+6557QOgVoYdeLjnBi6q/zVd42Gnsv5Gp5uz6d1gsbkkIhEkQs9yTO6SxCnTZtW73FBEPDOO+/4KRrSA1dDv+r7PUnMItua6jTbVs9NdDdc7Zx8unqu+oa66zuPiIhIr3SXIG7ZsqVOK5vS0lKUl5ejY8eO6NixozaBkS64SxbdJXvq4+pWNuKBJW4XrrjrvdiYCqE3q4VaVx6JKDCI0H4OIrUculjFrJafn4+jR4863MrKypCVlYWYmBisWbNG6xBJI+72UZZ3W2kokZKPqxNFV9d0twCmoRW97p5bXjDjLqaGMDkkIiJ/012C6M7IkSORkZGB2bNnax0KacRd0uZcVVQnXULqLGX18Ni+oW6TTDmJU1ca5cfK53m644p4YAmSo4zKuc7b+aljbMnJH1vgELU8euyDSPqkuyHm+vTs2RM//vij1mGQTjgnV84rkp2HoL9cvVBJ+upraaO+vnx+Y1c655TUuIw1kIaLA+V1EBFRXS2mgmiz2bB8+fI6/REp8HlaqVJX6tRJn5A6C6VVVmWxipzsqSt5UYMzlD2a1deQz3e1JV/U4Ay3Q8/yzi3q4WXnKmJzeHvvaCIKDr7ei5kCh+4qiKNGjapzX21tLY4cOYKSkhK89dZbGkRFWmpMpcq5ubW8ehmA22TPVeUxOcqoNNV2vq4cj/PQsZqriqOnC148qTJ6q3rHKiAREbmiuwriuXPnIIqiwy0sLAzjx4/H119/jXvvvVfrEEmH3G2bF2OyK1/LiaJ6jqB4YIlSXZSvIx5Y4pAcOl/X+Vx3fRXVcxjdxerqWHOSNlYEicgtH1cPWUEMLLqrIGZlZWkdArVA7hpXq6uJMilpMyjDwOKBJQ6LUVxVFdXXFg8sQUr6HLfH1NdUD2fX17dRPre5Fb3mJpesKBIREaDDCiJRczhX9cQDSzBi7Gzla1lplVVJ3uRVzq52YXHnUNYiJcF0TkhdrV5uaEtAb2z319zqIZNDosDnPELn7RsFDl1UEFeuXNmo8++66y4fRUItnfNqZCn5q1W+loacDS7nKF44/8L37nZhARyHrNXP7xyPfB1f767CBI+I6sNWNNQYukgQp06d6vG5giAwQaQGqecXAo79Dkt2LVSqinLlbsTY2ci1hCDGZEfJLunclPQ5yCmpcagEylVD9TVdPa+caHq6HSAREZGe6CJBPHr0qNYhUABRD/U6N8IurbIiJX0OiqwhGN4N5782IMYknB92vpDIyQtV5CoigHp3bFHf76ri6Oo8T+4nIvIWjgKTp3SRIHbv3l3rECjAyFU856Qtsq0Jh7KkJO+M1YickhqHRSpyi5uckhql1Y08xCxfS11FdF497bxq2V3S56r5tqudYpgwEhGRFnSRILpy8OBBfPPNNygtLUVkZCTS09ORkpKidVjUgsjVPiF1FoZ3C8WO41KSKA8vy6IGZ2BovA2Zh6Uh5JwSq7JSWVqtfGHOovq6QN0FLerKofMKanfDze52amlur0QiImesIJKndJcg2mw2TJ06FR9++KHDiihBEHD77bdj+fLlMBgMGkZIeuVqX2a5qrfjuLXOsQSziJwSKanbWWACUHt+EYupzgIW+fv6EjP1Ps7OK6nrU98KZn8sbiEiInKmuzY38+bNwyeffIL58+fj6NGjqKqqwtGjRzF//nx8/PHHmD9/vtYhkk65WkGckj5HqeqpG1cP7xaKL1cvRmRbk/I4afh5kctrysmiunciAKUfonhgSYOJnrv76mtP426uoif3ERHVIfr4RgFDEHXWuKhHjx6455578Oyzz9Y5Nn/+fCxbtkx3i1rS0tKQnZ2tdRjUAHlBipwwyquU5bmG6oUsADC2bygyD0stcuR5iWqOrXSsLoeTXc1R9LTnIYeRiYKHPz5HunSJxb3Tp/r0Ob5cv5mfhwFCdxXEwsJCDBs2zOWxYcOGobCw0M8RUSAQUmchp6QGQ+NtGN4tFELqLAxLlOYW5pTU1EncxANLsLMgBJFtTRjeLRRFVoPDMfV15fvUCZ16FbXz/s0AHBbFuKsINjY5VF+HFUUicoUFRPKU7hLELl26YMeOHS6Pfffdd+jSpYufI6KWTp4/KCd9O47XIrKtCYUWm7Jq2Tk5nHTXHOW+M1bB4Zj6T3lLPvk6DW2pJ1P3Z2zKHEPnBNA5OWXlkYiImkN3i1SmTJmCBQsWoFWrVpgyZQpiY2NRVFSEjz76CAsWLMDjjz+udYjUwsjzB1PS56Bk1yKkpM/BoayFDvspy1+X7Fp0fsi4BpvPDx2XVknXSI4yKg215QRPXrgizU20u00O3a1obqrG7thCRASRq5jJc7pLEOfOnYtff/0Vzz33HObOnavcL4oiJk+e7HJuIlF95EqgvEilZNciJVF7aHQYXt1cruzZLLfEybVIi1HkCmHU4AzklNRgrDkUpVVWJEcZAQA5JVKiGGOy41DWojqVPfWWfvL3TeFp4teY6zOZJCIid3SXIIaEhGDVqlV4+umnsW3bNqUP4siRI9kHkZpFXiQSNTgDkW1NSDLbsHK7HbddakRK+hwkmKWEMNxkAwAkmW3ItYSohqEvVOnUi1oAOKx+dl6gUl91zxeJn6eYHBIFFxGsIJLndJcgylJSUpgQktepm1yfsUpVwI9/lFcnG1FaZT3fMDsE2zMX4/pbZiPzMJRFKinpcxyGldW9EgEoC2Bc9WN0dx8reUREpDe6SxC/++47lJaW4oYbbgAAlJaW4v7778fBgwcxZswY/L//9//YKJuaRa4e5lqk36Ph3UIBADuO1+Ch0WHYtLcWESabsmez3EDbeR6hemGLnDCW7Fqs3Fdf8qe+z9Mk0blljvMxJplE1BAWEMlTulvF/MQTT2DPnj3K94888ggyMzPRp08fvPnmm/j73/+uYXQUCEqrrMpCkxiTHbmWEORaQpAcZcSrm8uRGg/kWkKUnom3XWpEkdWgLFIZ3i0Uw7uFqrbiu8BdexlPmmK7uoZzUuiqEikfIyIi8hbdJYi5ublIS0sDAJw9exarV6/GwoULsWbNGixYsACrVq3SOEIKJHJvxBiTHREmEeKBJThhufBvbHlxCSANM+84XoszVgFnrAJySmqUoWd5JxV1hbGxPJmz6Hw+E0MiagxRFH16o8ChuwSxoqICHTp0AADs2rULlZWVynDzgAEDUFBQoGV4FCCkPZclX65ejJySGmVBSq5FmnmRZJYWq5Rbpb/05NXLRVaDsiglyWxD1OAMh4bXrnZRcUW99V9TeiE2tlciERGRp3SXIHbt2hX79+8HAKxfvx79+vVDp06dAABnzpyByWSq7+FEDRIPLMGhrEUQDyxxWHAyOtGO5CgjYkx2jE6044xVwNB4G3YWhCgJpbzdnqvqnXwtdaKonl/o/Bi56ujJMHFT9l/2ZwLJZJSoZRBF394ocOguQZw8eTKeeuop3HLLLfjnP/+JO+64Qzm2d+9e9O7dW8PoKJAIqbNQWmVFZFsTYkx2HCiQhpGvGRCKzXkG5JTUIPNwLYbG21BkNThsl5ccZUTU4AycsQrKPswluxYqDbXVcw7l9jrq4eeGKo6u+ik6x+7tZtt6uRYREWlPd6uY586dizZt2mDnzp144oknkJFxodfc/v37MXHiRA2jo0AiHlhyvv+hDZmHa5Uq4srt0vHh3UIRbgLyLdJWe84LTZKjjEpFUVrxbHDYeUW9gKW0ytpgw2x1ldHVcU+38fME5y8SBSdW+chTuksQDQYDnn76aZfHPv/8c/8GQwEvp6QGESZpVfKO41YARtw1woBNe2sBXEgOgQsLVmJMduSU1CDBLCKnRErWrr9lNg6tltreRJ3foq9k1xKlUqiuErprVyNXGd1hxY+IiPxFd0PMsp9//hmrVq3Cyy+/jFWrVuGXX37ROiQKIOrh3TNWAUnxUpubAwXAKUstiqwGnLEKGJZoUCqDoxPtDk2xy85/GTU4A2VW9X7OjquZnecduqsCqrcEdBdvY+f6cW4gEV0g+uFGgUJ3CWJ1dTWmTZuGpKQk3HHHHXj88cdxxx13IDExETNmzEBNTU3DFyFqgDo5K7Ia8O+3Fipff7RSWqGcYBbx6V5gaLwNyVFGbM4zKHswJ0cZkWsJUaqKct9EV9VBddVQ/lrdPqeh+Ybq+9wNPdf3OpkkEhFRY+kuQXzkkUfwwQcfYN68efj5559RXl6On3/+GXPnzsV7772HRx991OcxJCQkIDU1Ff3791d6MlLgkquCOSU1iDHZMWLsbAyNt6HMKh3rE29EhElUeiUCF7bek4aSFyrXkOc1Au7n+YkHlijn1zf8LGtMgufqGhxOJiLA9yuYOb8xsAiizjpbms1mPPzww3jqqafqHFuwYAEWLlwIi8Xi0xgSEhKQnZ0Ns9ns0flpaWnIzs72aUzke86LT5KjjBiWaEB7kzQncViiAbkFNpyxCkgwi/hy9WIIqbOUqiIARJhE7DguzV+Utt5biKjBGQ7b8tX3/N5O5rgYhahl8MfnSExMDO6++26fPsfXX3/Nz8MAobsKYk1NDQYPHuzy2JAhQ1BbW+vniCiYDO8WigiTiOQoI64ZEIpyqx2782oQYRJRaJGSwyKrATsLQpQm13LjbHmnFbm/olwlLNm1UKkqyo+JGpzhsMq5sYmcc5XQXZWRySERqXEnFfKU7hLEq6++Gps2bXJ5bNOmTRg1apTPYxAEAddccw0GDhyIpUuX+vz5SFvqlca5lhDsOF6LCZe3wylLLTbnGZSt9bqYL+ywEmOyKz0US6usSuInzy1UDyELqbOQU1Kj9F0EpKRRHqZ2jqW+OGXOiR8TQSIi8iZdtLn59ddfla8ffvhh3HnnnaisrMTEiRPRuXNnnD59Gp988gkyMzPx/vvv+zye7du3o2vXrvjtt98wevRoJCYmYuTIkQ7nLF26VEkei4uLfR4T+Y46uZJ3NnljYzVGJ17Ybm/UwPbYk1uBImsIAGku4nCT1BpHGpK+sLo5anCGQ4/E5CijsjWfvL2eet6iOobGtLlxtwOLu2qkux1diCh4sMhHntLFHMRWrVpBEC70m5NDcnef3W6Hv8ydOxft27fHI4884vYczkEMLFGDM5BktiEpPgSFFhvCTAJOWKS5hfKuK3L1T72nMyAtdLntUqOyEtrVbiny3MT6uEvmGvq+IUwOifTJX3MQ77zzLp8+x9atW/h5GCB0UUFctmyZ1iEoKisrce7cOYSFhaGyshKbNm3Cs88+q3VYuhDIyYX6tclVxFxLCABpH+bUeAFjTaEYmNQGb2ysxvgBQKFFWumcawlR9mxOjjLi4x9rcEA1vxCQeiTK+z8LqbMwYuxsZTGLvBWfOml0V1Gs7/uGKofy+YH8cySi+mleEaIWQxcJoq9XVTXG6dOn8ac//QkAYLPZcPvtt+Paa6/VOCp9COSkwnk/ZGllslQpjDCJKLdKjbHXfFuJJLOIT/eGoLSqFg+NDkPudjvyLYJSWRQPLMGIsbORawlRvt6euUjZjk/9XPLX6uHmxvBk+z09z1dkskpEpE+6W6SitZ49e2L//v3Yv38/Dh065HbbPwpMcrIir0oGgB3Ha5F5uBbhJmDqmHYIP9/j+qXbI7E7r0aZp5hgFpU+iknxIUgy23D9LVKiGDU4A4eyFjksaHHebaUpu6XIj3PXQ9EVbzbObu61mBwS+RdXMZOndFFBdPbbb7/hww8/xOHDh1FdXe1wTBAEvPPOOxpFRsHAOXGLGpyBofFSEpi1pwJ94o3oEw+8+Fk1SqtqkRxlRJHVgJzD1vN7Otdi1MD2+HSv9LtbWiXdn+I07Ow8z1D+OrKtyWVlrb7G2+64egz3dCYiooboLkE8fPgwLrvsMthsNlRWVsJsNqO0tBR2ux0REREIDw/XOkQKAnK7GimpM6DMKlUSx/YNxSlLLT7+sQYPjQ5DhdWE3AIbEsw27CwwAbBheLdQvLGxWpnLGNnWhDNWu7KqWZ5rKD+HnBBGtjUpC1jU1URPVji7wwSOiBxoXORbuHAh3n77bQiCgNTUVCxbtgxt2rTRNihySXdDzI8++igGDRqE06dPQxRFrF+/HlVVVXj77bdhMpnw2WefaR0iBQG5DU1OSQ1Kq6zItYRgxnAT+sQbUW4VMbZvKI4U1OC7PLsy5Dw03oY4s6A8PmpwBoZ3C1WuKTfQloeY5XmH6t6IpVXWOlVE+XyZq0pkU3GfZiLyl5MnT2LRokXIzs7GwYMHYbfb8dFHH2kdFrmhuwRx9+7duO+++2A0StuXnTt3DiEhIZg2bRoeeOABPPTQQ9oGSEHDufr29g4rVp5fkJJvkRpnF1kN6BNvRObhWqUdjjznUE4sAWm3lRFjZzu0xVEnf+oqoXhgCUp2LVSGnOVkU07m5J6K7uL0lLcWiLhLMpl8EumL6IdbQ2w2G6qqqmCz2WC1WtGlSxevvT7yLt0liBUVFYiMjESrVq0QHh7usO/yoEGDsHv3bg2jo2AjJ2ylVVJD7CSzDQlmEREmEbkFNoxOtOOUpRa3XWrEgQKp5c3oRMfeiPKQ8hmroFQk1cfkoWZXCZU6SXSmlwUinq6eJqLg1rVrVzzyyCOIj49HbGwswsPDcc0112gdFrmhuwQxISEBRUVFAIC+ffviP//5j3Js3bp16Nixo0aREUHpXZgUH4I4s4Byq/Rv5nKriASziCSzDQcKoCxqGRpvw6S75iDGZHfYWQW4sA2fes4hgDpDyg31NiQi8ojo+1XMxcXFSEtLU27q7WrPnDmDtWvX4ujRoygsLERlZaVfdkejptFdgjh69Ghs3rwZgLTt3rJly9C3b1+kpKTgtddew7Rp0zSOkIKJejVzTkkNItuasLNA2mHlhEVEmRXo070dyqxAvkXAjuO1SI2XeiYC0n0f/yglhvIilCKrQdmOz9UcQ+DCPEN5az45Bvk+9UprIiJPiaJvb9HR0cjOzlZuM2fOVJ77q6++Qo8ePRAdHY3WrVtj/Pjx+O677zR8N6g+uksQX3jhBfzjH/8AANx6661Yu3YtBg0ahL59++LNN9/EvHnzNI6Qgom6SpccZVQWknQxh2DUwPY4YxWwZU8Fwk1SH8TItiaEmaT+iXIyGNnWhAiTiNIqK2JMdocFMJPumqNcW72Ti1xtBKAsXAEuVBfdtcFx7ofIJJKI9CI+Ph47d+6E1WqFKIr4+uuvkZSUpHVY5Ibu2twYjUZlgQoA3Hjjjbjxxhs1jIhIIi8OGd4tFN/l2YG8SgxLNKDQIg0n94k3It9Si0KLiKT4EORagCSzDeEmYGdBCIZ3A3Ycr3FYhfzxjzUud1ZRJ3+ujssaaoPDYWgiUtOyl/WQIUNwyy23YMCAAQgJCcGll17qUGEkfdFdBZFI77ZnLkaCWcSwRANyC2zoYpb+nXXKUosIk4j0ge1Rbr2wUGVngXR8x/FaDO8WipySGqX9jbxAJWpwhtLaBnAc2pa/V3/tfFz9GCIivZo3bx7y8vJw8OBBvPfeew4FIdIXXSSIN910E3788UePz6+ursY///lPvPXWWz6Misg1IXUWMg/X4t9vLcQZqyBVEyHNRQw3AUeOVSPMZECMyY5cSwhiTHYkmW1IjjJix/Ha842zBWV1tFxRlFc0Rw3OqLM3tPq55ZXV6tY3QN1qoau5jfW9pqZiYkrUcog+/o8Chy4SxISEBAwdOhRDhgzBokWLsHfvXthsNodzCgsL8fnnn2P69OmIjY3FO++8gwEDBmgUMQWqxiY7RVaDsmfzlvPb8AFAbHQbTLi8HUqrrEiNl6qH6nmFcl9EeX4iICV0JbsWKi1t6kv+GrofQJ3WOPW9tuYMRXPBDBFR4NHFHMRFixbhwQcfxKuvvoq5c+eirKwMgiCgQ4cOMBqN+P3331FbWwtRFDF48GC8+uqruOOOO2AwGLQOnQKMJ4mS+pwYkx0RJhFhJgGAiE17a1FkNeD+McCRY5WIbGvCgQKpwhjZ1oQksw1nzg8/h5ukBShnrEalGbZMSJ2F4d1CsT1zscPOK+q9m50TyYZir28uY3NxriOR/onQdg4itSyCKOrr16W2thbff/89fvjhBxQWFqK6uhpRUVFITEzEyJEj0b17d61DrCMtLQ3Z2dlah0Fe5mkiFTU4AzEmOxLMIvItAoYlGlButSPMJC1g6RNvRMX5pLDcasfmPAOGxtuwsyAEQ+NtyDwsDTvHmOwoshqURtrJUcY6u6a4qiq6i7OpiSB7LBL5nz8+Rzp1jsFtk6b49Dm+3/ENPw8DhC4qiGqhoaG44oorcMUVV2gdCgW5xiRJOSU1SI03IjUe+C7PjgmXt8OeXGnI+ZSlVkkWpUojEGYSlG33pAUrNmV+olw5dG5Z4y4m54UqTO6IyC1dlYRIz3QxB5GoJZOHfg8USN9HmERlPuKmvbXYnHehFQ4gtb7ZnGdAhElE5uFanLEKOGMVlOPbMxdjxNjZAOru0ey8ytmZq/Y4Mk/nCXqSYHLOIRFRYGOCSNRMckJVZDVgc540LzYpXirO55TUYPwAqUeivIAlziwo+zXLbW6GJRqQHGVEjMmOEWNnY8fxWmVLPsAxIXOXnDV0jjcri6xSErVMoo9vFDiYIBJ5ibxDyvbMxcgtsKFvQghmDDfh073S8QqrHQOT2mFznpRInrEKSDLbUGQ14Ls8Ow5lLUKESUSuJQTDu4WiyGpQEj05kZQTM7lnYmMqeerzWQEkIqL6MEEk8iJ5GDjcBGRlW1FosWHxrBBs2luLKweFYPnGSowfcGH1MwBlUYqQOgvbMxcDkNriyHMUb7vU6LBiObKtSemZ6G7HFXexufraE0woiQKAKEL08Y0CBxNEIi+LbGtC5mFp7mG+RcDsJTZMuLwddh8SMXu8VAmMMImIMwvItYQo3ydHGSGkzlKSv5ySGoe5jc67qaj7HDrvruLcm9DTVjjucEiZiCi4tJgEsaSkROsQiDwiJ27qKuGe3AoAwPsbKtHeZEBSfAhOWESMTrQjOcqoJIqyGJN0f0r6HESYxDqrk+WvowZnKDuxuFrN7CoxlPsqsipIFHxE0bc3Chy6SxD//e9/4+WXX1a+P3DgAOLi4tCpUyekpaWhqKhIw+iIPCNXALdnLkaMyY4wk4DdedJOKhVWO9qbpDmIYSYDUuOlpFLekUVO4ORdWnYcrwVwoUpYWmV1aJ7tqleiuqG2fJ9MTmAbGpImIqLgpbsEcfHixWjbtq3y/cMPP4yOHTvi1VdfRVlZGZ599lkNoyPyTMmuhcp+yQBQbhWRFB+CcGmEGUcKajB1TDu0NxlQbhWRkj4HJbsW4rZLjSitsiKnpAalVVZlHqLzIpUYk91h5xX1c6nvU3/tboGKu+FjV4kjk0milo0VRPKU7hLEY8eOITExEQBQVlaGb775Bi+99BJmz56NefPmYePGjRpHSOS5kl0LkVNSgy9XL8Z3eXaUWaXdVACgsPisssNKglnEyy88ic15BoztG4rItialzY14YAlKq6zK95FtTUq1UZ3cqSuD9bW5YeWQiIgaorsE8dy5c2jVSgpr+/btEAQB6enpAIBu3brht99+0zA6osYTDyxRGl/vOF6Lcquo9ESMjW6j9EhcvrESd40wYGdBCGJMduSU1KDIalAeeyhrkbKtn9xSx5nzfMTmVAEb2rWFiFoWX/dAZAExsOguQezduze+/PJLAMBHH32EYcOGwWSShtcKCwsRGRmpZXhETbLjeC2KrAaIB5ZgZ0EIwtq1VuYkhrVrjSMFNYgwididJzXWTo2X2tvEmOwIN0n7Mo8YO1sZfhZSZykVRfUKZvmYzFU10bmSSERE5Ex3CeIjjzyCV199FWazGatWrcLs2bOVY1u3bsXFF1+sYXREjaNudF1aZVW+35NboaxclvdsTooPQZxZQGx0G5RbRRwokIaeMw/XKquhk6OMSmKYU1Lj8FxRgzMcWtyoVzA3VDV0brrNhtpEgYl9EMlTIQ2f4l+333474uPj8cMPP2DQoEEYOXKkcqxz58646aabNIyOqHHkKp26ZyGA8xVAAVv2VCDOLEi7rCQbcTjfhvLKswDkBNCIsX1D8eXqxUrVsMhqUP6UnyNqcIZDw235Pk/7Hzofd26L4xy/1pzb/hARkXfpLkEEgBEjRmDEiBF17p83b54G0RB5zpPERd4NJcJkwxmrgDMFAGBHudWKWHMowtq1RhezHWMBdDFL2/BNumsOhncLxfbMRUhJn4NDWYswYuxsJTFUL2qRqXdfUT834PnwsifVRy0wOSRqGhb5yFO6G2L+7rvvsG7dOuX7kpISTJ48GampqXjkkUdgt9s1jI6ofq4SF1dzAOXk7VDWIhRZDcgpqUGsORQVVjtOFVcjNroNwkwCAOCaAaE4YZH2aBZSZyGnpAYp6XOw43gtSqusGN4tVFktDUjD2VGDM5S2N87tbtwlfZ5s0UdERMFBdwniE088gT179ijfP/roo8jMzESfPn3w5ptv4u9//7uG0RE1nvMOJ/Kf2zMXI2pwBpLMNiRHGbFyux2FFhsKLTbsya3ACYuIT/dKPRPDTVDOG9s3VBlmjmxrwhmr4HD90iorSnYtrHdY2JMVynqsHBIRkX/oLkHMzc1FWloaAODs2bNYvXo1Fi5ciDVr1mDBggVYtWqVxhESNZ16hxM5mcu1hCCnpAZD420oO9+5Rq4eJpltyte5lhAkmEWlDY58HLgwbD28W6jyXM5b6rlbiFJfrM3FJJOIqGXSXYJYUVGBDh06AAB27dqFyspK3HDDDQCAAQMGoKCgQMvwiJrNOfGSd13JPFyLcBPQxXxhavCTdxmUr0cn2jEwqb2SHEaYROw4XosEs6hcM9cSUmcuovp5Xe3n7EscnibSER/vosL5jYFFdwli165dsX//fgDA+vXr0a9fP3Tq1AkAcObMGaUnIlFLJydP6tXGOwtC8F2elACesQp4L/Mcyq0iyqxAmMmAPbkVSI2X+iTGmQUkRxmRbxEwYuxsZUg5p6TGYeVxcpRRaaCtfi5W94iIyB3drWKePHkynnrqKWRlZSEzM9Nh5fLevXvRu3dvDaMj8g7n1cTyamSpVY0JKLAjNR7o070dThVXY8qgEGzdbcONI9vhcL4Nr24ux22XqvohljheP8ZkV4adAYPDfERPG2U3dsUzEekfq3zkKd0liHPnzkWbNm2wc+dOPPHEE8jIyFCO7d+/HxMnTtQwOiLvcDXMLJPnDpZbRRw5VgkA+GC9DX3ijdiTU4O7b6hBhdWEQosNESYg0ipV1e/984VeiDklNW77Izo30HaXAOq1xQ0REfme7hJEg8GAp59+2uWxzz//3L/BEPmJOhFLjjIip6QGCeZQZTeVLuYQVFjtaG8y4OCvHVButWJgUnts2VOB8QOAQosNn+4NQWRbE0p2LXS4nlRFlEQNznD4vrENtNXx6rmyqPf4iLQgAtzthDymuzmIsv/97394/fXXMW/ePBQVFQEAfv75Z5SXl2scGZH3qZMZuZ9h5mFp/+YyK5BbYEOf7m0wKEXAf7dV4s6xrZRdWAot0krnJLMNMSY7Royd7bCDizphlKuJ8kIXQEqm1HMT5fs8jVeP9B4fEZHe6S5BrKmpwcSJE3HppZdizpw5mD9/PgoLCwEAjz32GBYsWKBxhERNV1/ipZ4bGNnWBPHAEsSY7Mi1hCDXEoLC4rPYfUjEwKT2KKtsjXGXt0ef7u2Ux5+xCphweTuEmy4sRpGTv+HdQiEeWILkKCNKdi3EoaxFynG5cbfzCmfnWJs73MzhaiLtiT6+UeDQXYL49NNP46uvvsJ7772H06dPO5TDr7vuOmzcuFHD6Iiax9MhXbnql1NSgxiTHaVVVpyy1OJIQQ325Fbgi29qkLWnAoDUFifWHIphiQas+bYSX65ejKHxNqWRtnrLvQSzqHztahW1fMxVrM2tytX3eCaPRET6orsE8cMPP8Tzzz+P22+/HZGRkQ7HevTogfz8fG0CI/IBd82rhdRZSj/DnJIaRLY14cD5FqB94o3o070dPvz7YRw5VolCiw2782rwXZ4dCWYR9/45w+E5ogZnYMfxWgBSGx255Y3MuXqojsNfOCRM5B/sg0ie0l2CWFJSgqSkJJfHzp07h5qaGj9HROQ7zs2rgQvVvUNZi5RjMSY7iqwGZB6uxe68GpwqrsZzb10MQNp1JdcSgqljpOFmeU5ikdWgzDm87VKjsjilyGqo83z1xcTqHhFR8NFdgtijRw98//33Lo/t2rULffv29XNERL7jLjlTVxLFA0uUpE7eSu/TvcDuPOkfSwOT2mHlw9I/3fvEG9EnXqo8llZZMbZvKJLMNhwogLJHc4zJjsi2JqVPotwOx1Vczvd7+jqISJ9YQSRP6S5BvOuuu/Diiy/igw8+wNmzZwEAgiBg69atWLhwIaZNm6ZxhETe425o11UFr7TKih3Ha5FrkfZilhepFBafxVe7QnDkWLXymI9WLkJylFHZvq/IakBylBEjxs5WKouRbU3KXs6u4pJ3Y/GkH2JjhoiZTBIR6Z/uEsTHHnsM119/Pe68805EREQAAEaMGIGrr74a1157LWbPnq1xhES+45yMyRXF0iqrsgo5xmRHTkkN1n5bgTXfVuLVzeWosNrRp3sbVFjtOGWpxbPPPImpY9ohsq0JZdIoM1LjpZXO8rAzIH3vbrVyya6FSgXRVQLY1ETPm9ciosbhKmbylO4SRIPBgI8++gjffPMN/u///g8zZszAnDlzsGXLFnzwwQdah0fUZJ4mQa6qivL8wUNZiwBIzbS3Zy5GglnEjOHSripHjlWjT/c2iDVLw9Brv5WaaIef74t9oODCghcADomiOhmUjwupsxzOae7rqg8XqRD5gdQpm2PM5BFBZFv1ZktLS0N2drbWYVCAkxPF0iqrssK5yGpQml5PuLwd3thYjZUPi/jhUFuUV55FWLvWyp97ciuQbxGUVjf5FkG5trw1n/w87hbO+OI1MTkk8s/niNncGdePm+TT5zi0fwc/DwOE7iqIar/99hsKCgrq3IiCgXP7G3Uj7ZySGmXhSk5JDSJMorLt3le7QhBmArpEt0aXaBFh7VojzHQhIewTL81NlB+bYBYR2daEEWNnO+zXrL65W9Xc3Oohk0Mi/2EBkRpDdwniH3/8gXvuuQcmkwmxsbHo0aNHnRtRMFAnaoCUjMkNtCPbmpQG2jOGS0PCcWYBuQU2XD3YhnIrcORYNbKyrQgzScPNESYRCWYRRwoutIqKbGtCmElKHHccr0VylFFJCOUVzu4WqTS2+ucumeT8QyIi/QnROgBn999/P9asWYPp06cjNTUVRqNR65CINNHQjibynMFP9wJACM5Y7UgwA/9abUcXczVio9ugz/n5h3FmAbHmUBwpqMGU69qgT7wRm/bWIsZkx8c/SsPL6gbaKelzEGNyjEO9qtlVXOq4nSuOrvo9Or8eIvI9FvnIU7pLEDds2ICXX34Z999/v9ahEGnK3Wrf5CijsthEnpM4vFsoci0hiLDacMe17fD+hkr06Q6H7fgAYMp1bfDBeqkdTmq8gBMWEckwIiV9DnJKLlQWi6wGpVqpnpsofy8ni+q45Epjc7fo47xEIiLt6W6IGQCbYROpOLe9kVcyJ5ltSpJ2xiogyWxDnFnA4k+tOGMVsPbbCqQPbI8bR7bDzelS3eCD9dXoYg5BmRUIM0lzGIusBqVPorx/c2mVFVGDM5Rk0DlRlJNHdVzqP5uDPRWJfIdzEMlTuksQJ02ahP/+979ah0GkG64SJvHAEmV/ZUBK8gYlGnGgQPp6WKIBuZYQpYJ4/Lc2OFJQgzCTgJvTRSTFh6Dcake4SUo0k8w25JTUOLTRkZNPdasbeW5iQ9TzJpvKk8ey0khE5Bu6G2K+5ppr8NBDD6G8vBxjx45FZGRknXNGjRqlQWREvlXf0Kqr+YhydS+yrUnpYzg0XgQsdnyXBySZRZRZgT05NdJ8xPNb8L2XeSGxLLNKfRLzLQLG9g1V7j+UtchhKz41OXF0Nc/Qeb6hu2FnT15/S07+OExOesUqH3lKd30QW7VyXdQUBAGiKEIQBNjtdj9HVT/2QSStyQmkPBdxaLwNZVZgUKIRpyy1CDMZUG6146YrjPhgfTUGJrXHlj0VSIoPQW6BDWesAiJMInIt0r8Zh8bbsLMgRNm1BbjQQNt5bqKrWNQLadRzFV2d463Xr5eETE+xUMvhj8+RKHNnXHuDb/sgHj7IPoiBQncVxC1btkAQhIZPJAoyzlVEOflSD8WesUr/7+RbpIRvUIqAD9aLGJjUBgCwdXc1wkwC9uRWINcSgqR44I5r22FPTg1yC6R9mUurrAgzGS/s01wi/RFjsiu9F52rh/K8RVfVRncLV7yZSOkpIdNTLETO9FUSIj3TXYKYnp6udQhEfuVpouTcF9G5P2FkWxOKrFKCV7JrCe79cwa27rZhYFJ7ZO2pQJkVePIuA3KOtkNYOxFT2tmlaiKkoedRA9sjPLcCQCjCTAbsOG5VrltaZVV2W3FOVF0NNTvH7fx6Xd3vDfWtpiYiffj9998xY8YMHDx4EIIg4N1338Vll12mdVjkRHeLVHr27In9+/e7PHbw4EH07NnTzxER+VZ9Q7WudlNxXiSinico9ykUUmeh3CpNxVjzbSUGJrVHnFlAztG22JNbiaxsK7butqGLOQSFxQIGJhtxqrga+RYB+RYB3+XZlVXN8lZ+cgzyc6oXorhK+tQ7sXj6mj3lbgGLu9XUXO1MdH4nFR//54kHH3wQ1157LfLy8rB//34kJSX59oVTk+guQczPz0dNTY3LY9XV1Th27JifIyLynfoSF+fm0s5JoPo+AEoiFzU4A8O7heKjlYuQW2BDglnEnlxpNXO5FSi3iii3imh/fl5imAl4f0Mlyq12RJhEpMZDWc0s79ucHGXE2L6hGN5NWsgir2x2XpTi3PpGvslNvZ1jbur71Nhr1Hc+k0ci/ykrK8O2bdswffp0AEBoaCg6duyobVDkku4SRABu5yBmZ2fzF4lalIaSj8YkOnI/QucWMvIKZnWj6zNWASnpc3DGKlUEy6zACYuIU8VSk+wwk4AKqx13jm2Frp1sSIqXZpuEny9OXn/LbCSYRXy5ejESzCKKrAbsLAjBGauA4d1C62zD51xZdH7drhaqNIanq6B9dW2igODjHoiezG88evQooqOjcc899+DSSy/FjBkzUFlZ6fvXTo2miwRx4cKFiI+PR3x8PARBwI033qh8L9+io6Nx//3349prr9U6XApyjUlEvJl8lOxa6LLtjPOcxJJdC5FTUqMsKEmNlxI/ecUyANx0hVHqg9i+Fnn5IRiYbMTApHZIH9geAJSh5kl3zUG+RfoH2+hEaUWz3H/RVVVQXqjiPNTsD0z0iLRXXFyMtLQ05bZ06VKH4zabDXv37sVf/vIX/Pjjj2jXrh1efPFFjaKl+uhikUrPnj1x1VVXAQBWrFiBtLQ0REdHO5xjNBqRnJyMGTNmaBEikcJXiys8ubZ61bJ8rtwHUb5/xNjZSI4yosiK84miCUPjpcQw3CT1PvxgfTX6xBvx/YF2OFVcjS17bMpzSA23a6UdVvIuDF2fsIgY3i0UO47XKomg3IcxJX2OMixd3yIWV69br4ldY2LztO0PkdZ8vYo5Ojq63jY3cXFxiIuLw5AhQwAAt9xyCxNEndJFgjhu3DiMGzdO+f7ZZ59Fjx49NIyIyL88TS5crWB2nqcoPyYlfQ6GxodiZ4F0rL3JgDKrlAiGmQR0iW6Nrp1sKCw2ICke6NO9DcqtwKniahRZDRidaMfmPKkKOTTehnyLgCKrAWP7ShVGdWWwtArK1nxynOoVxeok1rmhdlMSKH8kXY25fn3nMjkkuiAmJgbdunXD4cOH0bdvX3z99ddITk7WOixyQRcJotqyZcu0DoFIN9y1kHH1dWRbkzLsK/1pQFHBhQrgkYIanLEKSI2Xrrf22wqEm6RkUVq0chaDUgSs+daO8QMMKLSIuH9MGxw5Volyq7RgJcIqNdAePwAo2itNWCytsmJ4t1Bsz1xYZ9hZTiLlRS3e2rPZ1TC7J/cRBTs9tEFcvHgxpkyZgtraWvTs2ZOf+zqluwQRAH799Vd88sknKCgoQHV1tcMxQRDwzjvvaBQZkXacE0J3VTh1Uib1RjQAFqnJtdT8WsCBAgAQMGqgNMQ8MKkN9uRWIi+/HWaPN6Bfzz/w+icheGNjNWJMQIJZimFQohFn9tYCMCiNsyPbmpBrcT1M7q6Btvp1eCOJc7dfNRHpT//+/bnbSguguwTx888/x6233opz586hU6dOMBqNDse5ywoFGlfDyJ4kVA0NM8vk7fLG9g1F5uFaJFuNiDCJiDMLWPNtJYYlGlBYfBYAsCe3Alv2AKMGhiM9TUSYqQax0VISGRvdBqeKqxFhElFosaHIGqKsoFZXCF0tSokanIEYk12Zp9jQe+DpMV8I9OejIKeHEiK1CLpYxaz2zDPPID09HadOnUJhYSGOHj3qcPv111+1DpHIq+obRlb/6Ty/TyY3znbuQegs87C0+jjBLO25fKAAGJZoQJ/ubbA7rwax5lCEmQTccW07hJmAscOl/9eGpFTh5nQRW/ZUKKugv1y9GElmG1LS5zi0sFG3uxneLdShd6M6OXROipzb5bh7fxqrKSuo/Z2sMTkkIj3SXYL466+/4pFHHqmzipmoJWpsguKqMbZ672Xnc4ALK5tdJYrqYeDItialihhjsiM1Hii02FBuvbCHc5jJgMJi6eu3P78I3+XZ8XmWgPcyzyHcdH47PpO0UjrXEqLEJV9brnCW7FqotMNxt8hGzd1rc349rr6vD5MvIkda90GklkN3CWJiYiJKSkq0DoPIK5qToKgXfMj9DZ1XB8vniQeWoLTK6vCYyLYm5JTUKMO/Q+OlBSYzhkv3HyiQWt6cKq7GsEQDKqx2FFpsGJJShbB20u4rqedXN4eZDMi3CNiypwJdzCHItYSgtMqKBLOI0iorRifa8eXqxYganKE09JZjU1dCnYeg5dfj3Ei7vp1XXO3awt1QiIi8S3cJ4ksvvYS///3vHEomXWpuIuI8bOzquuodUmTqaqKrr+XkS70gRF6kIn+deVjqXyjvszzh8nZKFTA2ug3amwzoE2/ECyvt+O+2SqQPbI/0NBMuSy1DocWmNNz+91sLzy92kYatb7vUiM15Bgips5R+i/KqanU87iqJro57svNKS6wOMpElLYl+uFHgEERR+6LwyJEjHb7/+eefUVJSgt69eyMyMtLhmCAI+Oabb/wZXoPS0tK4Iou8KmpwRp0kyV1PRGdyYiY1yzagZNdCpKTPASA1zpb3Uz5jlfoajh+A83syS/MRl2+sxITL2ynXu2ZIGVasM+K7PDsSzKLS5qbcasfHP9bgtkuNOFAAZecW9XPL3+tlAQqRXvnjcyQiqjOuuvY2nz5H/uHv+HkYIHRRQWzVqhUMBoNy69u3L4YNG4bo6GiH+w0GA1q10kXIRPVqzPBnU/cudm4nI38vV/cOZS1ShqUPZS1ChElUksMdx6WdUu4f0waFFun8T/dKvRFT46Vh52uGlCExwYZNP4Tj5nTp35FdzFLFsb3JgHKrqCSHOSU1iDHZEWOSqpMyeXhbSJ2lJKnOr0F+/XocMtZLHETewjmI5CldtLnJysrSOgSiZnM1bCp/X5/mVNDkaqGcUKoXtKirc9KcPul/9xiTXdlpZcueCuRaQnD/mDY4UFAJ4PxCFYsN3x8Ix57cSsSaRZRVtkaESepJOn4A0CW6NXbn1aBPfCjKrTVIMIcCEJV9mxPMImCxo2TXEmUbPjkmOWZ5dxVXcwr1UlXUSxxERP7GchyRl9TX9LkxlSh37V5cXUdODNVzG+W+hJFtTQ7nj06UdlRJMIsQUmdhWKIB2zMXI8Zkx5pvK5X2NwOTjQgzSYleepo0hzG+cyXuuLYdYqPbAAAKi88i3CTtzlImFQkRZpKGrCNM0jB0kdWgVC9HjJ2tJIPykLMce30rmInIi3xcPWQFMbDoooKotm3bNrfHWrVqhfDwcCQmJqJ169Z+jCqwcR6Y79XX+NpVT0D1cVfXUB8TDyxxWC0sU1fpnJ93bN9Q/Puthbj+ltmIMAHbMxcjJX0Oxg8ADufbUG4VceRYNfp0b4Mu0a3x/YFwXJZahj05RmlVczsRu/NqEG6SFq4MTGqPv31eisi2JiTFh+CMVWqvIw9pb89c7NFrb6hJOBER+YcuFqmotWrVqsHdUkwmE+bMmYMFCxb4Kar6cZEKNZerRSlqrvoHqodr1cdS0ucgp6SmTkuZ4d1CseN4LcQDSzBi7GylT+HwbqGIMwv4+McLC1iS4kOQW2DDHde2Q3mlgLXfVuDNxyvwn69isCe3An3ijThSUIM+8UacskjXKbeKSB/YHntyK/HxjzXKQhV5Jxc5WZWTPbmXonP8nmDCSIHGL4tUIjsh/RrfLlI5/vP3/DwMELobYl67di26deuGG264AcuXL8f69euxfPlyjB07FnFxcVi2bBnuvvtuvPTSS/jHP/6hdbhEHqtvmLkxi1LkYWT1MK362KGsRUpVUV1l3HG8FslRRiU5TI4yIjnKiHBpFFlJDmW5lhB0aGdHWDsRd1zbDjv2d0aYSeqdWGG1Y2BSexwpqEG5VTy/t7M09HygQLqW3INRjkf9OoTUWdhxvFYZbna3S4y798zdln7e4K1WRkRELZnuKojTp09H69at8dZbb9U5NmvWLNTW1mLZsmWYM2cONm/ejNzcXA2idMQKIjWFu7Y1ngy5OlPvhxzZ1oQYkx0RJlGp0KkTsMi2JiSZbcruKQCUc4fG23DfLQY89tY5DEs04Ls8OyZcLm29d1lqGZ74lwFvPl4BANjwXQyyzjfOLrTY0CfeiN15Nco15eeW48kpkaqKESaxzi4rclyutu1r7lZ7vqo0sopJ3uSPz5GOfqggnmAFMWDoLkGMjIzExx9/jNGjR9c5tnnzZtx2220oLS1FZmYmxo8fj+rqag2idMQEkVypL4Fw3nPZ+TxXezK7+97d9eVz5Iqh+vHJUUYkmEV8uXoxrr9lNgAow8UnLFLFcPGnVlwzIBS782owKPHCkDIAhLWT5gCXV55FWLvWCDNJ1cPdeTVKormzIAQxJruygrm+fohNUd/74O4YkzrSKyaIpDe6G2K22+345ZdfXB77+eefYbdLKzGNRiOMRqPL84i01tAwY0NtcNwdl4eN1f0D5VXA6ueUd1ABpAUiyVFGpKTPUc4tshpQZpUeU2YFdhaEYNNeKTmMMwt4f4PULHt3Xg3OWAWEtWuN9IHtAQB9E6S1bV2iRVRYpf8f135bgUEpAs5YBaUPo1w1FFJnIcZkR2RbE1LS5zisuJbjV2+t5+l7Wd+qcVfHPG00ThTIuIqZPKW7BHHs2LF46qmnsGbNGiUZtNvtWL16NZ5++mlcf/31AIBDhw7hoosuavLzTJs2DZ06dUK/fv2U+0pLSzF69Gj07t0bo0ePxpkzZ5r3YqjFcZU0NCWRqC95qe+a6jl4rrbjkxd5qFvDyHswq+flOfcXzCmpQU5JDZLMNiV53HG8FmP7hirb7RVZDUiKD8GBAml4+FRxNZLiQ5BgFnGquBpHjlXj6sE2dOtUjVPF1SivFNDeZMCWPRWIMwv4YH01EswitmcuRpkVSmPusX2l+YgAlMUzzvGrOSeLvqr4uUogXX0dbIL5tRPRBbpLEBcvXoyUlBRMnDgRbdu2RefOndG2bVvceuutSElJweLFUruM8PBwPPXUU01+nqlTp2LDhg0O97344ou46qqr8NNPP+Gqq67Ciy++2KzXQi1DQw2a/TUsKt/vvDexu+Fouc+hYzPsC+Tvh3cLVXZakYd/5R1P5MbWcpL2XZ4dqfHA0HgbCi02fLpX6m84MNmIcqsdZZWt8a/VdsRGt0Fh8Vn0TQjBoEQjYs3SApcwk4BJd81BriVEuZVZpRjUSav69akX26hj8eR9bIzGNCwP5mHoYH7twYAVRPKU7uYgyjZt2oQffvgBp06dQmxsLIYOHepyXmJz5Ofn44YbbsDBgwcBAH379kVWVhZiY2Nx6tQppKen4/Dhww1eh3MQ9UNPc8wamlvofD9Q/6INV+eq+wk6UyeO6vYy8rmRbU0YGm9DF3MIPt0rPaZk10JEDc5QhokHJUrTOOS5ieMub49yK3DkWCX6dG+HxAQb4jtXouB0O3ywvlppfwMA+RZB2btZLcZkV/aI9vQ99NbPVU+/H4GC76l3+GsO4uVX+3YO4qlfOQcxUOiugii75ppr8Mwzz+Bf//oXnnnmGa8nh66cPn0asbGxAICYmBicPn3a589J3uXLD6rGVq08qUaqq37Ox9S7pMjPrW5d4+qD2bm6KC8OUT9+eLdQJEcZkWS2Id8i4O0dUsWutMqKEWNnO1xPWYxiFfHifXYUFp9FYoINfbq3w5CUKuw+JKKsIhR5+VISKM9JLLNKw8n5FkHZo3lovA0luxYq7W9c7cHs6fCyu2F45+PO6htW9rZgGaplckgUmHSbIGpNEIR6G3YvXboUaWlpSEtLQ3FxsR8jo+Zq6gd3Yz8I3fX0U9/nqo+h83OpF6WoqReiyEPI8vnycK78Z2Rbk8Pcw5wSabVxhEl0SCrPWAWUVlkRbgLOWAWs+bYSFVY7Mg/XIjysSnm+xAQbjv/WBhNGWfHVrhB0iRYx5bo2KLfacd8t0lxGeaX0NQNCUWQ1IN8iKAmgHK/8p/xeOW8dqH4P1O+f+rXWVz1tiC+TGyZOpEccYiZP6WKrPYPBgO+//x6DBw9ucCcVQRBgs9l8Ekfnzp2VIe1Tp06hU6dObs+dOXMmZs6cCUAaGqCWwx8f3K6Gfj15XnerbOvrjehq6BhwnMs3vFuosp1e6fk8b/wA4O0dtUrbmwiTtIIZMKLMKv1NH2GS/nzp9kjs2C/iSEEljhTILXGs6NCuHSaMqkR4WBU2fBeDcms1vtoVgtjo1ogoqFCef3SiHScsIgA7SqugLKxRx+/8vfPXzkPNDQ1tejL0yeFRIiLXdJEgPvvss4iLi1O+bmirPV+56aabsGLFCjzxxBNYsWIFxo0bp0kc1LLUN9TrTD1ELH8vzw90frynfQ+dk0NX/QblvZrlc5OjjPh074XEUUrO7Ni+UupZOCwRyC2Q/iFWbrUja08FwkzS/5cDk9qjvPIsHrjVhoO/mrBinRHtTSZMG1cEIAZ7cqWqY65F6oOYb6lVttwDLuzYkmsBksw2bM90XR109f42ZiFJYxNyvWHySt7GKh81hi4SxOeee075eu7cuX55zsmTJyMrKwsWiwVxcXGYN28ennjiCdx6661455130L17d3zyySd+iYVaNnfVPU+Gsp2HmJ0XlKh5Uj2Tq4auEk718G6RVTr3jNWoepwJk+6agySziO/yBABSQnimAAAEDEs0oE/3NiivPKtcd0+OtCClb0II/vNVDIakVGHttyIGJRowfoAd5VYgzCTtyCLbcbxWWSCTebi2TtKsfr0NCeQkKlBfFxG1DLqag1hbW4vIyEh88cUXPn+uDz/8EKdOncLZs2dx4sQJTJ8+HVFRUfj666/x008/4auvvkJkZKTP46CWw5OExVWFSz0X0XnlrvO8RDnBc9cORt0/UP5aTrDk+XzJUUblHHUlUl6hXFplVbbAA4Drb5mtfL05z4Bwk9QTMcIkoshqQIJZxKGsRcgtsOHIsUqcstSib0IINv0QjnKrHe1NBmRlW3GquBqfZwl48T47Kqx29OneBjddIbXHkYeqD2UtUqqcX65erHwtkyudrqqGznM6nd+nxswt9fTcYFloQsFD9PGNAocuKoiy0NBQhISEoE2bNlqHQjqhpwpRU+JoqM2Nq6HT+sjVRbkFjvp68spg51Y56gRMvShETlaleYkXzvlytZR8yg208y0CRoydjXATcKBAmpf4/oZKpf9hl+jWyu4qAPD9gTYot1YCALbutuGERdrnOclsg5A6C8O7hSqVy5JdC5GSPsfh9cmxO78v7iq1I8bOxvbMxR7PTXS+FhER1aWrCiIA3HzzzVi9erXWYehesFQ2/PlB3pT3tL6dVzxdXetq/p2rXVScryGfL7emUa9UjhqcoSSRchUxOcqIofE2h+cTUmfhUNYi5brydnhywhhjsuOaAaFIipcaXqfGSzHccW07JSm8LLUMh/NtKCyWhqQLi88i1hyKFz+rRnuTAXFmAUPjbQ6xF1kNytZ/CeYLdQd1hVT9fX22Zy5Wvk5Jn9Ps3xnn9zpY/l+j4MBVzOQp3TXK/uyzzzBnzhwMGTIEN998M2JjY+ssWhk1apRG0bnmjQaneqqUkWveWDXryXOoF5o0tEDFVYNt+XtXiY48NF1aZUVylBFFVoNyjpwUyklmya6FGDF2Ns5YBUSYRJyxSvMQ5d1W5N1TAGBQioA/Kg0or5T+X712WBH+8v/aY9TA9jhyrBLlVhFfrl6M62+ZjczDtQ7P4ep1uHqd3myY7Xxdb57b2Bj5/z4B/mmUHR7RCcNG+bZRdvExNsoOFLpLEFu1cl3UFAQBoihCEARlj2a94E4q1FyuEiBPElKgbkVR/lo9DC2f56pK6fz98G7S/szqJHJovNRUu8hqUFrWyLuqdIkWkZVtRXqaCYfzbdidJ/VYHD8AaG8y4JSlFpvzpMep/5TnRDrv8tLQ+1DfuZ68x+RdfF+9w18J4mVX+jZBtBQwQQwUuhti3rp1q8vbli1blD+JGtKcYUFPV88251ruFlu4qhq6arbt/Dj1cecFMfIQs7t+ic67uZyxCijZtRCRbU3IKalBktmGPvFSn8TRidI/zsJNwJFj1ThVXI3ySgF9urfDf7dVYlCKoAwpl5/fVSXMZFD1QZQWwshD3epdXtSvwdXQrrtEt6Hqqrv3Khj4Y3g8GN9XomCguwpiS8QKYnBpbPNr58e66oPYlOesr2IoDyXHmOw4lLUIKelzlD9zSqTWNK4WsACOeyVff8tshJkEfLRyEe79cwbKrVKid8e17bAnpwZv77DimZsjsSe3Ak9OtWPNFukapyy1KLeKKLMCcWYBm/MMSDLbcMYqDUGrY0gy25SKpfz61K9HHhL3xRBzIOJ71DL5q4I41McVxBJWEAOGbhPEP/74AwcPHsTJkyfRtWtXpKamIiwsTOuwXGKC2LL54wO1vkTQ3RCq/DXgeSJa35xE9ffDu4Vix/Fa5XFya5wiq0FJxibdNQcHCqRkbmxfab7hzgKp+bU8B1Hee7nQYkMXcwjuvqFGSRK7RLfGkWPVuHJQCLbutinJ5RmrgJySGkS2NSnJqPyccgLrbvV3c+cMcn4g6RUTRNIbXSaI8+fPxyuvvIKKigrI4YWFheHRRx/FX//6V42jq4sJInlbfcmNu2NA/auk5ePOQ8yA47Z86oUschKXU1KDGcOl8wst0nzE2eNN2JNTg9joNjhVXI3Y6DbYk1uBKde1wQfrq5FvkaqFCWapkihXCeXkVGp3I+BQ1iKH1yRXOz153e7eq/ow6SM98sfnSIeIThia7tsEsfQ4E8RAoas+iIC0q8rf/vY3zJgxA5MmTULnzp1x+vRpfPjhh3juuedgs9n8ttsKUXM1NqmR73fXy1C964inc+xcLeiQK5rqRFDdFxGQVjerF7l8uhcYGi/NR+wTD2RlW3GgAEiwVKDMCgxMFpGY0Aa7D4noE29EmKlWmXcISNvqhZtCEWYSMBxSkihXDZ1frzrhddUw25MV3u64q9YSEdEFuqsgdunSBVOmTMHLL79c59gjjzyCVatWobCwUIPI3GMFsWXzZZLQlGFOV8PRTYlR/RjneXwA6szxU1Nvhaeez6huiyMni5v21iI1HsrwcYRJxKBEI44USPMMw0wCyq3SXzNlViiJYdTgDIxOtKPcKiLzsDTc7WpxinMy6G6xSmPfk6byxtA1kTO/VBA7dsIQH1cQz5xgBTFQ6G4Vc1lZGcaMGePy2LXXXouysjI/R0SBzpcf7M7VKvV97laYqpPD+lYwy+Tt6eo7T26YrT4mP4+6mTYgzUcsrbIqSdu9f85AktmGCJOIGJMdMSa70vbmlKUWESYRA5PaYdzl7ZFglpLEU5ZaDExqD0BKHOXhZvn6KelzULJrITbnGZBvEZQm3fL747yq23kldkMrmN1p6HxPVv26ugaTQyIKNLpLEIcMGYLdu3e7PLZ7924MGTLEzxG1PNz5QZ+ckwh1oujuZ6ZOhFwlm87nqYeg5YTL+frydnvqa6mPR5hEJEcZkRxlRGRbEz7dK92v3rEk3yIgNR4ot4qIMwvI2lOB5Rsr0cUcgtnjTUhPM2FPbgXCTAIGJRqRGg9lRbP8HCPGzkaS2YackholYYwanFEn4VXHWt97UB9Pz21sNZKopeFOKuQpXSSI586dU26LFi3Cu+++i5dffhn5+fmoqqpCfn4+XnrpJbz77rt4/fXXtQ5Xcw19MLlbwOBPwfDh6Y3X6FwR8/Ta6vPVw8Pq6qOccDlfWz2vUN6ST/5aPLAEuZYQFFkNyCmpUa4XboLDnskAlPmF5VZpzqG8ZV5hsYDD+TYMTGqP9DTp2pvzpC335L2cAeCMVVCSTnmhSmmVVRkKb6gPpPPrqm9bPl9U+IK1ahgM/28TkU7mILZq1cphOz15xxRnoiiiVatWsNls/gyvQZyDSN5U33w2T+a/uduFpDELZtSLWdTUvQxlRVYDxg8Ayq12adGKWUQXcwhio9vgb5+XYsZwE/p0b4M9uZUIM0lb9QFwaHUjfy0vmJGTRFfU8yl9qSmtdZrzPBTc/DUHcdAVvp2DWHaScxADhS5WMT/77LMuE0Iif2rog7qpH+SNfVx957qb/+ZqZxHn520oOXQVp/PCFDk5lNvQpKTPQYzJjtwCEaMGtke5tUI598ixSqU1zoufVSPGBABSD8UwkwE5O3C+YiidL1c2XSV/nrwWb2vqPMemPg8RkZ7oIkFk2xrSg+YkJfUlgd5eNeuqstWUhRPO13H3tXpIsbRKuu6IsbNxxnphb+YDBQK6RIs4VRyC9iYDdufVIM4s4OZ0EZ9nXZh3CAAf/1iL2y6VGnMnRxmRU1KD5Cijy0U8rl6DqxXe8uPqG4L2Z6WusVVcIn/RfsyQWgpdzEEk7/FkfhDnEHmmqVU/by+eaCjx8eQ51AtR3C1wUfcjlOcmCqmzlMUqgLTAJSV9DnItIcgpqUGMSRouLrIa8N9tldKOKtGtEWeWWtt8niWg0GLDXSMMOGMVkBQfguHdQnGg4MLzR7Y1OVQpXc0ldH4P1K/HeVWzuwU9/kzM3P3DgskhEbUUupiD2NJ5c+4IKwzUVJ787jj3WHSubsmJoDwXUP4acNxhBYAyfxCQEsQYkx0RJqnNzbBEA8qtdmUByylLrdInMcEstb2JMIkINwFfrl7sEI+6aberGN3Nt/Q3/r9K3uSPOYhhHTsh7XLfzkEsP8U5iIGCFUSdaeocN1+eT/7j6mfTnBYtzo91Hp51Vd1S90dUJ4cyOXEcGi8tFkuNlxavXDMgVEkAv8uzY3OeAWVW4NXN5ThQIK2EzimpQb5FOmfH8VpkHq6FkDoLKelzlISrtMqqVBGdV067es2evj/uKqhN5YvkkP9v6gN/DkRMEANCYz+o1Hvwyhr6C9Fbf2HyL976NacJs6v31lWvRVdtY+Q/1dXBEWNnO/RMFFJnKcljZFsTdhZI7XA25xmQawnBpr21yr7L8tzEcJN07rBEKVkc3i0UESZR2m6vWyiAC/MQ1cPE8vOo73dXsfP0/VE34nb3fmmNFUl9COSfg+jjGwUOJohByLmKBDT8F6K3/sL0x1+8evzgb4g3Yq5vHqTzPwrcLeyQlexaiB3Ha1FaZa3TSDvGZFcSySSzTfm+yGpQdl9JMttwoEBqjj060Y7v8uyIMws4Y5Vu5VYRuRZpPmJOSY1DXM7PJ3/fmGqh82Pl16QWCElAS/xdJ6KWQVcJYm1tLQYMGIBNmzZpHUrAcddsuL7zPDlfj1riB399Pf8aw92CDHk7PfmY83FXq5adF3/IDmUtUr7fcbzWYYEJIO24Ii9iCT+fl14zIBR9urdDhEnEoaxF2FkQgqHxNqVR9vBuocr8Q/UOMOr41HF6ytVrbQl8sfMLEcCdVMhzulukEhERgTVr1mDUqFFah+IxNsomLXlj4Ya8eKWhptsy56bWclInN9KWW9cAUnubOLOAj3+swW2XGnHCIs0/HN4tFLkWKVHcWRCiVCWdh5y99RqJ9Mxfi1QGjPDtIpXKIi5SCRS6qiACwOjRo1lBbCZfVvxaWjWxJXD3nnq7ilTf8zgvRnF1rpzwyefIySEAZYs84MJezoC0gAUAPlq5CMO7hWJzntTuRk4oS3YtxJerFztsF6gecla/RnmPZiaHRE3k4+qhp+Umu92OSy+9FDfccINvXy81iy4aZavNnj0bd9xxB2w2G26++WbExsbW2WWlZ8+eGkXXMnjy4dnUD1luOeZdvmiw7dxE25P7nWNyfozzcbnFTcmuC30Tk8w27Dheq7Spuf6W2QAE5FpCMOmuOThjFTB+AJBbIKLIeuFaziuk62uE7Ymm9j0Mxt8/Ii289tprSEpKwh9//KF1KFQP3VUQr7jiChw/fhz//Oc/ccUVV6BPnz7o3bu3w42aT48fhHqMyVNNraz6YkWtJ0mnq0Ug9TXjlufyyauaS6usynZ7cgVye+ZiJEcZlTY1mYdrEWuWVip//GMNIkwi3t4hZYb3j2mDM1ZpJXPU4Azl+vKiGPXcS/XOLp5UWz39B5Lz157sPEPU0mm9ivnEiRP48ssvMWPGDO+9KPIJ3VUQly1bpnUI1EisvDQ/ufXm++fJtdy1i3FOnNSLPJznIAJQkjv10O/1t8xGvkWqLo4YOxsxJgFD40PRxSz9dRNuAtZ8W4kiqwERJptSMVT3PJTvUy+cqe91NVQVdXd+Y353fVmZJwoWDz30EF566SWUl5drHQo1QHeLVFoiLlJxraV9WLa0eJujodfq6Xvhql2OeseV5Cijw44p198yG13MIfgu78KuK4DjTiw7jtd6HFsw/cwosPnjc6R9eCf0H+7bRSrHD32B6Oho5fuZM2di5syZAIB169YhMzMT//rXv5CVlYV//OMfWLdunU/joabT3RAz+Zcvh83cfXDrdahOqx6NvmpCXt9zuaoKOg/renJ9edg5anAGhncLVb5WzyPMtYRgZ0EIRoydDQD4Ls+OnJIaZbVzTkmN0kdxe+ZiJdlUx+NuCNnfyaFef3eJ9CI6OhrZ2dnKTU4OAWDHjh344osvkJCQgEmTJmHLli244447NIyW6qPLCuJvv/2GDz/8EIcPH0Z1dbXDMUEQ8M4772gUmWusILKS01zNff8a8/jGtIzxpNIor2ZOjjI6zEuMbGtS2t4AcGh9k2AWkXm41mEltHqBiqtE1l3S2tT3jb+zpCf+qiBeMsy3FcSaYs/a3LCCqH+6m4N4+PBhXHbZZbDZbKisrITZbEZpaSnsdjsiIiIQHh6udYhBrbnbnZFrTU3uGvt4V+c6VxPVc/5crXAWDyxBSvqcOtvg5ZTUKEPLsh3HazFjuAn/fmvh+QqiiO2ZixE1OAORbaW/fuQkUe7D6EnMTXnd3nxsQ9i3kYhaOt0NMT/66KMYNGgQTp8+DVEUsX79elRVVeHtt9+GyWTCZ599pnWIQS2QPuSCcbjQ1eplmbudU9Tk+4ushjrzDgHHvZzlPz/dC1x/y2ycsUotb0aMnY3RiXaU7FrosLezvOBFHYu7bfca+tlp/bNt7KIZIn/RehWzLD09ndVDndNdgrh7927cd999MBqloahz584hJCQE06ZNwwMPPICHHnpI2wDJp/z5wd4SP7SbO6/Tef6eJ9dTry6W75fb0TivfFZfT64KluxaiJ0FITiUtQhD420ApLY3cuNr+Vy5PQ5wYT6kHKP6e+fnUcfV1B6IrmidZOoF34fAoodG2dQy6C5BrKioQGRkJFq1aoXw8HBYLBbl2KBBg7B7924NoyM1X3xwtMSkTQ+83U9R/XOQ5xXK97saflYvKJGrh3I86mHnfIuAM1YBY/uGKlv0xZjsyvkluxZieLdQh+sKqbMchp/ra9Hjq3ZBwZwk8f9JouCkuwQxISEBRUVFAIC+ffviP//5j3Js3bp16Nixo0aRkTN+cOhPfT8Td6uCXX3vjpyEqbe9Uy80AS5UA52HnaMGZ+CaAVLy9+XqxcoilkNZi5QV0ELqLORaQlCya2Gd1dDOSbBzzL78fWQTbQoEIoBzom9vFDh0lyCOHj0amzdvBgA8/PDDWLZsGfr27YuUlBS89tprmDZtmsYREjWdlomEq2QLqNtXsD7OSZ+7IV852ZPJO6ys3C5VC+VkdcfxWiUpVO/rrI5XrkjWlxC6Sxr9hf9YIqJAo7sE8YUXXsA//vEPAMCtt96KtWvXYtCgQejbty/efPNNzJs3T+MIiZpOj3PjXC02aej51efJw7/qZFFdQYxsa0JOSQ0AKfnLKalBya6FGBpvw4zhJgzvFooYk91hOz/161TPd1TH6KpvIxM1onr4eP4h5yAGFt21uTEajcoCFQC48cYbceONN2oYEZG+NCUJauxWdZ48v/OCF1dJppzsycfVvRJ3FoSg9LDVZYWwoS32OKRLRORbuqsgEpH3NabPoqdcneuc1Kn7G8qVRHnuYozJriSH6jmMruJ2NbzsbiUzEbmnlzY3pH+6qCCOGjXK43MFQcDXX3/tw2iItOfNdi2N0Zj9mZ13OVH3PpTJcxHlhS3qfZoPZS1yaF+jXpTirm1NfZVQDi8TEXmPLiqI586dgyiKHt3OnTundbiaY6Uk8NXXo9AXPPmdaigxUy8yka9XsmuhUlV0XnyiPsf5fnf7Lfuz9Qz/P6PAI0AUfXujwKGLCmJWVpbWIbQorJQEH2/0+Gtq9c2T/Zhd7cLiXDlUn58cZVQWq6i37VNXGZ2vJX/vbhtAb/Okakn6wp8VkffoooJIRPXzxodeU6/R0OPcLSJxriwCUBJAeVUzAIc9ndWteJwrjeoEtCXvuMPKpO8wOWwYVzGTp3RRQdy2bVujzh85cqSPIqGWjNUDbTj3UXSu7rlqiQNIvRHV1wCkOYvqJNG5+ujqmk2NVStaPz8RkScEUdQ+52/VqhUEoeG5C6IoQhAE2O32Bs/1p7S0NGRnZ2sdhm7o4UOYvM/Vz7W+NjTq4WB3j5UTQldDyA09hzdfB5HW/PE5YurQGYmDb/Ppc7T6/Tt+HgYIXVQQt27dqnUI5EX88A1MnlTy3M1HVK9edk4cATj0R5Tvd+6h2Nyqobu5i0wYiYjq0kWCeMUVV2gdAhG50ZgEyl1vQvHAEoehY+fkz/m5mpIUuju/KXMoiQKVr/dL5sKGwKHbn6XFYsG6deuwYsUKlJaWAgCqq6tbVJsbTkanQNCcJtvu2tI47wtdX1XP1ZBzU+JkIkhE5DndJYiiKOLRRx9FXFwcbrrpJkybNg35+fkAgHHjxmHBggXaBtgI/EByrSmJM5Nt31PvbezMucrnirskrqHkzvlc5+FnT2JqCH9/iCRcxUye0l2C+MILL+D111/Hs88+ix9++AHqNTQ33ngj1q1bp2F05A1NSZyDMdn2d1Kjruo5c7cq2ZPz63sdzjumOP+pvpa8RZ+rvaAbE09DsTQGE08iClS6mIOo9vbbb+PZZ5/Fk08+WWe1cq9evfDLL79oFBmRd3g6ty5QkmL163DV2kZ9jrpyqG6YLe/Ion6ct98f/sOFggGLfOQp3SWIJ0+exNChQ10eCw0NRWVlpZ8jIvKuQEkqGpuo1dcrUabue+g81Fzf47gSmYjIu3Q3xNy1a1ccPHjQ5bH9+/ejR48efo6IggmHDD3T1O3u6kvkhNRZdRavOP/pjZ8Pf8YUrERRWsXsyxsFDt0liBMnTsT8+fOxY8cO5T5BEHDkyBG88sormDRpkobRUaBjFcp9AuVu4Ulj1Dc30blaqF404zz/0N11G7uYhoiIXNPFTipqVVVVuOaaa/Ddd9+he/fuyM/PR8+ePXH8+HEMGzYMGzduRGhoqNZhOuBOKkSOmtvYGmg4keOwMgUSf3yOtA3rjJ4DfbuTStsK7qQSKHRXQWzbti2ysrKwfPlyDBs2DFdffTUGDRqEpUuXYvPmzbpLDqlhHNILPs1N3FxVBD15Dv6uERF5h+4WqQCAwWDAnXfeiTvvvFPrUMgLWOXRVkurtKm35ZN3XJE1tB90S3qdRFoQIWgdArUQuqsgGgwG7Nq1y+WxPXv2wGAw+DkiIu01pzLmj6TJ25U7ebGKq96Mzg29mRQSEXmf7hLE+qZE2u12CAL/9UMXNDcxaSlDknpPgnwZn/wzklvg1NfQW32+p9clChYiuIqZPKebBPHcuXNKY+xz587VuVVWVmL9+vUwm80aR0p64q25buQZfyZV6m33gPp3enF+nDfPIyIKRrpIEOfNm4fWrVsjNDQUgiBg+PDhaN26tcOtQ4cOmD9/PiZOnKh1uERBy9/D1Z5u2UdEnuFezOQpXSxSSU9PByANL8+fPx/Tp09HXFycwzlGoxHJycm44YYbNIiQiPyloV6HRETke7pIEK+44gpcccUVAKSm2Pfeey+6dOmicVRE5EvuVld7uupavRUfk0ciz3CeIHlKF0PMas8995xDclhWVobs7GycOHFCw6hIKxxWDFz1VQo9+bmztQ0Rke/oIkHcuHEjnnjiiTr3L1iwAJ06dcKQIUPQvXt33H777bDZbBpESFrR6sOfiWldTXlPmvo+elpBdPU9f3ZE7ok+vlHg0EWC+NZbb+HIkSMO923evBnPPPMMEhMT8eqrr2LWrFn4+OOP8dprr2kUJemVLxICVqXqasp74s330dXeza6+58+OiKj5dJEg/vjjj7j++usd7lu2bBnatGmDjRs3Yvbs2fjXv/6FWbNmYdWqVRpFSXrFhCAwuUsI3VUOPbkGUTATfdwDkfMbA4suEsTffvsNF110kcN9mzdvxogRIxATE6Pcd/3119epNBJRYPJkP2b1eY09RkRE7ukiQQwLC0NlZaXy/U8//YSSkhIMHTrU4bwOHToozbSJSBv+rso5J4pM+oiaThQFn94ocOgiQUxMTMTatWuV79euXQtBEHDNNdc4nHf06FF07tzZ3+GRl3HYr2XTKkHzdOEKf7+IiJpPF30QMzIyMH78eJSWlqJz585Yvnw5UlNTMXz4cIfzMjMzcckll2gUJXmLXipAUYMzPN6+jfTLubKol98vIj06p3UA1GLoooJ4880349VXX8Xu3buxcuVKDB06FP/5z38gCBfK1UVFRfjqq68wduxYDSOlQMLksGVytXiFySFRw0RwkQp5ThcVRACYM2cO5syZ4/Z4TEwMLBaLHyMiIj1ylwQ6VxK5wwoRUdPpooJIRIHB1/P/6ru+upIof09EjlhBJE8xQSQir6kvKWtq8qh+HJM+IiL/YIJIRH7R1OSuMY9rCSuYW0KMFJg4B5EagwkikRN+gGunue+9eGAJogZneCka32AVlIhaAiaIRE4C5QO8MVvSefN5msMb7z1XpxO5dw6CT28UOJggEgUo52TLV4lvoCTUROR7x48fx5VXXonk5GSkpKTgtdde0zokcoMJIhEFBE4NIGqAj+cfejIHMSQkBK+88gpycnKwc+dOvPHGG8jJyfH9a6dGC9oEcdq0aejUqRP69eun3Dd37lx07doV/fv3R//+/ZGZmalhhNQSMUnxDU/eV1YyifQvNjYWAwYMAACEhYUhKSkJJ0+e1DgqciVoE8SpU6diw4YNde7PyMjAvn37sG/fPu7aQo3GJMV72N7mAv7Dg7xBb6uY8/Pz8eOPP2LIkCE+eb3UPEGbII4cORKRkZFah0FEbjQ1KQzEZCrYE2RqOYqLi5GWlqbcli5d6vK8iooKTJgwAa+++io6dOjg5yjJE7rZak8vXn/9daxcuRJpaWl45ZVXEBERoXVIRNQITKaI3LP7+PrR0dHIzs6u95yzZ89iwoQJmDJlCsaPH+/jiKipgraC6Mpf/vIX/PLLL9i3bx9iY2Pxf//3f27PXbp0qfIvpOLiYj9GSURE1DKJoojp06cjKSkJDz/8sNbhUD2YIKp07twZBoMBrVq1wr333otdu3a5PXfmzJnIzs5GdnY2oqOj/RglBbJAHB7VK77XFGxEAHbRt7eG7NixA++99x62bNnCBaE6xyFmlVOnTiE2NhYA8NlnnzmscCbyBw6PNo2QOqvR7x3fayL/GzFiBESRe/K1BEGbIE6ePBlZWVmwWCyIi4vDvHnzkJWVhX379kEQBCQkJGDJEn6AELUETPaIGiYCsDE3Iw8FbYL44Ycf1rlv+vTpGkRCREREpC9BmyASEREFGzv3SyYPcZEKERERETlggkjUAK52JaJAIM9B9OWNAgcTRKIG6H0BBBNYIiLyNs5BJGrh9J7AEpFOiIDPO8xwimPAYAWRiIiIiBywgkhERBQ0OFGQPMMKIhFpjvMoiYj0hQkiEWlOnkfJRJHIx0Qf3yhgMEEkIt3gghsiIn3gHEQiIqKgwTIfeYYVRKIWjsOy3sX3k4iIFUSiFo/Dst7F95MCmnhO6wiohWAFkYiIiIgcsIJIREQUFPyxlQoFClYQiYiIiMgBK4hERERBg3MQyTOsIBIRERGRA1YQiYiIggVXMZOHmCASEREFA1Fkgkge4xAzERERETlgBZGIiChosIJInmEFkYgaxO3niIiCCyuIRNQgbj9HFAg4B5E8xwoiERERETlgBZGIiChYcKs98hAriESkK5zvSESkPVYQiUhXON+RyJc4B5E8wwoiEZGHWN0komDBCiIRkYdY3aSWjauYyXOsIBIRERGRA1YQiYiIggUriOQhVhCJiIiIyAEriEREREGDFUTyDCuIREREROSAFUQiIqJgIIrcSYU8xgoiERERETlgBZGIiChYcBUzeYgVRCIiIiJywAoiERFRsGAFkTzECiIREREROWAFkYiIKCiI529EDWMFkYiIiIgcsIJIREQULDgHkTzECiIREREROWAFkYiIKAgM7HcRsrM/9elzpKWl1Xt8w4YNePDBB2G32zFjxgw88cQTPo2Hmo4VRCIiIvI5u92O+++/H+vXr0dOTg4+/PBD5OTkaB0WucEEkYiIiHxu165d6NWrF3r27InQ0FBMmjQJa9eu1ToscoMJIhEREfncyZMn0a1bN+X7uLg4nDx5UsOIqD6cg+gFeXl5Dc67aOmKi4sRHR2tdRg+FwyvMxheIxAcr5OvMXDk5eX5/DnMZrPPP6uqqqocnmPmzJmYOXOmT5+TfIMJohckJiYiOztb6zB8Ki0tLeBfIxAcrzMYXiMQHK+TrzFw+KPIsGHDBp8/R326du2K48ePK9+fOHECXbt21TAiqg+HmImIiMjnBg0ahJ9++glHjx5FbW0tPvroI9x0001ah0VusIJIREREPhcSEoLXX38dY8aMgd1ux7Rp05CSkqJ1WOQGE0QvCIb5FcHwGoHgeJ3B8BqB4HidfI2BI1he59ixYzF27FitwyAPCKIocuduIiIiIlJwDiIREREROWCC2ASlpaUYPXo0evfujdGjR+PMmTMuzzMYDOjfvz/69+/fYibibtiwAX379kWvXr3w4osv1jleU1OD2267Db169cKQIUOQn5/v/yCbqaHXuHz5ckRHRys/u7fffluDKJtn2rRp6NSpE/r16+fyuCiKmDNnDnr16oWLL74Ye/fu9XOE3tHQ68zKykJ4eLjys5w/f76fI2y+48eP48orr0RycjJSUlLw2muv1Tmnpf88PXmNgfCzrK6uxuDBg3HJJZcgJSUFzz33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F4z08Pq9EcPp06fx/vvv47PPPnO4//nnn8dnn32GNWvW4E9/+pPDsQkTJuDJJ59EXl5es57blaSkJAwdOhQAMGrUKPz22294++23UVRUhJiYGIdze/bsqZx7xRVX4OzZs5g7dy5+/PFHDBgwwOuxaSkuLg5xcXFah1EvQRAwc+ZMPPPMM3jyySfRpk0brUMi0hwriAHmp59+wnPPPYeLLroIM2bM8Oq1S0tL0alTJ5fbPrVqJf0qLV++HPfccw8AoHfv3spQWn5+PgCpuvPCCy8gMTERRqMRXbp0wf/93/+hurq60fE899xzGDBgADp06ACz2YxRo0Zh586dDufIw3+ffvop7r33XkRHR6Nz584urzd37lzMmzcPANC6dWsldpnVasXjjz+OHj16IDQ0FD169MCCBQsckmP5+T7//HPMmjULkZGR6NixIx566CHY7Xbs3r0bI0aMQLt27ZCSkoKNGzc6xDB16lTExcXhu+++w6BBg9CmTRskJCRg8eLFdeI9evQopkyZgujoaBiNRvTv379OsiQP7x08eBBjxoxB+/btceuttwIANm3ahLFjxyI2NhYmkwn9+vXDK6+8Arvdrjxefv0LFixQ3o+5c+cCcD+cl5CQgKlTpyrfL1++HIIgYNu2bZg4cSI6duyIIUOGAGje78Py5csRFhaGMWPGKPfV1NRg4cKFuPHGG+skh7KePXti7NixDV6/ueREr6CgoMFzBw0aBAD4+eef3Z4j/yzz8vIwZswYtGvXDvHx8Vi2bBkA4L333kNiYiLat2+PK6+8Er/88ovD4z/66COMGjUK0dHRaN++PS699FJlSze14uJiTJ48GR06dEBERATuuecefPHFFxAEAVlZWcp56enpGDFiBL766isMGDBA+R1y9zsISEPsPXr0AADce++9yu+UPJ3E+XdHpv69U78e+fcmJSWlzvOqX8+f//xndO3aFUajEYmJiVi6dGmd82699Vb8/vvv+PTTT11ehyjYsIIYAEpKSvDxxx/jvffew86dOxEXF4fJkyfj7rvv9urzDB48GCtWrMBf//pX3HrrrUhNTa2TLF5//fX461//iueffx7/+c9/lMqBvC/sHXfcgf/+9794/PHHMWzYMOTm5uKZZ55Bfn4+1qxZ06h4Tp48iYyMDMTFxaGyshLvv/8+Ro4ciT179iA1NdXh3NmzZ+O6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 style\u003d\u0027width\u003dauto;height:auto\u0027\u003e\u003cdiv\u003e\n"
-          }
-        ]
-      },
       "apps": [],
-      "runtimeInfos": {
-        "jobUrl": {
-          "propertyName": "jobUrl",
-          "label": "SPARK JOB",
-          "tooltip": "View in Spark web UI",
-          "group": "spark",
-          "values": [
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d11"
-            }
-          ],
-          "interpreterSettingId": "spark"
-        }
-      },
+      "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006279_2067181135",
+      "jobName": "paragraph_1646827009559_1460910171",
       "id": "20210923-111423_1394822309",
-      "dateCreated": "2021-12-12 21:53:26.279",
-      "dateStarted": "2022-02-28 10:00:51.419",
-      "dateFinished": "2022-02-28 10:10:35.686",
+      "dateCreated": "2022-03-09 11:56:49.559",
+      "dateStarted": "2022-03-10 10:54:07.154",
+      "dateFinished": "2022-03-10 11:02:10.090",
       "status": "FINISHED"
     },
     {
       "title": "Spark df manipulations",
       "text": "%spark.pyspark\ndef reshape_input(Input, padding \u003d 1, desired_length \u003d 2):\n    \u0027\u0027\u0027reshapes input into list of lists padded/cut to a standard desired length\n    \n    EXAMPLE\n        input \u003d [[cos, cos], [sin], [cos, sin, cos],\n                 [sin, cos], [cos], [sin, sin],\n                   [sin],     [0],    [cos]]\n                   \n        new_input \u003d  reshape_input(input, padding \u003d 1) \n        \n        new_input \u003d [[cos, cos], [sin, 1], [cos, sin],\n                     [sin, cos], [cos, 1], [sin, sin],\n                      [sin, 1],   [0, 1],   [cos, 1]]\n        \u0027\u0027\u0027\n    \n    for i in Input:\n        if len(i) \u003c desired_length:\n            while len(i) \u003c desired_length:\n                i.append(padding)\n        elif len(i)\u003edesired_length: \n            while len(i) \u003e desired_length:\n                i.pop()\n    return Input\n\ndef element_transform(function, col_name, sign \u003d 1, padding \u003d 1, col_units \u003d \u0027degrees\u0027):\n    \u0027\u0027\u0027Returns the spark syntax to select and transform columns from a dataframe\n    \u0027\u0027\u0027\n    \n    if function \u003d\u003d padding:\n        return 1\n    \n    elif type(function) \u003d\u003d int: \n        return lit(function)\n    \n    else:\n        if col_units \u003d\u003d \u0027degrees\u0027:\n            conv\u003dpi/180\n        else:\n            conv \u003d 1\n        return sign*function(col(col_name)*conv)\n    \ndef drop_matrix_from_dataframe(df, name):\n    \u0027\u0027\u0027Drops matrix from the dataframe, assuming the column names\n    use function: \"create_matrix_index\" notation. \u0027\u0027\u0027\n    drop \u003d [i for i in df.columns if name in i]\n    df \u003d df.select([column for column in df.columns if column not in drop])\n    return df\n\ndef create_matrix_index(N,M, matrix_name \u003d \u0027A\u0027):\n    \u0027\u0027\u0027Creates index for matrix column names.\u0027\u0027\u0027\n    indicies\u003d[]\n    for i in range(M):\n        for j in range(N):\n            indicies.append(\u0027{}{}{}\u0027.format(matrix_name,i,j))\n    return indicies\n\ndef drop_DataFrame(df, matrix_cols, signs, names, drop_df \u003d True):\n    \u0027\u0027\u0027Drops input DataFrame columns after calulation\u0027\u0027\u0027\n    \n    if drop_df \u003d\u003d True:\n        A \u003d df.select([c for c in matrix_cols])\n        for i in range(len(signs)):\n            A \u003d A.withColumnRenamed(A.columns[i], names[i])\n        return A\n    else:\n        for i in range(len(matrix_cols)):\n            df \u003d df.withColumn(names[i], matrix_cols[i])\n            \n        index \u003d len(df.columns) - len(signs)\n        for i in range(len(signs)):\n            df \u003d df.withColumnRenamed(df.columns[index+i], names[i])\n        return df",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:52:08.932",
+      "dateUpdated": "2022-03-11 10:20:05.420",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -549,18 +532,18 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_210198279",
+      "jobName": "paragraph_1646827009559_1127395790",
       "id": "20210923-144717_657496516",
-      "dateCreated": "2021-12-12 21:53:26.288",
-      "dateStarted": "2022-03-07 11:28:34.365",
-      "dateFinished": "2022-03-07 11:28:34.373",
+      "dateCreated": "2022-03-09 11:56:49.559",
+      "dateStarted": "2022-03-11 10:20:05.441",
+      "dateFinished": "2022-03-11 10:20:05.448",
       "status": "FINISHED"
     },
     {
       "title": "LSR Function definitions",
       "text": "%pyspark\n\n# Generic functions used later\n\ndef convDegRad(args, units\u003d\"degrees\"):\n    \u0027\u0027\u0027args in km/sTransforms degrees to radians or returns radians if in radians\n        units - [\u0027degrees\u0027, \u0027radians\u0027] Units of args\u0027\u0027\u0027\n\n    if units \u003d\u003d \u0027degrees\u0027:\n        args \u003d [i*pi/180 for i in args]\n    return args\n\ndef convMasKm(args, parallax, units\u003d \u0027mas/yr\u0027):\n    \u0027\u0027\u0027Converts data from mas/yr to km/s\n        units - [\u0027mas/yr\u0027, \u0027km/s\u0027] Units of args\u0027\u0027\u0027\n    \n    if units \u003d\u003d \u0027mas/yr\u0027:\n        k \u003d 4.74057\n        args \u003d [i/parallax * 4.74057 for i in args]\n    elif units !\u003d \u0027km/s\u0027:\n        raise ValueError(\"Input proper motion values in either mas/yr or km/s\")\n    return args\n\ndef matrix_multiplication_arrays(A,B):\n    \u0027\u0027\u0027Matrix multiplication of Matrix A and B if both are either lists or numpy.arrays\u0027\u0027\u0027\n    \n    if np.shape(A)[1] !\u003d np.shape(B)[0]:\n        return \u0027Invalid matrix shape\u0027\n    else:\n        n,m \u003d np.shape(A)[0], np.shape(B)[1]\n        M \u003d np.zeros((n,m))\n        \n        for i in range(n):\n            for j in range(len(B[0])):\n                E\u003d0\n                for k in range(len(B)):\n#                     print(\u0027A{}{}*B{}{}\u0027.format(i,k,k,j))\n                    E +\u003d A[i][k]*B[k][j]\n                M[i,j] \u003d E\n#                 print(\u0027\\n\u0027)\n        return M\n        \n# Functions to perform the LSR cut\n\ndef create_Matrix_A(ra, dec, coord_units \u003d \u0027degrees\u0027):\n    \u0027\u0027\u0027creates Matrix A, where A \u003d [[cos(ra)*cos(dec), -sin(ra), -cos(ra)*sin(dec)],\n                                     [sin(ra)*cos(dec),  cos(ra), -sin(ra)*sin(dec)],\n                                     [sin(dec),             0,     cos(dec)]])\u0027\u0027\u0027\n    \n#     if all(v is None for v in {data, ra, dec}):\n#         raise ValueError(\"Expected input either as array or \u0027ra\u0027 and \u0027dec\u0027 values\")\n#     if data is None:\n#         if any(v is None for v in {ra,dec}):\n#             raise ValueError(\"Expected input either as array or \u0027ra\u0027 and \u0027dec\u0027 values\")\n\n    ra,dec \u003d convDegRad([ra,dec], units \u003d coord_units)  # Ensures radians\n        \n    A \u003d np.array([[cos(ra)*cos(dec), -sin(ra), -cos(ra)*sin(dec)],\n              [sin(ra)*cos(dec), cos(ra), -sin(ra)*sin(dec)],\n              [sin(dec), 0, cos(dec)]])\n    return A\n\ndef create_matrix_C(pmra, pmdec, parallax \u003d None, radial_velocity \u003d 0.0, units \u003d \u0027mas/yr\u0027):\n    \u0027\u0027\u0027creates Matrix C, where C \u003d [radial_velocity, pmra, pmdec]\u0027\u0027\u0027\n    \n    if parallax \u003d\u003d None and units \u003d\u003d \u0027mas/yr\u0027:\n        raise ValueError(\"Parallax value must be supplied if proper motion units are \u0027mas/yr\u0027\")\n\n    pmra,pmdec \u003d convMasKm([pmra, pmdec], parallax \u003d parallax, units \u003d units)  # Ensures proper motions in km/s\n    C \u003d np.array([[radial_velocity, pmra, pmdec]]).T\n    \n    \n    return C\n    \ndef conv_Galactic_LSR(G, magnitude \u003d True):\n    \u0027\u0027\u0027Calculates magnitude of LSR velocity give U,V,W velocity.\n    \n    SEE ALSO\n        v_sun values from Schonrich, R., Binney, J., \u0026 Dehnen, W. 2010 | \n        DOI: 10.1111/j.1365-2966.2010.16253.x\u0027\u0027\u0027\n        \n    v_sun \u003d [11.1, 12.24, 7.25]\n    lsr \u003d np.asarray(G).T + v_sun\n    \n    if magnitude \u003d\u003d True:\n        v_lsr \u003d np.sqrt(np.sum([i**2 for i in lsr]))\n        return v_lsr\n    return lsr\n    \ndef LSR_conv(ra, dec, parallax, pmra, pmdec, coord_units \u003d \u0027degrees\u0027, pm_units\u003d\u0027mas/yr\u0027, radial_velocity \u003d 0.0, magnitude \u003d True):\n    \u0027\u0027\u0027Converts proper motions from ra, dec to LSR velocity\n    SEE ALSO\n         Method from: Johnson, Dean R. H., Soderblom, David R. DOI: 10.1086/114370\n    \u0027\u0027\u0027\n    \n    T \u003d [[-0.05646624, -0.87325802, -0.48397519],\n         [ 0.49253617, -0.44602111,  0.74731071],\n         [-0.86845823, -0.19617746,  0.4552963 ]]\n\n    A \u003d create_Matrix_A(ra,dec, coord_units\u003dcoord_units)   # forms Marix A\n    B \u003d matrix_multiplication_arrays(T, A)  # forms Matrix B\n    \n    C \u003d create_matrix_C(pmra,pmdec,parallax, units \u003d pm_units, radial_velocity \u003d radial_velocity)    # forms Matrix C\n    G \u003d matrix_multiplication_arrays(B,C) # Calculates U, W, V\n\n    v_lsr \u003d conv_Galactic_LSR(G, magnitude \u003d magnitude) # Calculates velocity magnitude in LSR coords\n    \n    return v_lsr\n\n# This function needs to be called by the UDF, all optional parameters are set as required - e.g. show_velocity \u003d False.\n\ndef LSR_cut(ra,dec,parallax,pmra,pmdec, \n            cut \u003d 60, coord_units \u003d \u0027degrees\u0027, \n            pm_units\u003d\u0027mas/yr\u0027, show_velocity \u003d False):\n    \u0027\u0027\u0027Calculates LSR velocity through LSR_conv and returns boolean if satisfies cut condition\u0027\u0027\u0027\n    \n    v \u003d LSR_conv(ra,dec,parallax,pmra,pmdec, coord_units\u003dcoord_units, pm_units\u003dpm_units)\n    if show_velocity \u003d\u003d True:\n        print(v)\n    if v \u003c cut:\n        return 1\n    if v \u003e cut:\n        return 0\n        \n\nfrom pyspark.sql.types import IntegerType\n\n# finally, register the top-level user-defined function for inclusion in queries\nspark.udf.register(\"udf_lsr_cut\", LSR_cut, IntegerType())        \n",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:52:20.393",
+      "dateUpdated": "2022-03-11 10:20:05.540",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -586,25 +569,25 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u003cfunction LSR_cut at 0x7f746403fd40\u003e\n"
+            "data": "\u003cfunction LSR_cut at 0x7ff50256a830\u003e\n"
           }
         ]
       },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_455446791",
+      "jobName": "paragraph_1646827009560_24211509",
       "id": "20210510-152257_591411400",
-      "dateCreated": "2021-12-12 21:53:26.288",
-      "dateStarted": "2022-03-07 11:28:34.466",
-      "dateFinished": "2022-03-07 11:28:34.547",
+      "dateCreated": "2022-03-09 11:56:49.560",
+      "dateStarted": "2022-03-11 10:20:05.561",
+      "dateFinished": "2022-03-11 10:20:05.642",
       "status": "FINISHED"
     },
     {
       "title": "Create and cache the primary data set",
       "text": "%pyspark\n\n# apply the velocity cut to the data frame and at this point cache for downstream processing\n# df \u003d df.select(\"*\").where(\"udf_lsr_cut(ra, dec, parallax, pmra, pmdec) \u003d 1\").dropna()\n\n# sanity check\n# df.show()\n# print (\"Data frame rows: \",df_lsr_cut.count())",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:27:51.513",
+      "dateUpdated": "2022-03-11 10:20:05.661",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -632,18 +615,18 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_884121570",
+      "jobName": "paragraph_1646827009560_593723440",
       "id": "20210510-152604_936587614",
-      "dateCreated": "2021-12-12 21:53:26.288",
-      "dateStarted": "2022-03-07 11:28:34.666",
-      "dateFinished": "2022-03-07 11:28:34.671",
+      "dateCreated": "2022-03-09 11:56:49.560",
+      "dateStarted": "2022-03-11 10:20:05.761",
+      "dateFinished": "2022-03-11 10:20:05.767",
       "status": "FINISHED"
     },
     {
       "title": "def equatorial to Cartesian",
       "text": "%pyspark\ndef deg_conv_factor(unit \u003d \u0027degrees\u0027):\n    \u0027\u0027\u0027return conversion factor to radians\u0027\u0027\u0027\n    \n    if unit \u003d\u003d \u0027degrees\u0027: return pi/180\n    elif unit \u003d\u003d \u0027radians\u0027: return 1\n    else: raise ValueError(\u0027Please enter a valid unit for angle [\"degrees\", \"radians\"]\u0027)\n        \ndef plx_conv_factor(unit \u003d \u0027mas\u0027):\n    \u0027\u0027\u0027return conversion factor to arcsec\u0027\u0027\u0027\n    \n    if unit \u003d\u003d \u0027mas\u0027: return 10**-3\n    elif unit \u003d\u003d \u0027arcsec\u0027: return 1\n    else: raise ValueError(\u0027Please enter a valid unit for parallax [\"mas\", \"arcsec\"]\u0027)\n        \ndef equatorial_to_cartesian(df, drop_df \u003d True, coord_units \u003d \u0027degrees\u0027):\n    \u0027\u0027\u0027Converts equatorial coordinates to cartesian from a spark dataframe\n    \n    RETURNS\n        sql.DataFrame with cartesian coordinates in parsec\u0027\u0027\u0027\n    \n    trig_funcs \u003d [[1, cos, cos], [1, cos, sin], [1, sin]]\n    trig_funcs \u003d reshape_input(trig_funcs, desired_length \u003d 3)\n\n    cols \u003d [[\u0027parallax\u0027,\u0027dec\u0027, \u0027ra\u0027], [\u0027parallax\u0027,\u0027dec\u0027,\u0027ra\u0027], [\u0027parallax\u0027,\u0027dec\u0027]]\n    cols \u003d reshape_input(cols, desired_length \u003d 3)\n    signs \u003d [1, 1, 1]\n\n    matrix_cols\u003d[]\n    plx_conv \u003d plx_conv_factor(\u0027mas\u0027)\n    \n    for i in range(len(signs)):\n        a \u003d 1/(col(cols[i][0])*plx_conv) * \\\n            element_transform(trig_funcs[i][1], cols[i][1], col_units \u003d \u0027degrees\u0027) * \\\n            element_transform(trig_funcs[i][2], cols[i][2], col_units \u003d \u0027degrees\u0027)\n\n        matrix_cols.append(a)\n\n    names \u003d [\u0027X_pc\u0027, \u0027Y_pc\u0027, \u0027Z_pc\u0027]\n    df \u003d drop_DataFrame(df \u003d df, matrix_cols \u003d matrix_cols, signs \u003d signs,\n                        names \u003d names, drop_df \u003d drop_df)\n\n    return df",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:27:58.735",
+      "dateUpdated": "2022-03-11 10:20:05.783",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -671,18 +654,18 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_7207999",
+      "jobName": "paragraph_1646827009560_2059120249",
       "id": "20210923-145031_91175875",
-      "dateCreated": "2021-12-12 21:53:26.288",
-      "dateStarted": "2022-03-07 11:28:34.767",
-      "dateFinished": "2022-03-07 11:28:34.772",
+      "dateCreated": "2022-03-09 11:56:49.560",
+      "dateStarted": "2022-03-11 10:20:05.861",
+      "dateFinished": "2022-03-11 10:20:05.868",
       "status": "FINISHED"
     },
     {
       "title": "Define the 5d kinematic data set ",
-      "text": "%pyspark\n\ndf \u003d equatorial_to_cartesian(df \u003d df, drop_df \u003d False) # Convert to cartesian\n\ncluster_cols \u003d [\u0027source_id\u0027, \u0027l\u0027, \u0027b\u0027,  \u0027parallax\u0027, \u0027phot_g_mean_mag\u0027, \u0027g_rp\u0027, \u0027X_pc\u0027, \u0027Y_pc\u0027, \u0027Z_pc\u0027,\u0027pmra\u0027,\u0027pmdec\u0027]\n# create a Pandas data frame object for input into HDBSCAN for the kinematic info columns\ndf.createTempView(\u0027dcr_tmp\u0027)",
+      "text": "%pyspark\n\ndf \u003d equatorial_to_cartesian(df \u003d df, drop_df \u003d False) # Convert to cartesian\n\ncluster_cols \u003d [\u0027source_id\u0027, \u0027l\u0027, \u0027b\u0027,  \u0027parallax\u0027, \u0027phot_g_mean_mag\u0027, \u0027g_rp\u0027, \u0027X_pc\u0027, \u0027Y_pc\u0027, \u0027Z_pc\u0027,\u0027pmra\u0027,\u0027pmdec\u0027]\n# create a Pandas data frame object for input into HDBSCAN for the kinematic info columns\ndf.createOrReplaceTempView(\u0027dcr_tmp\u0027)",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 11:51:37.814",
+      "dateUpdated": "2022-03-11 10:20:05.907",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -710,245 +693,17 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_1104217112",
+      "jobName": "paragraph_1646827009560_1203294547",
       "id": "20210510-153623_1203862364",
-      "dateCreated": "2021-12-12 21:53:26.288",
-      "dateStarted": "2022-03-07 11:51:37.838",
-      "dateFinished": "2022-03-07 11:51:37.957",
-      "status": "FINISHED"
-    },
-    {
-      "text": "%pyspark\nstep \u003d 1000; zmin \u003d -1000\nxmin \u003d -1000; ymin \u003d -1000\nspark.sql(f\u0027SELECT * FROM dcr_tmp WHERE X_pc between {xmin} AND {xmin+step} AND Y_pc between {ymin} AND {ymin+step} AND Z_pc between {zmin} AND {zmin+step}\u0027)",
-      "user": "dcr",
-      "dateUpdated": "2022-03-07 13:10:51.711",
-      "progress": 0,
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9.0,
-        "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "10409985\n"
-          }
-        ]
-      },
-      "apps": [],
-      "runtimeInfos": {
-        "jobUrl": {
-          "propertyName": "jobUrl",
-          "label": "SPARK JOB",
-          "tooltip": "View in Spark web UI",
-          "group": "spark",
-          "values": [
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d18"
-            }
-          ],
-          "interpreterSettingId": "spark"
-        }
-      },
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1646653955256_343281154",
-      "id": "paragraph_1646653955256_343281154",
-      "dateCreated": "2022-03-07 11:52:35.256",
-      "dateStarted": "2022-03-07 11:58:28.983",
-      "dateFinished": "2022-03-07 12:06:23.490",
-      "status": "FINISHED"
-    },
-    {
-      "text": "%pyspark\nnumber_of_sources \u003d []\nstep \u003d 1000; count \u003d 0\nfor xmin in range(-1000, 1000-step+1, int(step/2)):\n    print(xmin, xmin+step)\n    for ymin in range(-1000, 1000-step+1, int(step/2)):\n        for zmin in range(-1000, 1000-step+1, int(step/2)):\n            # count +\u003d1\n            tmp \u003d spark.sql(f\u0027SELECT * FROM dcr_tmp WHERE X_pc between {xmin} AND {xmin+step} AND Y_pc between {ymin} AND {ymin+step} AND Z_pc between {zmin} AND {zmin+step}\u0027)\n            count \u003d tmp.count()\n            number_of_sources.append(count)\n            if count \u003c 12000000:\n                \n    \ncount",
-      "user": "dcr",
-      "dateUpdated": "2022-03-09 11:55:07.203",
-      "progress": 0,
-      "config": {
-        "tableHide": false,
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9.0,
-        "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "0 1000\n0 1000\n0 1000\n6622621\n"
-          }
-        ]
-      },
-      "apps": [],
-      "runtimeInfos": {
-        "jobUrl": {
-          "propertyName": "jobUrl",
-          "label": "SPARK JOB",
-          "tooltip": "View in Spark web UI",
-          "group": "spark",
-          "values": [
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d22"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d23"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d24"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d25"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d26"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d27"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d28"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d29"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d30"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d31"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d32"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d33"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d34"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d35"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d36"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d37"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d38"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d39"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d40"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d41"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d42"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d43"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d44"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d45"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d46"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d47"
-            },
-            {
-              "jobUrl": "http://zeppelin:4042/jobs/job?id\u003d48"
-            }
-          ],
-          "interpreterSettingId": "spark"
-        }
-      },
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1646652648783_1974111271",
-      "id": "paragraph_1646652648783_1974111271",
-      "dateCreated": "2022-03-07 11:30:48.783",
-      "dateStarted": "2022-03-07 13:58:14.909",
-      "dateFinished": "2022-03-07 17:28:46.379",
-      "status": "FINISHED"
-    },
-    {
-      "text": "%pyspark\nnumber_of_sources\n\n#  [10409985, 19382771, 6622621]",
-      "user": "dcr",
-      "dateUpdated": "2022-03-08 10:54:24.772",
-      "progress": 0,
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9.0,
-        "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "[10409985, 6558125, 1072000, 15718901, 10072904, 1971159, 10676592, 9386450, 3055795, 14782067, 18196260, 11782070, 16875695, 19382771, 13891292, 10187840, 13237253, 9138098, 5163470, 12857063, 12259604, 2771210, 10510603, 13410247, 825188, 4720196, 6622621]\n"
-          }
-        ]
-      },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1646661401744_557630575",
-      "id": "paragraph_1646661401744_557630575",
-      "dateCreated": "2022-03-07 13:56:41.744",
-      "dateStarted": "2022-03-08 10:54:24.802",
-      "dateFinished": "2022-03-08 10:54:24.816",
+      "dateCreated": "2022-03-09 11:56:49.560",
+      "dateStarted": "2022-03-11 10:20:05.962",
+      "dateFinished": "2022-03-11 10:20:06.081",
       "status": "FINISHED"
     },
     {
       "text": "%pyspark\nnp.sort(number_of_sources)",
       "user": "dcr",
-      "dateUpdated": "2022-03-09 11:54:45.562",
+      "dateUpdated": "2022-03-11 10:20:06.127",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -961,35 +716,24 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": false
       },
       "settings": {
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "array([  825188,  1072000,  1971159,  2771210,  3055795,  4720196,\n        5163470,  6558125,  6622621,  9138098,  9386450, 10072904,\n       10187840, 10409985, 10510603, 10676592, 11782070, 12259604,\n       12857063, 13237253, 13410247, 13891292, 14782067, 15718901,\n       16875695, 18196260, 19382771])\n"
-          }
-        ]
-      },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1646686953572_1065569494",
+      "jobName": "paragraph_1646827009562_1065327673",
       "id": "paragraph_1646686953572_1065569494",
-      "dateCreated": "2022-03-07 21:02:33.572",
-      "dateStarted": "2022-03-09 11:54:45.590",
-      "dateFinished": "2022-03-09 11:54:45.598",
+      "dateCreated": "2022-03-09 11:56:49.562",
       "status": "FINISHED"
     },
     {
       "text": "%md\n\n## HDBSCAN begins here\n",
       "user": "dcr",
-      "dateUpdated": "2022-03-07 13:56:40.509",
+      "dateUpdated": "2022-03-11 10:20:06.166",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -1022,91 +766,18 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1646042361624_1952862363",
+      "jobName": "paragraph_1646827009562_571679433",
       "id": "paragraph_1646042361624_1952862363",
-      "dateCreated": "2022-02-28 09:59:21.624",
-      "dateStarted": "2022-03-07 13:56:40.510",
-      "dateFinished": "2022-03-07 13:56:40.518",
+      "dateCreated": "2022-03-09 11:56:49.562",
+      "dateStarted": "2022-03-11 10:20:06.186",
+      "dateFinished": "2022-03-11 10:20:06.189",
       "status": "FINISHED"
-    },
-    {
-      "title": "Move to Pandas (Required for HDBSCAN)",
-      "text": "%pyspark\ndf \u003d df.select(cluster_cols).toPandas()",
-      "user": "dcr",
-      "dateUpdated": "2022-02-28 09:59:07.758",
-      "progress": 0,
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9.0,
-        "title": true,
-        "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1646042328801_1301073469",
-      "id": "paragraph_1646042328801_1301073469",
-      "dateCreated": "2022-02-28 09:58:48.801",
-      "status": "READY"
-    },
-    {
-      "title": "Get data summary",
-      "text": "%pyspark\ndf.describe()",
-      "user": "anonymous",
-      "dateUpdated": "2022-02-28 09:59:18.210",
-      "progress": 0,
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9.0,
-        "results": {},
-        "enabled": true,
-        "title": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "          source_id             l             b      parallax  \\\ncount  2.000000e+07  2.000000e+07  2.000000e+07  2.000000e+07   \nmean   4.117477e+18  1.948523e+02 -9.912512e-01  1.009754e+00   \nstd    1.905229e+18  1.138699e+02  1.360571e+01  1.448446e+00   \nmin    3.831633e+16  1.951935e-05 -3.000000e+01 -3.466014e+01   \n25%    2.163626e+18  7.918012e+01 -9.937442e+00 -7.141932e-02   \n50%    4.532461e+18  2.267009e+02 -1.660497e+00  1.096957e+00   \n75%    5.799668e+18  2.993193e+02  7.957939e+00  1.566226e+00   \nmax    6.917529e+18  3.600000e+02  3.000000e+01  7.680665e+02   \n\n       phot_g_mean_mag          g_rp          X_pc          Y_pc  \\\ncount     2.000000e+07  2.000000e+07  2.000000e+07  2.000000e+07   \nmean      1.800781e+01  9.040987e-01  5.711884e+03  1.607452e+04   \nstd       2.077235e+00  2.667828e-01  8.623231e+06  2.143606e+07   \nmin       1.942524e+00 -2.413034e+00 -9.261592e+09 -8.419322e+09   \n25%       1.713718e+01  6.882076e-01 -2.623735e+02 -4.956999e+02   \n50%       1.868541e+01  9.076633e-01  6.157679e+01  2.619433e+01   \n75%       1.948239e+01  1.119133e+00  5.557049e+02  7.461605e+02   \nmax       2.108428e+01  6.188890e+00  3.323084e+10  9.019210e+10   \n\n               Z_pc          pmra         pmdec  \ncount  2.000000e+07  2.000000e+07  2.000000e+07  \nmean   1.983162e+04 -2.814610e+00 -3.763223e+00  \nstd    1.960219e+07  1.196717e+01  1.261365e+01  \nmin   -4.067637e+09 -3.781741e+03 -2.092209e+03  \n25%   -4.423812e+02 -6.755954e+00 -7.667691e+00  \n50%    1.664969e+02 -2.814108e+00 -2.628008e+00  \n75%    2.036104e+03  1.082407e+00  1.829054e+00  \nmax    7.517050e+10  3.468251e+03  1.862525e+03  "
-          }
-        ]
-      },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_2093105519",
-      "id": "20210923-101652_1425051284",
-      "dateCreated": "2021-12-12 21:53:26.288",
-      "status": "READY"
     },
     {
       "title": "HDBSCAN clusterer info",
       "text": "%pyspark\n\ndef insert_to_df(df, name, insert_data, index\u003d-1):\n    \u0027\u0027\u0027Creates column in DataFrame if does not exist, or replaces values if already present.\u0027\u0027\u0027\n    if name in df.columns:\n        df[name] \u003d insert_data\n    else:\n        if index\u003d\u003d-1:               # Adds the data to end of the DataFrame\n            index\u003dlen(df.columns)\n        df.insert(index, name, insert_data)\n    return df\n\ndef clustering_info(clusterer, add_to_data\u003dFalse, df\u003d[], index\u003d-1):\n    \u0027\u0027\u0027\n    REQUIRED\n        clusterer \u003d output clusterer from HDBSCAN.\n        \n    OPTIONAL\n        add_to_data \u003d [boolean] Add results to df or return as arrays.\n        df \u003d [Required if add_to_data \u003d True] DataFrame to add results.\n        index \u003d [Default \u003d -1] Column location to add results.\n        \n    RETURNS\n        *groups \u003d Cluster labels for each point in the dataset given to fit(). \n                   Noisy samples are given the label -1.\n        *prob \u003d The strength with which each sample is a member of its assigned cluster.\n        *persistence \u003d A score of how persistent each cluster is. \n                       A score of 1.0 represents a perfectly stable cluster. \n    \n        if add_to_data \u003d False, returns [groups, prob, persistence] as seperate arrays.\n        if add_to_data \u003d True - returns df(DataFrame), persistence (array) - Must provide df to add.\n        \n        (*From HDBSCAN - in SEE ALSO)\n        \n    SEE ALSO\n        https://hdbscan.readthedocs.io/en/latest/\n    \u0027\u0027\u0027\n    # probabilities and group for each object\n    prob\u003dclusterer.probabilities_\n    groups\u003dclusterer.labels_\n\n    # Info on persistence of groups\n    persistence\u003dclusterer.cluster_persistence_\n    \n    print(\u0027Number of Groups \u003d \u0027, max(groups)+1) \n    if add_to_data \u003d\u003d False:\n        return groups, prob, persistence\n    \n    if add_to_data \u003d\u003d True:\n        df\u003dinsert_to_df(df, \u0027group\u0027, groups, index\u003dindex)\n        df\u003dinsert_to_df(df,\u0027probability\u0027, prob, index\u003dindex)\n        return df, persistence\n    \ndef clustering_prediction(clusterer, points_to_predict, cols, add_to_data\u003dFalse, index\u003d-1):\n    \u0027\u0027\u0027\n    REQUIRED\n        clusterer \u003d output clusterer from HDBSCAN.\n        points_to_predict \u003d DataFrame of objects to predict relationships to clustered data.\n        cols \u003d list of columns used for clustering.\n    \n    OPTIONAL\n        add_to_data \u003d [boolean] Add results to points_to_predict or return as arrays.\n        index \u003d [Default \u003d -1] Column location to add results.\n        \n    RETURNS\n        *group \u003d The predicted labels of the points_to_predict\n        *prob \u003d The soft cluster scores for each of the points_to_predict\n        \n        if add_to_data\u003dFalse, returns [group, prob] as seperate arrays.\n        if add_to_data\u003dTrue - returns df(DataFrame) with group and prob added.\n        \n        (*From HDBSCAN - in SEE ALSO)\n        \n    SEE ALSO\n        https://hdbscan.readthedocs.io/en/latest/\n    \u0027\u0027\u0027\n    \n    groups, prob \u003d hdbscan.approximate_predict(clusterer, points_to_predict[cols])\n    if add_to_data \u003d\u003d False:\n        return groups, prob\n    \n    if add_to_data \u003d\u003d True:\n        points_to_predict\u003dinsert_to_df(points_to_predict, \u0027group\u0027, groups, index\u003dindex)\n        points_to_predict\u003dinsert_to_df(points_to_predict,\u0027probability\u0027, prob, index\u003dindex)\n        return points_to_predict",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.288",
+      "user": "dcr",
+      "dateUpdated": "2022-03-11 10:20:06.286",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1134,16 +805,126 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_327083557",
+      "jobName": "paragraph_1646827009563_511516535",
       "id": "20210511-165444_823155595",
-      "dateCreated": "2021-12-12 21:53:26.288",
-      "status": "READY"
+      "dateCreated": "2022-03-09 11:56:49.563",
+      "dateStarted": "2022-03-11 10:20:06.306",
+      "dateFinished": "2022-03-11 10:20:06.315",
+      "status": "FINISHED"
     },
     {
-      "title": "Run HDBSCAN",
-      "text": "%pyspark\n\n# Apply HDBSCAN for full data with prediction ON.\nclusterer \u003d hdbscan.HDBSCAN(min_cluster_size\u003d40, min_samples\u003d25, prediction_data\u003dTrue, allow_single_cluster\u003dFalse, cluster_selection_method\u003d\u0027leaf\u0027, gen_min_span_tree\u003dTrue).fit(df[cluster_cols[-5:]])\n\n# Create clusterer\n# clusterer \u003d hdbscan.HDBSCAN(min_cluster_size\u003d10, min_samples\u003d5, prediction_data\u003dTrue, allow_single_cluster\u003dFalse, \n#                             cluster_selection_method\u003d\u0027leaf\u0027, gen_min_span_tree\u003dTrue).fit(df[cluster_cols[-5:]])\n                            \n# add clusters to data and get cluster persistance\ndf, persistance \u003d clustering_info(clusterer, add_to_data \u003d True, df \u003d df)",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.288",
+      "text": "%pyspark\n# for i in os.listdir(\u0027/user/dcr/HDBSCAN/looped/\u0027):\n#     os.rmdir(f\u0027/user/dcr/HDBSCAN/looped/{i}\u0027)\n# os.listdir(\u0027/user/dcr/HDBSCAN/\u0027)",
+      "user": "dcr",
+      "dateUpdated": "2022-03-11 10:20:06.405",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646834527922_1254719185",
+      "id": "paragraph_1646834527922_1254719185",
+      "dateCreated": "2022-03-09 14:02:07.923",
+      "dateStarted": "2022-03-11 10:20:06.425",
+      "dateFinished": "2022-03-11 10:20:06.431",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\n# for xmin in range(-1000, 1000-step+1, int(step/2)):\n    # print(xmin, xmin+step)\n    # for ymin in range(-1000, 1000-step+1, int(step/2)):\n    #     for zmin in range(-1000, 1000-step+1, int(step/2)):\n    #         os.mkdir(f\u0027/user/dcr/HDBSCAN/looped/X{xmin}_Y{ymin}_Z{zmin}\u0027)",
+      "user": "dcr",
+      "dateUpdated": "2022-03-11 10:20:06.525",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646835036849_1242231460",
+      "id": "paragraph_1646835036849_1242231460",
+      "dateCreated": "2022-03-09 14:10:36.850",
+      "dateStarted": "2022-03-11 10:20:06.545",
+      "dateFinished": "2022-03-11 10:20:06.550",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\ndef savetxt(df, filename):\n    if type(df) \u003d\u003d list:\n        import json\n        with open(f\u0027/user/dcr/HDBSCAN/looped/{filename}.json\u0027, \u0027w\u0027) as f:\n            json.dump(df, f, indent\u003d2)",
+      "user": "dcr",
+      "dateUpdated": "2022-03-11 10:20:06.645",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646835439463_1035671639",
+      "id": "paragraph_1646835439463_1035671639",
+      "dateCreated": "2022-03-09 14:17:19.463",
+      "dateStarted": "2022-03-11 10:20:06.665",
+      "dateFinished": "2022-03-11 10:20:06.670",
+      "status": "FINISHED"
+    },
+    {
+      "title": "Run HDBSCAN over all Cubes",
+      "text": "%pyspark\n\n# step \u003d 1000; count \u003d 0\n# for xmin in range(-1000, 1000-step+1, int(step/2)):\n#     print(xmin, xmin+step)\n#     for ymin in range(-1000, 1000-step+1, int(step/2)):\n#         for zmin in range(-1000, 1000-step+1, int(step/2)):\n#             # count +\u003d1\n#             df \u003d spark.sql(f\u0027SELECT * FROM dcr_tmp WHERE X_pc between {xmin} AND {xmin+step} AND Y_pc between {ymin} AND {ymin+step} AND Z_pc between {zmin} AND {zmin+step}\u0027)\n#             count \u003d df.count()\n#             if count \u003c 12000000: # Current limit for node size.\n#                 os.mkdir(f\u0027/user/dcr/HDBSCAN/looped/X{xmin}_Y{ymin}_Z{zmin}\u0027)\n#                 os.mkdir(f\u0027/user/dcr/HDBSCAN/looped/X{xmin}_Y{ymin}_Z{zmin}/model/\u0027)\n#                 df \u003d df.select(cluster_cols).toPandas() # Move to Pandas for HDBSCAN\n#                 # Apply HDBSCAN for full data with prediction ON.\n#                 clusterer \u003d hdbscan.HDBSCAN(min_cluster_size\u003d40, min_samples\u003d25, prediction_data\u003dTrue, allow_single_cluster\u003dFalse, memory \u003d f\u0027/user/dcr/HDBSCAN/looped/X{xmin}_Y{ymin}_Z{zmin}/model\u0027,\n#                                             cluster_selection_method\u003d\u0027leaf\u0027, gen_min_span_tree\u003dTrue).fit(df[cluster_cols[-5:]])\n#                 # # Create clusterer\n#                 # clusterer \u003d hdbscan.HDBSCAN(min_cluster_size\u003d10, min_samples\u003d5, prediction_data\u003dTrue, allow_single_cluster\u003dFalse, \n#                 #             cluster_selection_method\u003d\u0027leaf\u0027, gen_min_span_tree\u003dTrue).fit(df[cluster_cols[-5:]])\n                \n#                 # add clusters to data and get cluster persistance\n#                 df, persistance \u003d clustering_info(clusterer, add_to_data \u003d True, df \u003d df)",
+      "user": "dcr",
+      "dateUpdated": "2022-03-11 10:20:06.765",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1165,25 +946,117 @@
       },
       "results": {
         "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646827009563_1383712786",
+      "id": "20210531-142725_734621930",
+      "dateCreated": "2022-03-09 11:56:49.563",
+      "dateStarted": "2022-03-11 10:20:06.785",
+      "dateFinished": "2022-03-11 10:20:06.790",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\nos.listdir(\u0027/user/dcr//HDBSCAN/looped/\u0027)",
+      "user": "dcr",
+      "dateUpdated": "2022-03-11 11:31:22.218",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
         "msg": [
           {
             "type": "TEXT",
-            "data": "Number of Groups \u003d  5884\n"
+            "data": "[\u0027X-1000_Y-1000_Z-1000\u0027, \u0027X-1000_Y-1000_Z0\u0027, \u0027X-1000_Y-1000_Z-500\u0027, \u0027X-1000_Y-500_Z0\u0027, \u0027X-1000_Y0_Z-1000\u0027, \u0027X-1000_Y-500_Z-500\u0027]\n"
           }
         ]
       },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_1799790477",
-      "id": "20210531-142725_734621930",
-      "dateCreated": "2021-12-12 21:53:26.288",
-      "status": "READY"
+      "jobName": "paragraph_1646998251905_1517292124",
+      "id": "paragraph_1646998251905_1517292124",
+      "dateCreated": "2022-03-11 11:30:51.905",
+      "dateStarted": "2022-03-11 11:31:22.239",
+      "dateFinished": "2022-03-11 11:31:22.247",
+      "status": "FINISHED"
     },
     {
-      "text": "%pyspark\nclusterer.condensed_tree_.plot()",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.288",
+      "text": "%pyspark\ndef run_HDBSCAN(cluster_cols, save \u003d False, xmin \u003d -1000, ymin \u003d -1000, zmin \u003d -1000, step \u003d 1000):\n    \n    # Get data\n    df \u003d spark.sql(f\u0027SELECT * FROM dcr_tmp WHERE X_pc between {xmin} AND {xmin+step} AND Y_pc between {ymin} AND {ymin+step} AND Z_pc between {zmin} AND {zmin+step}\u0027)\n    count \u003d df.count()\n    if count \u003c 12000000: # Current limit for node size.\n        filename \u003d f\u0027{user_home}/HDBSCAN/looped/X{xmin}_Y{ymin}_Z{zmin}\u0027\n        if f\u0027X{xmin}_Y{ymin}_Z{zmin}\u0027 not in os.listdir(f\u0027{user_home}/HDBSCAN/looped/\u0027):\n            os.mkdir(filename)\n            os.mkdir(f\u0027{filename}/model/\u0027)\n            os.mkdir(f\u0027{filename}/results/\u0027)\n        df \u003d df.select(cluster_cols).toPandas() # Move to Pandas for HDBSCAN\n        # Apply HDBSCAN for full data with prediction ON.\n        clusterer \u003d hdbscan.HDBSCAN(min_cluster_size\u003d40, min_samples\u003d25, prediction_data\u003dTrue, allow_single_cluster\u003dFalse, memory \u003d f\u0027/user/dcr//HDBSCAN/looped/X{xmin}_Y{ymin}_Z{zmin}/model\u0027,\n                                    cluster_selection_method\u003d\u0027leaf\u0027, gen_min_span_tree\u003dTrue).fit(df[cluster_cols[-5:]])\n                \n        # add clusters to data and get cluster persistance\n        df, persistance \u003d clustering_info(clusterer, add_to_data \u003d True, df \u003d df)\n        \n        if save:\n            if not dev_run:\n                df.to_csv(f\"{filename}/results/data_{save}.csv\", index \u003d False)\n                persistance.to_csv(f\"{filename}/results/cluster_{save}.csv\", index \u003d False)\n                # df.write.mode(\u0027overwrite\u0027).save(f\"{filename}/results/data_{save}.parquet\", format\u003d\"parquet\")\n                # persistance.write.mode(\u0027overwrite\u0027).).save(f\"{filename}/results/cluster_{save}.csv\", format\u003d\"csv\")\n                print(f\u0027data saved at f\"{filename}/results/{save}\u0027)\n        return clusterer\n    else:\n        print(f\u0027X{xmin}_Y{ymin}_Z{zmin} Contains Too Many Samles.\u0027)\n            \nclusterer \u003d run_HDBSCAN(cluster_cols \u003d cluster_cols, save \u003d \u0027test\u0027, xmin \u003d -1000, ymin \u003d -1000, zmin \u003d -1000, step \u003d 1000)\n    ",
+      "user": "dcr",
+      "dateUpdated": "2022-03-11 11:31:52.371",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Fail to execute line 32: clusterer \u003d run_HDBSCAN(cluster_cols \u003d cluster_cols, save \u003d \u0027test\u0027, xmin \u003d -1000, ymin \u003d -1000, zmin \u003d -1000, step \u003d 1000)\nTraceback (most recent call last):\n  File \"/tmp/1646993873165-0/zeppelin_python.py\", line 158, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 32, in \u003cmodule\u003e\n  File \"\u003cstdin\u003e\", line 9, in run_HDBSCAN\nFileNotFoundError: [Errno 2] No such file or directory: \u0027file:///user/dcr//HDBSCAN/looped/\u0027\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://zeppelin:4040/jobs/job?id\u003d13"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646907714561_557952954",
+      "id": "paragraph_1646907714561_557952954",
+      "dateCreated": "2022-03-10 10:21:54.561",
+      "dateStarted": "2022-03-11 11:31:52.393",
+      "dateFinished": "2022-03-11 11:39:28.592",
+      "status": "ERROR"
+    },
+    {
+      "text": "%pyspark\n# clusterer.condensed_tree_.plot()",
+      "user": "dcr",
+      "dateUpdated": "2022-03-10 10:53:36.732",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1218,15 +1091,45 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_1173800002",
+      "jobName": "paragraph_1646827009563_1799615848",
       "id": "20210928-113722_2021599344",
-      "dateCreated": "2021-12-12 21:53:26.288",
+      "dateCreated": "2022-03-09 11:56:49.563",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\nstop",
+      "user": "dcr",
+      "dateUpdated": "2022-03-10 10:54:02.649",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646909636518_1369840229",
+      "id": "paragraph_1646909636518_1369840229",
+      "dateCreated": "2022-03-10 10:53:56.518",
       "status": "READY"
     },
     {
       "text": "%md\n\n# Add an SQL search to get the galactic coordinates back",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.288",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.563",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -1259,15 +1162,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_1073694045",
+      "jobName": "paragraph_1646827009563_1329354409",
       "id": "20211013-140616_331462908",
-      "dateCreated": "2021-12-12 21:53:26.288",
+      "dateCreated": "2022-03-09 11:56:49.563",
       "status": "READY"
     },
     {
       "text": "%spark.pyspark\n\nspark.catalog.listTables()",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.288",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.564",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1298,15 +1201,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_1700209607",
+      "jobName": "paragraph_1646827009564_1517956011",
       "id": "20211015-105344_1128019803",
-      "dateCreated": "2021-12-12 21:53:26.288",
+      "dateCreated": "2022-03-09 11:56:49.564",
       "status": "READY"
     },
     {
       "text": "%spark.pyspark\ndf.columns",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.288",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.564",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1337,15 +1240,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_2081329367",
+      "jobName": "paragraph_1646827009564_1580800543",
       "id": "20211018-092658_1549955614",
-      "dateCreated": "2021-12-12 21:53:26.288",
+      "dateCreated": "2022-03-09 11:56:49.564",
       "status": "READY"
     },
     {
       "text": "%pyspark\ndf.describe()",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.288",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.564",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1376,15 +1279,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_732917473",
+      "jobName": "paragraph_1646827009564_1337212435",
       "id": "20211018-092937_688640168",
-      "dateCreated": "2021-12-12 21:53:26.288",
+      "dateCreated": "2022-03-09 11:56:49.564",
       "status": "READY"
     },
     {
       "text": "%pyspark\ndef randomise_color(group):\n    np.random.seed(group)\n    return np.random.randint(0,255)\n    \ndef cluster_projections(df, save \u003d False, cmap \u003d \u0027plasma\u0027, fontsize \u003d 14):\n    \n    from matplotlib import cm\n    plt.rcParams[\u0027font.size\u0027] \u003d fontsize\n    plt.figure(3, figsize \u003d (16.18, 10.0))\n    plt.subplot(111, projection\u003d\"mollweide\")\n    plt.grid(True)\n\n    cmap \u003d cm.get_cmap(cmap, 255)\n    \n    randomise_color(group \u003d 1)\n    color \u003d [randomise_color(i) for i in df.group]\n\n    x \u003d (df[\u0027l\u0027] - 180.0) * np.pi / 180.0\n    y \u003d (df[\u0027b\u0027] * np.pi / 180.0)\n    plt.title(\u0027eDR3 CLusters\u0027, fontsize \u003d 12)\n    plt.scatter(x,y, marker \u003d \u0027.\u0027, s \u003d 10, cmap \u003d cmap, c \u003d color)\n    plt.xlabel(\u0027Galactic Longnitude (l)\u0027)\n    plt.ylabel(\u0027Galactic Latitude (b)\u0027)\n    if save:\n        if not dev_run:\n            savefigs(save)\n    plt.show()\n    \ncluster_projections(df \u003d df[df[\u0027group\u0027] !\u003d -1], save \u003d False, cmap \u003d \u0027plasma\u0027, fontsize \u003d 14)    \n\n\n",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.288",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.564",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1419,15 +1322,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006288_963942717",
+      "jobName": "paragraph_1646827009564_89276202",
       "id": "20210922-153556_396655628",
-      "dateCreated": "2021-12-12 21:53:26.288",
+      "dateCreated": "2022-03-09 11:56:49.564",
       "status": "READY"
     },
     {
       "text": "%pyspark\n\ndef clusterSubProjections(df, save \u003d False, cmap \u003d \u0027plasma\u0027, fontsize \u003d 14):\n    \n    from matplotlib import cm\n    \n    fig \u003d plt.figure(3, figsize \u003d (32, 20))\n    ax1 \u003d plt.subplot2grid((1, 12), (0, 0), colspan\u003d4, projection \u003d \u0027polar\u0027)\n    ax2 \u003d plt.subplot2grid((1, 12), (0, 5), colspan\u003d9, projection \u003d \u0027mollweide\u0027)\n        \n    plt.rcParams[\u0027font.size\u0027] \u003d fontsize\n    \n    l \u003d (df[\u0027l\u0027] - 180.0) * np.pi / 180.0\n    cmap \u003d cm.get_cmap(cmap, 255)\n    randomise_color(group \u003d 1)\n    color \u003d [randomise_color(i) for i in df.group]\n\n    ax1.set_theta_zero_location(\u0027W\u0027, offset\u003d90)\n    ax1.scatter(l, 1/df[\u0027parallax\u0027], c \u003d color, cmap \u003d cmap, s \u003d 1, alpha \u003d 0.5)\n    ax1.set_xlabel(\u0027Galactic Longnitude (l)\u0027)\n    ax1.set_xlim(-np.pi, np.pi)\n    ax1.set_ylim(0, 1)\n    ax1.set_xticks(np.arange(-np.pi, np.pi, np.pi/6))\n    \n    ax2.grid(True)\n    y \u003d (df[\u0027b\u0027] * np.pi / 180.0)\n    ax2.set_title(\u0027eDR3 CLusters \\n\u0027, fontsize \u003d 12)\n    ax2.scatter(l, y, marker \u003d \u0027.\u0027, s \u003d 3, cmap \u003d cmap, c \u003d color)\n    ax2.set_xlabel(\u0027Galactic Longnitude (l)\u0027)\n    ax2.set_ylabel(\u0027Galactic Latitude (b)\u0027)\n    ax1.text(np.radians(45),ax1.get_rmax()*0.6,\u0027Distance (kpcs)\u0027,\n        rotation\u003d300,ha\u003d\u0027center\u0027,va\u003d\u0027center\u0027, fontsize \u003d fontsize)\n    if save:\n        if not dev_run:\n            savefigs(save)\n    plt.show()\n    \nclusterSubProjections(df \u003d df[df[\u0027group\u0027] !\u003d -1], save \u003d False, cmap \u003d \u0027plasma\u0027, fontsize \u003d 24)",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.292",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.570",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1462,15 +1365,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006292_665445919",
+      "jobName": "paragraph_1646827009570_203754954",
       "id": "20210922-153551_1565263017",
-      "dateCreated": "2021-12-12 21:53:26.292",
+      "dateCreated": "2022-03-09 11:56:49.570",
       "status": "READY"
     },
     {
       "text": "%sh\n\ncd /user/dcr/HDBSCAN/plots/spacial_gif\n",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.303",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.597",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1496,16 +1399,16 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006303_936380512",
+      "jobName": "paragraph_1646827009597_177552604",
       "id": "20211015-104503_1782257000",
-      "dateCreated": "2021-12-12 21:53:26.303",
+      "dateCreated": "2022-03-09 11:56:49.597",
       "status": "READY"
     },
     {
       "title": "gif saving setup",
       "text": "%pyspark\n\ndef sequential_labelling(frame):\n    if frame \u003e 26**2:\n        raise valueError(f\u0027Maximum frames is {26**2}\u0027)\n        \n    return f\u0027{string.ascii_lowercase[frame//26]}{string.ascii_lowercase[frame%26]}\u0027\n\ndef progress(total, progress, update_time \u003d False):\n    \n    if progress \u003d\u003d 1:\n        global start\n        start \u003d time.time()\n        \n    if update_time \u003d\u003d True:\n        x \u003d time.time()-start\n        if x \u003e 10:\n            barLength, status \u003d 20, \"| Time taken \u003d {} HH:MM:SS\".format(time.strftime(\u0027%H:%M:%S\u0027, time.gmtime(x)))\n        else: barLength, status \u003d 20, \"| Time taken \u003d {} seconds\".format(round(x,2))\n    else: barLength, status \u003d 20, \"\"\n    progress \u003d float(progress) / float(total)\n    \n    if progress \u003e\u003d 1:\n        progress \u003d 1\n        end \u003d time.time()-start\n        if end \u003c 10:\n            x \u003d \"| Time taken \u003d {} seconds\".format(round(end, 2))\n        else:\n            x \u003d \"| Time taken \u003d {} HH:MM:SS\".format(time.strftime(\u0027%H:%M:%S\u0027, time.gmtime(end)))\n        status \u003d \"{}\\r\\n\".format(x)\n    block \u003d int(round(barLength*progress))\n    text \u003d \"\\rPercent: [{}] {:.0f}% {}\".format( \"#\"*block + \"-\"*(barLength-block), progress*100, status)\n    sys.stdout.write(text)\n    sys.stdout.flush()",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.303",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.597",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1533,15 +1436,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006303_2058567428",
+      "jobName": "paragraph_1646827009597_1290281076",
       "id": "20210922-153604_1760558696",
-      "dateCreated": "2021-12-12 21:53:26.303",
+      "dateCreated": "2022-03-09 11:56:49.597",
       "status": "READY"
     },
     {
       "text": "%sh\n\ncd /user/dcr/HDBSCAN/plots/spacial_gif/\nls",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.304",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.597",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1572,16 +1475,16 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_606047276",
+      "jobName": "paragraph_1646827009597_1691395947",
       "id": "20211019-133153_1305641265",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.597",
       "status": "READY"
     },
     {
       "title": "manual stop to avoid additional plotting.",
       "text": "%pyspark\n# stop",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.304",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.597",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1608,16 +1511,16 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_200825691",
+      "jobName": "paragraph_1646827009597_492260430",
       "id": "20211018-095148_833289314",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.597",
       "status": "READY"
     },
     {
       "title": "Gif Setup functions",
       "text": "%pyspark\ndef sequential_labelling(frame):\n    if frame \u003e 26**2:\n        raise valueError(f\u0027Maximum frames is {26**2}\u0027)\n        \n    return f\u0027{string.ascii_lowercase[frame//26]}{string.ascii_lowercase[frame%26]}\u0027\n\ndef progress(total, progress, update_time \u003d False):\n    \n    if progress \u003d\u003d 1:\n        global start\n        start \u003d time.time()\n        \n    if update_time \u003d\u003d True:\n        x \u003d time.time()-start\n        if x \u003e 10:\n            barLength, status \u003d 20, \"| Time taken \u003d {} HH:MM:SS\".format(time.strftime(\u0027%H:%M:%S\u0027, time.gmtime(x)))\n        else: barLength, status \u003d 20, \"| Time taken \u003d {} seconds\".format(round(x,2))\n    else: barLength, status \u003d 20, \"\"\n    progress \u003d float(progress) / float(total)\n    \n    if progress \u003e\u003d 1:\n        progress \u003d 1\n        end \u003d time.time()-start\n        if end \u003c 10:\n            x \u003d \"| Time taken \u003d {} seconds\".format(round(end, 2))\n        else:\n            x \u003d \"| Time taken \u003d {} HH:MM:SS\".format(time.strftime(\u0027%H:%M:%S\u0027, time.gmtime(end)))\n        status \u003d \"{}\\r\\n\".format(x)\n    block \u003d int(round(barLength*progress))\n    text \u003d \"\\rPercent: [{}] {:.0f}% {}\".format( \"#\"*block + \"-\"*(barLength-block), progress*100, status)\n    sys.stdout.write(text)\n    sys.stdout.flush()    \n    \ndef get_distance(max_distance, frames):\n    return np.arange(0, max_distance+max_distance/frames, max_distance/frames)",
-      "user": "anonymous",
-      "dateUpdated": "2022-02-28 10:41:54.856",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.598",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1645,16 +1548,16 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_1373119787",
+      "jobName": "paragraph_1646827009598_1735134604",
       "id": "20211019-132248_650478310",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.598",
       "status": "READY"
     },
     {
       "title": "Dual Gif projections",
       "text": "%pyspark\n\n\n\ndef clusterSubProjectionsGif(df, frames \u003d 10, max_distance \u003d 1, save \u003d False, cmap \u003d \u0027plasma\u0027, fontsize \u003d 14):\n    \n    from matplotlib import cm\n    import string\n    \n    plt.rcParams[\u0027font.size\u0027] \u003d fontsize\n    \n    distances \u003d get_distance(max_distance, frames)\n    for i, distance in enumerate(distances[1:]):\n        fig \u003d plt.figure(3, figsize \u003d (32, 20))\n        ax1 \u003d plt.subplot2grid((1, 12), (0, 0), colspan\u003d4, projection \u003d \u0027polar\u0027)\n        ax2 \u003d plt.subplot2grid((1, 12), (0, 5), colspan\u003d9, projection \u003d \u0027mollweide\u0027)\n        \n        tmp \u003d df[(1/df[\u0027parallax\u0027] \u003c distance) \u0026 (1/df[\u0027parallax\u0027] \u003e distances[i])]\n        randomise_color(group \u003d 1)\n        color \u003d [randomise_color(i) for i in tmp.group]\n        \n        l \u003d (tmp[\u0027l\u0027] - 180.0) * np.pi / 180.0\n        b \u003d (tmp[\u0027b\u0027] * np.pi / 180.0)\n        \n        ax1.set_theta_zero_location(\u0027W\u0027, offset\u003d90)\n        ax1.scatter(l, 1/tmp[\u0027parallax\u0027], c \u003d color, cmap \u003d cmap, s \u003d 1, alpha \u003d 0.5)\n        ax1.set_xlabel(\u0027Galactic Longnitude (l)\u0027)\n        ax1.set_xlim(-np.pi, np.pi)\n        ax1.set_ylim(0, 1)\n        ax1.set_xticks(np.arange(-np.pi, np.pi, np.pi/6))\n        ax1.text(np.radians(50),ax1.get_rmax()*0.6,\u0027Distance (kpcs)\u0027,\n                rotation\u003d300,ha\u003d\u0027center\u0027,va\u003d\u0027center\u0027, fontsize \u003d fontsize)\n    \n        ax2.grid(True)\n        # ax2.set_title(\u0027eDR3 CLusters\u0027, fontsize \u003d 12)\n        ax2.scatter(l, b, marker \u003d \u0027.\u0027, s \u003d 3, cmap \u003d cmap, c \u003d color)\n        ax2.set_xlabel(\u0027Galactic Longnitude (l)\u0027)\n        ax2.set_ylabel(\u0027Galactic Latitude (b)\u0027)\n        if save:\n            if not dev_run:\n                suffix \u003d sequential_labelling(i)\n                savefigs(save+f\u0027_{suffix}\u0027, dpi \u003d 300, drop_pdf \u003d True)\n        plt.close()\n        progress(frames, i+1)\n        \nframes \u003d 8\nclusterSubProjectionsGif(df \u003d df[df[\u0027group\u0027] !\u003d -1], frames \u003d frames, max_distance \u003d 1, \n                      save \u003d \u0027spacial_gif/frame2\u0027, cmap \u003d \u0027plasma\u0027, fontsize \u003d 32)",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.304",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.598",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1686,15 +1589,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_1699252643",
+      "jobName": "paragraph_1646827009598_1491256920",
       "id": "20211019-091704_2128234574",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.598",
       "status": "READY"
     },
     {
       "text": "%pyspark\nfrom PIL import Image\nimport glob\n \n# Create the frames\nframes \u003d []\nimgs \u003d np.sort(glob.glob(\"/user/dcr/HDBSCAN/plots/spacial_gif/frame2_*.png\"))\nfor i in imgs:\n    new_frame \u003d Image.open(i)\n    frames.append(new_frame)\n \n# Save into a GIF file that loops forever\nframes[0].save(\"/user/dcr/HDBSCAN/plots/spacial_gif/test2.gif\", format\u003d\u0027GIF\u0027,\n               append_images\u003dframes[1:],\n               save_all\u003dTrue,\n               duration\u003d2000, loop\u003d0)",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.304",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.599",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1720,15 +1623,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_2047649457",
+      "jobName": "paragraph_1646827009599_770500846",
       "id": "20211015-104740_1332957772",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.599",
       "status": "READY"
     },
     {
       "text": "%pyspark\n",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.304",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.600",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1750,15 +1653,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_636908855",
+      "jobName": "paragraph_1646827009600_1765493269",
       "id": "20211015-104739_1509177285",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.600",
       "status": "READY"
     },
     {
       "text": "%pyspark\n",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.304",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.600",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1780,15 +1683,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_34191792",
+      "jobName": "paragraph_1646827009600_1449584620",
       "id": "20211015-104739_980234419",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.600",
       "status": "READY"
     },
     {
       "text": "%pyspark\n",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.304",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.600",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1810,15 +1713,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_591652367",
+      "jobName": "paragraph_1646827009600_210331309",
       "id": "20211015-104739_121506368",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.600",
       "status": "READY"
     },
     {
       "text": "%pyspark\n",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.304",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.600",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1840,15 +1743,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_598163942",
+      "jobName": "paragraph_1646827009600_1057485135",
       "id": "20211015-104739_877627154",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.600",
       "status": "READY"
     },
     {
       "text": "%pyspark\n",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.304",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.601",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1870,15 +1773,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_477210095",
+      "jobName": "paragraph_1646827009601_1999956858",
       "id": "20211015-104739_1220371996",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.601",
       "status": "READY"
     },
     {
       "text": "%pyspark\n",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.304",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.601",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1900,15 +1803,15 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_1701917016",
+      "jobName": "paragraph_1646827009601_1025956375",
       "id": "20211015-104738_758549282",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.601",
       "status": "READY"
     },
     {
       "text": "%pyspark\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-      "user": "anonymous",
-      "dateUpdated": "2021-12-12 21:53:26.304",
+      "user": "dcr",
+      "dateUpdated": "2022-03-09 11:56:49.601",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1930,14 +1833,14 @@
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639346006304_180229638",
+      "jobName": "paragraph_1646827009601_1255038433",
       "id": "20210922-153600_1565643719",
-      "dateCreated": "2021-12-12 21:53:26.304",
+      "dateCreated": "2022-03-09 11:56:49.601",
       "status": "READY"
     }
   ],
-  "name": "HDBSCAN",
-  "id": "2GS6MXSE7",
+  "name": "HDBSCAN_looped",
+  "id": "2GXT874N7",
   "defaultInterpreterGroup": "spark",
   "version": "0.10.0",
   "noteParams": {},
@@ -1946,5 +1849,7 @@
   "config": {
     "isZeppelinNotebookCronEnable": false
   },
-  "info": {}
+  "info": {
+    "isRunning": false
+  }
 }

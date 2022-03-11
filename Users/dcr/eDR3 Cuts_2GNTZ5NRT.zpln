@@ -2,7 +2,7 @@
   "paragraphs": [
     {
       "text": "%md\n\n# Using Spark to select required eDR3 data and perform a coordinate shift into LSR\n\nCurrent deployment has Spark 2.4.7 installed\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:39.863",
       "progress": 0,
       "config": {
@@ -43,7 +43,7 @@
     },
     {
       "text": "%spark.pyspark\n\nimport numpy as np\nimport pandas as pd\nimport pyspark.ml as ml\nimport matplotlib.pylab as plt\nfrom collections import Counter\nimport pyspark.sql.functions as f\nfrom pyspark.ml.feature import VectorAssembler\nfrom pyspark.sql.functions import lit, col, when, floor\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:39.863",
       "progress": 0,
       "config": {
@@ -77,8 +77,8 @@
     },
     {
       "text": "%spark.pyspark\n\ncuts \u003d  \u0027(parallax_error \u003c 1 or parallax_over_error \u003c 0.03) AND\u0027 + \\\n         \u0027(phot_g_mean_flux_over_error*0.03 \u003e 1.0857) AND\u0027 + \\\n         \u0027(astrometric_excess_noise \u003c 1 or (astrometric_excess_noise \u003e 1 AND astrometric_excess_noise_sig \u003c 2)) AND\u0027 + \\\n         \u0027(b \u003e 30)\u0027\n\n\n# define the data source\ngs_df \u003d sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/TESTS/GEDR3/*.parquet\u0027)\n# register as SQL-queryable \ngs_df.createOrReplaceTempView(\u0027gaia_source\u0027)\n\n",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:52:39.863",
+      "user": "anonymous",
+      "dateUpdated": "2022-03-10 10:17:34.211",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -91,7 +91,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -116,8 +117,8 @@
     },
     {
       "text": "%spark.pyspark\ngs_df.columns",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:52:39.864",
+      "user": "anonymous",
+      "dateUpdated": "2022-03-10 10:17:35.394",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -130,7 +131,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -155,8 +157,8 @@
     },
     {
       "text": "%spark.pyspark\n# clear any previously cached data in the context (cells may be executed in any order, and out-dated by changes from here onwards)\nsqlContext.clearCache()\n\n# a conservative selection of everything that COULD be within 100pc, including things with measured \n# distances putting them outside the 100pc horizon when their true distances are within, and also including \n# loads of spurious chaff with the wheat of course, plus bad things with significant, unphysical parallaxes:\nraw_sources_df \u003d spark.sql(\u0027SELECT source_id, random_index, parallax, ra, dec, b, pmra, pmdec, phot_g_mean_flux_over_error, \u0027 + cuts + \u0027FROM gaia_source WHERE (parallax \u003e 1)\u0027)\n\n# cache it for speedy access below (all subsequent samples are derived from this):\nraw_sources_df.cache()\n\n# register as SQL-queryable\nraw_sources_df.createOrReplaceTempView(\u0027raw_sources\u0027)\n\nraw_sources_df.count()\n# parallax \u003e 10: count \u003d 574531\n# parallax \u003e 1:  count \u003d 217,066,354\n# with b \u003e 30",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:52:39.864",
+      "user": "anonymous",
+      "dateUpdated": "2022-03-10 10:17:37.262",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -169,7 +171,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -194,8 +197,8 @@
     },
     {
       "text": "%spark.pyspark\nraw_sources_df.groupby().min(\u0027phot_g_mean_flux_over_error\u0027).collect()[0]",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:52:39.864",
+      "user": "anonymous",
+      "dateUpdated": "2022-03-10 10:17:43.001",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -208,7 +211,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -233,8 +237,8 @@
     },
     {
       "text": "%spark.pyspark\n\nfrom pyspark.sql.functions import lit, col, cos, sin, max\nfrom numpy import pi\nimport numpy as np\nimport pandas as pd",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:52:39.864",
+      "user": "anonymous",
+      "dateUpdated": "2022-03-10 10:17:45.880",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -247,7 +251,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -267,8 +272,8 @@
     },
     {
       "text": "%spark.pyspark\n# Matrix multiplication of sources\n\ndef matrix_multiplication_array_dataframe(A, B, B_name \u003d \u0027B\u0027, name \u003d \u0027C\u0027, drop_B \u003d True):\n    \u0027\u0027\u0027return A with A*B appended as columns, e.g. C01\n    \n    INPUTS\n         A - matrix A as an array\n         B - matric B as dataframe\n    B_name - columns prefix of B\n      name - desired prefix of output, default \u003d \u0027C\u0027\n    drop_A - if True, only return new columns, e.g. C--\n    \u0027\u0027\u0027\n    \n    n,m \u003d np.shape(A)[0], 3\n    M \u003d np.zeros((n,m))\n    \n    for i in range(n):\n        for j in range(3):\n            element \u003d [ A[i][k]*col(\u0027{}{}{}\u0027.format(B_name,k,j)) for k in range(3)]\n            if len(element) \u003c 3:\n                element.append(0)\n\n            B \u003d B.withColumn(\u0027{}{}{}\u0027.format(name,i,j), element[0]+element[1]+element[2])\n    if drop_B \u003d\u003d True:\n        res \u003d B.select([i for i in B.columns if name in i])\n        return res\n    else:\n        return B\n\n    \ndef matrix_multiplication_dataframes(df, A_name \u003d \u0027A\u0027, B_name \u003d \u0027B\u0027, name \u003d \u0027C\u0027, drop_A \u003d True):\n    \u0027\u0027\u0027multipies two matricies in the same dataframe and adds new matrix to end\u0027\u0027\u0027\n    \n    n,m \u003d 3, 1\n    M \u003d np.zeros((n,m))\n    \n    for i in range(n):\n        for j in range(m):\n#             print([ \u0027{}{}{}\u0027.format(A_name,i,k)+\u0027{}{}{}\u0027.format(B_name,k,j) for k in range(3)])\n            element \u003d [ col(\u0027{}{}{}\u0027.format(A_name,i,k))*col(\u0027{}{}{}\u0027.format(B_name,k,j)) for k in range(3)]\n            \n            \n            df \u003d df.withColumn(\u0027{}{}{}\u0027.format(name,i,j), element[0]+element[1]+element[2])\n    if drop_A \u003d\u003d True:\n        res \u003d df.select([i for i in df.columns if name in i])\n        return res\n    return df\n\ndef reshape_input(Input, padding \u003d 1, desired_length \u003d 2):\n    \u0027\u0027\u0027reshapes input into list of lists padded/cut to a standard desired length\n    \n    EXAMPLE\n        input \u003d [[cos, cos], [sin], [cos, sin, cos],\n                 [sin, cos], [cos], [sin, sin],\n                   [sin],     [0],    [cos]]\n                   \n        new_input \u003d  reshape_input(input, padding \u003d 1) \n        \n        new_input \u003d [[cos, cos], [sin, 1], [cos, sin],\n                     [sin, cos], [cos, 1], [sin, sin],\n                      [sin, 1],   [0, 1],   [cos, 1]]\n        \u0027\u0027\u0027\n    \n    for i in Input:\n        if len(i) \u003c desired_length:\n            while len(i) \u003c desired_length:\n                i.append(padding)\n        elif len(i)\u003edesired_length: \n            while len(i) \u003e desired_length:\n                i.pop()\n    return Input\n\ndef element_transform(function, col_name, sign \u003d 1, padding \u003d 1, col_units \u003d \u0027degrees\u0027):\n    \u0027\u0027\u0027Returns the spark syntax to select and transform columns from a dataframe\n    \u0027\u0027\u0027\n    \n    if function \u003d\u003d padding:\n        return 1\n    \n    elif type(function) \u003d\u003d int: \n        return lit(function)\n    \n    else:\n        if col_units \u003d\u003d \u0027degrees\u0027:\n            conv\u003dpi/180\n        else:\n            conv \u003d 1\n        return sign*function(col(col_name)*conv)\n    \ndef drop_matrix_from_dataframe(df, name):\n    \u0027\u0027\u0027Drops matrix from the dataframe, assuming the column names\n    use function: \"create_matrix_index\" notation. \u0027\u0027\u0027\n    drop \u003d [i for i in df.columns if name in i]\n    df \u003d df.select([column for column in df.columns if column not in drop])\n    return df\n\ndef create_matrix_index(N,M, matrix_name \u003d \u0027A\u0027):\n    \u0027\u0027\u0027Creates index for matrix column names.\u0027\u0027\u0027\n    indicies\u003d[]\n    for i in range(M):\n        for j in range(N):\n            indicies.append(\u0027{}{}{}\u0027.format(matrix_name,i,j))\n    return indicies\n\ndef drop_DataFrame(df, matrix_cols, signs, names, drop_df \u003d True):\n    \u0027\u0027\u0027Drops input DataFrame columns after calulation\u0027\u0027\u0027\n    \n    if drop_df \u003d\u003d True:\n        A \u003d df.select([c for c in matrix_cols])\n        for i in range(len(signs)):\n            A \u003d A.withColumnRenamed(A.columns[i], names[i])\n        return A\n    else:\n        for i in range(len(matrix_cols)):\n            df \u003d df.withColumn(names[i], matrix_cols[i])\n            \n        index \u003d len(df.columns) - len(signs)\n        for i in range(len(signs)):\n            df \u003d df.withColumnRenamed(df.columns[index+i], names[i])\n        return df",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:52:39.864",
+      "user": "anonymous",
+      "dateUpdated": "2022-03-10 10:18:01.904",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -281,7 +286,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -301,8 +307,8 @@
     },
     {
       "text": "%spark.pyspark\n\ndef create_Matrix_A(df, drop_df \u003d True, coord_units \u003d \u0027degrees\u0027):\n    \u0027\u0027\u0027creates Matrix A, where A \u003d [[cos(ra)*cos(dec), -sin(ra), -cos(ra)*sin(dec)],\n                                     [sin(ra)*cos(dec),  cos(ra), -sin(ra)*sin(dec)],\n                                     [sin(dec),             0,     cos(dec)]])\u0027\u0027\u0027\n\n    # creating the filter for df\n    trig_funcs \u003d [[cos, cos], [sin], [cos, sin],\n                       [sin, cos], [cos], [sin, sin],\n                       [sin], [0], [cos]]\n    trig_funcs \u003d  reshape_input(trig_funcs)\n\n    cols \u003d [[\u0027ra\u0027, \u0027dec\u0027], [\u0027ra\u0027], [\u0027ra\u0027, \u0027dec\u0027],\n            [\u0027ra\u0027, \u0027dec\u0027], [\u0027ra\u0027], [\u0027ra\u0027, \u0027dec\u0027],\n            [\u0027dec\u0027], [], [\u0027dec\u0027]]\n    cols \u003d reshape_input(cols)\n\n    signs \u003d [1, -1, -1,\n             1,  1, -1, \n             1,  1,  1]\n\n    matrix_cols\u003d[]\n    for i in range(len(signs)):\n        a \u003d element_transform(trig_funcs[i][0], cols[i][0], sign \u003d signs[i], col_units\u003dcoord_units) * \\\n            element_transform(trig_funcs[i][1], cols[i][1], col_units\u003dcoord_units)\n        matrix_cols.append(a)\n\n    names \u003d create_matrix_index(3,3, \u0027A\u0027)\n    \n    df \u003d drop_DataFrame(df \u003d df, matrix_cols \u003d matrix_cols, signs \u003d signs,\n                        names \u003d names, drop_df \u003d drop_df)\n    return df\n\ndef form_matrix_C(df, radial_velocity\u003d0, drop_df \u003d True):\n    \u0027\u0027\u0027Selects the correct columns for C depending on given units of columns.\u0027\u0027\u0027\n    \n    if radial_velocity \u003d\u003d 0:\n        df \u003d df.withColumn(\u0027C00\u0027, lit(radial_velocity))\\\n            .withColumnRenamed(\u0027pmra (km/s)\u0027,  \u0027C10\u0027)\\\n            .withColumnRenamed(\u0027pmdec (km/s)\u0027, \u0027C20\u0027)\n    else:\n        df \u003d df.select(col(\u0027radial_velocity\u0027), col(\u0027pmra (km/s)\u0027), col(\u0027pmdec (km/s)\u0027))\\\n            .withColumnRenamed(\u0027radial_velocity\u0027, \u0027C00\u0027)\\\n            .withColumnRenamed(\u0027pmra (km/s)\u0027,     \u0027C10\u0027)\\\n            .withColumnRenamed(\u0027pmdec (km/s)\u0027,    \u0027C20\u0027)\n    if drop_df \u003d\u003d True:      \n        C \u003d df.select(\u0027C00\u0027, \u0027C10\u0027, \u0027C20\u0027)\n        return C\n    return df\n\ndef create_matrix_C(df, pm_units \u003d \u0027mas/yr\u0027, drop_df \u003d True):\n    \u0027\u0027\u0027 Calls \"form_Matrix_C\" with the correct input columns.\u0027\u0027\u0027\n    \n    if \u0027pmra (km/s)\u0027 in df.columns and \u0027pmra (km/s)\u0027 in df.columns:\n        C \u003d form_matrix_C(df, drop_df\u003ddrop_df)\n\n    elif pm_units \u003d\u003d \u0027mas/yr\u0027:\n        df \u003d convMasKm_sql(df, \u0027pmra\u0027, \u0027pmdec\u0027)\n        C  \u003d  from_matrix_C(df, drop_df\u003ddrop_df)\n\n    elif pm_units \u003d\u003d \u0027km/s\u0027:\n        df \u003d df.withColumnRenamed(\u0027pmra\u0027, \u0027pmra (km/s)\u0027)\\\n               .withColumnRenamed(\u0027pmdec\u0027, \u0027pmdec (km/s)\u0027)\n        C  \u003d form_matrix_C(df, drop_df\u003ddrop_df)\n        df \u003d df.withColumnRenamed(\u0027pmra (km/s)\u0027, \u0027pmra\u0027)\\\n               .withColumnRenamed(\u0027pmdec (km/s)\u0027, \u0027pmdec\u0027)\n    return C\n\ndef calculate_LSR_mag(df, name \u003d \u0027U\u0027):\n    \u0027\u0027\u0027 Calculates magnitude of LSR velocity give U,V,W velocity.\n    Uses v_sun from Schonrich, R., Binney, J., \u0026 Dehnen, W. 2010 | \n    DOI: 10.1111/j.1365-2966.2010.16253.x\u0027\u0027\u0027\n    \n    v_sun \u003d [11.1, 12.24, 7.25]\n    df \u003d df.withColumn(\u0027v_lsr^2\u0027, (col(\u0027{}00\u0027.format(name))+v_sun[0])**2 + \n                                  (col(\u0027{}10\u0027.format(name))+v_sun[1])**2 + \n                                  (col(\u0027{}20\u0027.format(name))+v_sun[2])**2)\n    df \u003d drop_matrix_from_dataframe(df, \u0027U\u0027)\n    return df",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:52:39.864",
+      "user": "anonymous",
+      "dateUpdated": "2022-03-10 10:18:03.165",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -315,7 +321,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -335,8 +342,8 @@
     },
     {
       "text": "%spark.pyspark\n\ndef convMasKm_sql(df, *args, add_to_data \u003d True):\n    \u0027\u0027\u0027\n    FUNCTION\n        Converts data from mas/yr to km/s\n    \n    REQUIRES:\n        df \u003d sql.DataFrame as an input with column [\u0027parallax\u0027 in mas/yr] and any args provided\n        *args \u003d columns names of df you wish to convert from mas/yr to km/s\n    \n    RETURNS\n    \n        if add_to_data \u003d False - returns first column in *args [km/s] as an sql.DataFrame\n        if add_to_data \u003d True  - returns df with all *args [km/s] added.\n    \u0027\u0027\u0027\n    \n    for i in args:\n        df \u003d df.withColumn(str(i + \u0027 (km/s)\u0027), col(i)/col(\u0027parallax\u0027)*4.74057)\n        \n        if add_to_data \u003d\u003d False:   # Returns first column in args as np.array\n            return df.select(str(args[0] + \u0027 (km/s)\u0027))\n            break\n    \n    return df\n\ndef LSR_conv_sql(df, cut \u003d 60, coord_units \u003d \u0027degrees\u0027):\n    \u0027\u0027\u0027\n    FUNCTION\n        Converts proper motions from ra, dec to LSR velocity\n    \n    REQUIRES:\n        df \u003d dataframe of ra, dec, parallax, pmra, pmdec values respectively\n        \n    OPTIONAL:\n        coord_units \u003d [defaut \u003d \u0027deg\u0027] units of coordinates (ra, dec). \n                      Accepted values are [\u0027deg\u0027, \u0027rad\u0027]\n        pm_units \u003d [defaut \u003d \u0027mas/yr\u0027] units of proper motions. \n                    Accepted values are: [\u0027mas/yr\u0027, \u0027km/s\u0027]\n        radial_velocity \u003d list of radial velocity (defaults \u003d 0.0)\n        mag \u003d Return only V_LSR mag (default \u003d False - returns three dimensions of v_lsr [u,v,w])\n    \n    SEE ALSO\n         Method from: Johnson, Dean R. H., Soderblom, David R. DOI: 10.1086/114370\n    \u0027\u0027\u0027\n    \n    T \u003d [[-0.05646624, -0.87325802, -0.48397519],\n         [ 0.49253617, -0.44602111,  0.74731071],\n         [-0.86845823, -0.19617746,  0.4552963 ]]\n\n    df \u003d create_Matrix_A(df, drop_df\u003dFalse, coord_units\u003dcoord_units)   # forms Marix A\n    df \u003d matrix_multiplication_array_dataframe(T,df, B_name \u003d \u0027A\u0027,\n                                               name \u003d \u0027B\u0027, drop_B \u003d False)  # forms Matrix B\n    \n    df \u003d drop_matrix_from_dataframe(df, \u0027A\u0027)   # drops A from df\n    df \u003d create_matrix_C(df, drop_df\u003dFalse)    # forms Matrix C\n    \n    df \u003d matrix_multiplication_dataframes(df, A_name \u003d \u0027B\u0027,\n                                          B_name \u003d \u0027C\u0027, name \u003d \u0027U\u0027, drop_A \u003d False) # Creates U, W, V\n    df \u003d drop_matrix_from_dataframe(df, \u0027B\u0027)   # drops B from df\n\n    df \u003d df.withColumnRenamed(\u0027C10\u0027, \u0027pmra (km/s)\u0027)\\\n        .withColumnRenamed(\u0027C20\u0027, \u0027pmdec (km/s)\u0027)   # Cleaning up DataFrame Columns\n    df \u003d drop_matrix_from_dataframe(df, \u0027C\u0027)   # drops C from df\n    df \u003d calculate_LSR_mag(df, name \u003d \u0027U\u0027)                 # Adds v_lsr^2 column to df\n    \n    return df\n\ndef LSR_cut_sql(df, cut, column, calc_lsr \u003d True, drop_lsr \u003d True):\n    \u0027\u0027\u0027   \n    FUNCTION\n        Cuts the data according to below a certain value\n    \n    INPUT:\n        df \u003d input pd.DataFrame\n        cut \u003d v_max^2 for the LSR velocity\n        calc_lsr \u003d calculate lsr velocity if not present - [True/False]\n        drop_lsr \u003d drop v_lsr from df - [True/False]\n        \n    RETURNS\n        DataFrame contiaining only objects which satisfy the cut value\u0027\u0027\u0027\n\n    if calc_lsr \u003d\u003d True:  df \u003d LSR_conv_sql(df)                   # Calcs the lsr velocity\n    if drop_lsr \u003d\u003d True:  df \u003d df.filter(col(column) \u003c cut).drop(col(column))\n    else: df \u003d df.filter(col(column) \u003c cut)\n    return df",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:52:39.864",
+      "user": "anonymous",
+      "dateUpdated": "2022-03-10 10:18:05.975",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -349,7 +356,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -369,8 +377,8 @@
     },
     {
       "text": "%spark.pyspark\n# Convert to Cartesian Coordinates\n\ndef deg_conv_factor(unit \u003d \u0027degrees\u0027):\n    \u0027\u0027\u0027return conversion factor to radians\u0027\u0027\u0027\n    \n    if unit \u003d\u003d \u0027degrees\u0027: return pi/180\n    elif unit \u003d\u003d \u0027radians\u0027: return 1\n    else: raise ValueError(\u0027Please enter a valid unit for angle [\"degrees\", \"radians\"]\u0027)\n        \ndef plx_conv_factor(unit \u003d \u0027mas\u0027):\n    \u0027\u0027\u0027return conversion factor to arcsec\u0027\u0027\u0027\n    \n    if unit \u003d\u003d \u0027mas\u0027: return 10**-3\n    elif unit \u003d\u003d \u0027arcsec\u0027: return 1\n    else: raise ValueError(\u0027Please enter a valid unit for parallax [\"mas\", \"arcsec\"]\u0027)\n        \ndef equatorial_to_cartesian(df, drop_df \u003d True, coord_units \u003d \u0027degrees\u0027):\n    \u0027\u0027\u0027Converts equatorial coordinates to cartesian from a spark dataframe\n    \n    RETURNS\n        sql.DataFrame with cartesian coordinates in parsec\u0027\u0027\u0027\n    \n    trig_funcs \u003d [[1, cos, cos], [1, cos, sin], [1, sin]]\n    trig_funcs \u003d reshape_input(trig_funcs, desired_length \u003d 3)\n\n    cols \u003d [[\u0027parallax\u0027,\u0027dec\u0027, \u0027ra\u0027], [\u0027parallax\u0027,\u0027dec\u0027,\u0027ra\u0027], [\u0027parallax\u0027,\u0027dec\u0027]]\n    cols \u003d reshape_input(cols, desired_length \u003d 3)\n    signs \u003d [1, 1, 1]\n\n    matrix_cols\u003d[]\n    plx_conv \u003d plx_conv_factor(\u0027mas\u0027)\n    \n    for i in range(len(signs)):\n        a \u003d 1/(col(cols[i][0])*plx_conv) * \\\n            element_transform(trig_funcs[i][1], cols[i][1], col_units \u003d \u0027degrees\u0027) * \\\n            element_transform(trig_funcs[i][2], cols[i][2], col_units \u003d \u0027degrees\u0027)\n\n        matrix_cols.append(a)\n\n    names \u003d [\u0027X_pc\u0027, \u0027Y_pc\u0027, \u0027Z_pc\u0027]\n    df \u003d drop_DataFrame(df \u003d df, matrix_cols \u003d matrix_cols, signs \u003d signs,\n                        names \u003d names, drop_df \u003d drop_df)\n\n    return df",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:52:39.864",
+      "user": "anonymous",
+      "dateUpdated": "2022-03-10 10:18:08.063",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -383,7 +391,8 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "editorHide": true
       },
       "settings": {
         "params": {},
@@ -403,7 +412,7 @@
     },
     {
       "text": "%spark.pyspark\ndef quality_cut(df, cut_lsr \u003d 60, cartesian \u003d True, drop_equitorial \u003d False):\n    \u0027\u0027\u0027\n    FUNCTION\n        perform the relevant control cuts on the data.\n    \n    INPUT\n        df - full data release sql.DataFrame\n        cut_lsr - value of maximum LSR velocity (m/s)\n    RETURNS\n        sql.DataFrame containing only objects of \u0027\u0027\u0027\n    \n    \n    df \u003d convMasKm_sql(df, \u0027pmra\u0027, \u0027pmdec\u0027)      # converts proper motions to km/s.\n    df \u003d LSR_conv_sql(df)\n    # calculates v_lsr**2 and drops objects above the cut\n    df \u003d LSR_cut_sql(df, cut_lsr**2, \u0027v_lsr^2\u0027, calc_lsr \u003d True, drop_lsr \u003d True) \n    \n    if cartesian \u003d\u003d True:\n        df \u003d equatorial_to_cartesian(df, drop_df \u003d False)\n        \n    if drop_equitorial \u003d\u003d True:\n        df \u003d df.drop(\u0027ra\u0027).drop(\u0027dec\u0027)\n    return df\n\ndf \u003d quality_cut(df \u003d raw_sources_df, cut_lsr \u003d 60, drop_equitorial \u003d False)\ndf.show(1), df.count()",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:39.864",
       "progress": 0,
       "config": {
@@ -442,7 +451,7 @@
     },
     {
       "text": "%spark.pyspark\ndf.show(20)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:39.864",
       "progress": 0,
       "config": {
@@ -481,7 +490,7 @@
     },
     {
       "text": "%spark.pyspark\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:39.864",
       "progress": 0,
       "config": {
