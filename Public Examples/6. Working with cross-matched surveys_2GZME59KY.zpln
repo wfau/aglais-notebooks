@@ -1,0 +1,250 @@
+﻿{
+  "paragraphs": [
+    {
+      "user": "nch",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646992513304_653265144",
+      "id": "paragraph_1646992513304_653265144",
+      "dateCreated": "2022-03-11T09:55:13+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:25842",
+      "text": "%md\n\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n    \nThis notebook illustrates a simple usage of cross-matched survey data available on the platform. \n",
+      "dateUpdated": "2022-03-11T09:57:17+0000",
+      "dateFinished": "2022-03-11T09:57:12+0000",
+      "dateStarted": "2022-03-11T09:57:12+0000",
+      "title": "Introduction",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n<p>This notebook illustrates a simple usage of cross-matched survey data available on the platform.</p>\n\n</div>"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%pyspark\n\nimport math\n\n# range and resolution of the rasterized colour-magnitude diagram - configure to suit\nbrightest_abs_mag = -5.0\nfaintest_abs_mag = 20.0\nbluest_colour = -1.0\nreddest_colour = +3.0\nmag_resolution = 0.01\n\n# global constant given the above configuration\nabs_mag_range = faintest_abs_mag - brightest_abs_mag\ncolour_range = reddest_colour - bluest_colour\nxmax_idx = int((colour_range) / mag_resolution)\nymax_idx = int((abs_mag_range) / mag_resolution)\n\n# raster function\ndef cmd_raster_index(magnitude, colour, parallax):\n    '''\n    Computes an arbitrary, unique raster index in the 2d absolute-magnitude / colour space given the \n    apparent magnitude, colour and parallax of a source and fixed configuration.\n    '''\n    \n    # distance modulus assuming zero reddening and hence absolute magnitude\n    mmm = 5.0 * math.log10(1000.0 / parallax) - 5.0\n    abs_mag = magnitude - mmm\n    \n    # create the 2d raster unique index as a combination of those of colour and absolute mag\n    xidx = int(round((colour - bluest_colour) * xmax_idx / colour_range))\n    yidx = int(round((abs_mag - brightest_abs_mag) * ymax_idx / abs_mag_range))\n    \n    # return the index\n    return xidx + (xmax_idx * yidx)\n\n# inverse raster function based on the reverse of the above\ndef colour_mag_from_raster(raster_idx):\n    '''\n    Computes the colour and absolute magnitude of a raster cell from it's unique index given\n    the fixed configuration. \n    '''\n    \n    # colour\n    xidx = raster_idx % xmax_idx\n    colour = bluest_colour + mag_resolution * xidx\n    \n    # absolute magnitude\n    yidx = (raster_idx - xidx) // xmax_idx\n    abs_mag = brightest_abs_mag + mag_resolution * yidx\n    \n    # give back the result\n    return colour, abs_mag\n    \n# wrap up the rasterization function as a user-defined function for use via the PySpark SQL API\nfrom pyspark.sql.types import IntegerType\nspark.udf.register('rasterize', cmd_raster_index, IntegerType())\n",
+      "user": "nch",
+      "dateUpdated": "2022-03-11T11:49:38+0000",
+      "progress": 0,
+      "config": {
+        "lineNumbers": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646992632242_1534494301",
+      "id": "paragraph_1646992632242_1534494301",
+      "dateCreated": "2022-03-11T09:57:12+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:26745",
+      "dateFinished": "2022-03-11T11:38:40+0000",
+      "dateStarted": "2022-03-11T11:38:40+0000",
+      "title": "Utility function definitions",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "<function cmd_raster_index at 0x7f60ce37cd40>\n"
+          },
+          {
+            "type": "ANGULAR",
+            "data": ""
+          }
+        ]
+      }
+    },
+    {
+      "text": "%pyspark\n\n# aggregate query employing the rasterization UDF\nquery = 'SELECT rasterize(t.j_m, t.j_m - t.k_m, g.parallax) AS ridx, COUNT(*) count_in_pixel' + \\\n        'FROM gaia_source AS g INNER JOIN gaia_source_tmasspsc_best_neighbours AS t ON g.source_id = t.source_id ' + \\\n        'WHERE g.ruwe < 1.4 AND g.parallax_over_error > 10.0 AND t.j_m IS NOT NULL AND t.k_m IS NOT NULL ' + \\\n        'GROUP BY ridx'\n\n# define the data frame via the aggregate query\ndf = spark.sql(query)\n\n# force execution and sanity check\ndf.show()\n",
+      "user": "nch",
+      "dateUpdated": "2022-03-11T11:46:54+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://zeppelin:4041/jobs/job?id=9",
+              "$$hashKey": "object:27732"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646996320283_812479873",
+      "id": "paragraph_1646996320283_812479873",
+      "dateCreated": "2022-03-11T10:58:40+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:26888",
+      "dateFinished": "2022-03-11T11:41:13+0000",
+      "dateStarted": "2022-03-11T11:38:45+0000",
+      "title": "Define a data aggregation",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+------+--------+\n|  ridx|count(1)|\n+------+--------+\n|473782|    1928|\n|419385|    4041|\n|434587|    3653|\n|308930|    3909|\n|531391|     654|\n|317762|    1382|\n|178576|     804|\n|398174|    4385|\n|143778|     380|\n|310950|    3595|\n|374948|    5627|\n|130995|     190|\n|337768|    1094|\n|316958|    1920|\n|458185|    2697|\n|356543|    7669|\n|398172|    5018|\n|404969|    5260|\n|506978|     976|\n|509779|     876|\n+------+--------+\nonly showing top 20 rows\n\n"
+          },
+          {
+            "type": "ANGULAR",
+            "data": ""
+          }
+        ]
+      }
+    },
+    {
+      "text": "%pyspark\n\n# collect the counts as a Pandas data frame\npdf = df.toPandas()\n# ... this will action the distributed spark job and then merge the individual worker aggregations.\n# It \"collects\" all the data to the driver executor as a monolithic in-memory data set - always use with care!\n\n# compute the colour/magnitude bin centres from the raster index\ndef \n\n",
+      "user": "nch",
+      "dateUpdated": "2022-03-11T11:49:35+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646996892901_1183551489",
+      "id": "paragraph_1646996892901_1183551489",
+      "dateCreated": "2022-03-11T11:08:12+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:26978",
+      "title": "Collect the results and process in preparation for visualisation"
+    },
+    {
+      "text": "%pyspark\n",
+      "user": "nch",
+      "dateUpdated": "2022-03-11T11:11:09+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646997023626_41851232",
+      "id": "paragraph_1646997023626_41851232",
+      "dateCreated": "2022-03-11T11:10:23+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:27065",
+      "title": "Visualise via matplotlib"
+    }
+  ],
+  "name": "6. Working with cross-matched surveys",
+  "id": "2GZME59KY",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/Public Examples/6. Working with cross-matched surveys"
+}
