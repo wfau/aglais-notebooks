@@ -1,9 +1,9 @@
 ﻿{
   "paragraphs": [
     {
-      "text": "%md\n\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n\n",
+      "text": "%md\n\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n\nThis note book shows a simple example of statistical aggregations over the entire sky catalogue. Visualisation employs the HEALPixel pixelisation encoded in the Gaia source identifier.",
       "user": "nch",
-      "dateUpdated": "2022-03-04T12:04:34+0000",
+      "dateUpdated": "2022-03-15T15:11:53+0000",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -18,11 +18,21 @@
         "fontSize": 9,
         "editorHide": true,
         "results": {},
-        "enabled": true
+        "enabled": true,
+        "title": true
       },
       "settings": {
         "params": {},
         "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n<p>This note book shows a simple example of statistical aggregations over the entire sky catalogue. Visualisation employs the HEALPixel pixelisation encoded in the Gaia source identifier.</p>\n\n</div>"
+          }
+        ]
       },
       "apps": [],
       "runtimeInfos": {},
@@ -30,26 +40,18 @@
       "jobName": "paragraph_1646395441893_1272795891",
       "id": "paragraph_1646395441893_1272795891",
       "dateCreated": "2022-03-04T12:04:01+0000",
+      "dateStarted": "2022-03-15T15:11:46+0000",
+      "dateFinished": "2022-03-15T15:11:46+0000",
       "status": "FINISHED",
       "focus": true,
-      "$$hashKey": "object:27267",
-      "dateFinished": "2022-03-04T12:04:16+0000",
-      "dateStarted": "2022-03-04T12:04:16+0000",
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "HTML",
-            "data": "<div class=\"markdown-body\">\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n\n</div>"
-          }
-        ]
-      }
+      "$$hashKey": "object:25560",
+      "title": "Introduction"
     },
     {
       "title": "Set HEALPix resolution",
       "text": "%pyspark\n\n# set the required HEALPixelisation level here:\nhealpix_level = 6\n# HEALPix level : no. of pixels\n# 4 : 3072\n# 5 : 12288\n# 6 : 49152 ~ 1 square degree pixels\n# 7 : 196608\n",
       "user": "anonymous",
-      "dateUpdated": "2022-02-24T12:18:35+0000",
+      "dateUpdated": "2022-03-15T15:03:56+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -61,7 +63,7 @@
         "colWidth": 12,
         "editorMode": "ace/mode/python",
         "fontSize": 9,
-        "editorHide": false,
+        "editorHide": true,
         "title": true,
         "results": {},
         "enabled": true
@@ -83,14 +85,13 @@
       "dateStarted": "2022-02-24T12:18:35+0000",
       "dateFinished": "2022-02-24T12:18:35+0000",
       "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:26714"
+      "$$hashKey": "object:25561"
     },
     {
       "title": "Define a data frame by SQL query",
       "text": "%pyspark\nimport math\n\n# compute relevant pixelisation quantities\nnside = int(math.pow(2, healpix_level))\npowers_of_2 = 35 + (12 - healpix_level)*2\ndivisor = int(math.pow(2, powers_of_2))\n\n# formulate SQL query\nquery = \"SELECT floor(source_id /  %d\"%(divisor) + \") AS hpx_id, COUNT(*) AS n, AVG(pmra) AS avg_pmra, AVG(pmdec) AS avg_pmdec FROM gaia_source GROUP BY hpx_id\"\n\n# define a data frame aggregation of the relevant quantities (note this is cached for use in two subsequent cells)\ndf = spark.sql(query).cache()\n",
       "user": "anonymous",
-      "dateUpdated": "2022-02-24T12:18:35+0000",
+      "dateUpdated": "2022-03-15T15:11:08+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -102,7 +103,7 @@
         "colWidth": 12,
         "editorMode": "ace/mode/python",
         "fontSize": 9,
-        "editorHide": false,
+        "editorHide": true,
         "title": true,
         "results": {},
         "enabled": true
@@ -124,13 +125,13 @@
       "dateStarted": "2022-02-24T12:18:35+0000",
       "dateFinished": "2022-02-24T12:18:35+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26715"
+      "$$hashKey": "object:25562"
     },
     {
       "title": "Mean RA proper motion plot",
       "text": "%pyspark\n\n# plot up the sky counts\nimport matplotlib.pyplot as plot\nimport numpy as np\nimport healpy as hp\n\n# set a figure to use along with a plot size (landscape, golden ratio)\nplot.figure(1, figsize = (16.18, 10.0))\n\n# healpy constants appropriate to the HEALPix indexing encoded in Gaia source IDs\nnpix = hp.nside2npix(nside)\n\n# do the visualisation\narray_data = np.empty(npix)\nfor item in df.rdd.collect():  array_data[item[0]] = item[2]\nhp.mollview(array_data, fig = 1, coord='C', unit='mas/yr', nest=True, title='Mean RA proper motion at HEALPix level %d'%(healpix_level), cmap='rainbow')\nhp.graticule(coord='C', color='white')",
       "user": "anonymous",
-      "dateUpdated": "2022-02-24T12:18:35+0000",
+      "dateUpdated": "2022-03-15T15:01:31+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -183,7 +184,7 @@
       "dateStarted": "2022-02-24T12:18:35+0000",
       "dateFinished": "2022-02-24T12:19:15+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26716"
+      "$$hashKey": "object:25563"
     },
     {
       "title": "Mean Dec proper motion plot",
@@ -242,7 +243,7 @@
       "dateStarted": "2022-02-24T12:19:15+0000",
       "dateFinished": "2022-02-24T12:19:16+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26717"
+      "$$hashKey": "object:25564"
     },
     {
       "title": "Further reading and resources",
@@ -288,13 +289,13 @@
       "dateStarted": "2022-02-24T12:19:16+0000",
       "dateFinished": "2022-02-24T12:19:16+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26718"
+      "$$hashKey": "object:25565"
     },
     {
       "title": "Tidy-up",
       "text": "%pyspark\n\nsqlContext.clearCache()\n\n\n",
       "user": "anonymous",
-      "dateUpdated": "2022-02-24T12:19:16+0000",
+      "dateUpdated": "2022-03-15T15:12:00+0000",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -307,7 +308,7 @@
         "colWidth": 12,
         "editorMode": "ace/mode/python",
         "fontSize": 9,
-        "editorHide": false,
+        "editorHide": true,
         "title": true,
         "results": {},
         "enabled": true
@@ -329,7 +330,7 @@
       "dateStarted": "2022-02-24T12:19:16+0000",
       "dateFinished": "2022-02-24T12:19:16+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26719"
+      "$$hashKey": "object:25566"
     },
     {
       "text": "%pyspark\n",
@@ -366,10 +367,10 @@
       "dateStarted": "2022-02-24T12:19:16+0000",
       "dateFinished": "2022-02-24T12:19:16+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26720"
+      "$$hashKey": "object:25567"
     }
   ],
-  "name": "Mean proper motions over the sky",
+  "name": "4. Mean proper motions over the sky",
   "id": "2GSNYBDWB",
   "defaultInterpreterGroup": "spark",
   "version": "0.10.0",
@@ -382,5 +383,8 @@
     "personalizedMode": "false"
   },
   "info": {},
-  "path": "/Public Examples/Mean proper motions over the sky"
+  "path": "/Public Examples/4. Mean proper motions over the sky",
+  "checkpoint": {
+    "message": "Intro"
+  }
 }

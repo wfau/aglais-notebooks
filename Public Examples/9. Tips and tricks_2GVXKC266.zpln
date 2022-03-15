@@ -2,7 +2,7 @@
   "paragraphs": [
     {
       "text": "%md\n\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930, based on \n    original scripts provided by the Apache SW Foundation\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n    \nThis notebook illustrates a few tips and tricks that should aid users in interacting with the platform via the Zeppelin user interface.",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-04T12:07:30+0000",
       "progress": 0,
       "config": {
@@ -42,12 +42,12 @@
       "dateFinished": "2022-03-04T12:07:17+0000",
       "status": "FINISHED",
       "focus": true,
-      "$$hashKey": "object:29940"
+      "$$hashKey": "object:43498"
     },
     {
       "title": "Interpreters",
       "text": "%md\n\n## Interpreters\n\nWe recommend usage of the PySpark interpreter since this gives access to large scale distributed computing via the data frame applications programming interface. Other Python interpreters are available however: for light, non-distributed processing of relatively small data sets collected to the driver process in Zeppelin it is possible to specify plain Python or IPython interpreters (the latter is perhaps more familiar to Jupyter notebook users). \n\nThere are some differences in functionality between the interpreters available - these are illustrated in the following cells.",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T14:49:07+0000",
       "progress": 0,
       "config": {
@@ -87,12 +87,12 @@
       "dateStarted": "2022-03-03T14:49:07+0000",
       "dateFinished": "2022-03-03T14:49:07+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29941"
+      "$$hashKey": "object:43499"
     },
     {
       "title": "Getting Python help (PySpark)",
       "text": "%spark.pyspark\n\nimport sys\n\nhelp(sys)\n# ... available also in python.ipython interpreter",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T12:31:39+0000",
       "progress": 0,
       "config": {
@@ -135,12 +135,12 @@
       "dateStarted": "2022-03-03T12:31:39+0000",
       "dateFinished": "2022-03-03T12:31:40+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29942"
+      "$$hashKey": "object:43500"
     },
     {
       "title": "Getting Python help (IPython)",
       "text": "%python.ipython\n# ... this facility is not available in the pyspark interpreter\n\nimport sys\n\nsys?",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T12:31:43+0000",
       "progress": 0,
       "config": {
@@ -179,12 +179,12 @@
       "dateStarted": "2022-03-03T12:31:43+0000",
       "dateFinished": "2022-03-03T12:31:43+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29943"
+      "$$hashKey": "object:43501"
     },
     {
       "title": "IPython \"magic\" functions ",
       "text": "%md\n\nAll the IPython magic functions are avalible in Zeppelin, here's one example of `%timeit`, for the complete IPython magic functions, you can check the [link](http://ipython.readthedocs.io/en/stable/interactive/magics.html) here.\n\n",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T12:31:47+0000",
       "progress": 0,
       "config": {
@@ -225,11 +225,11 @@
       "dateStarted": "2022-03-03T12:31:47+0000",
       "dateFinished": "2022-03-03T12:31:47+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29944"
+      "$$hashKey": "object:43502"
     },
     {
       "text": "%python.ipython\n# ... available only in IPython interpreter\n\n%timeit range(1000)\n",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T12:31:49+0000",
       "progress": 0,
       "config": {
@@ -267,11 +267,11 @@
       "dateStarted": "2022-03-03T12:31:49+0000",
       "dateFinished": "2022-03-03T12:31:51+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29945"
+      "$$hashKey": "object:43503"
     },
     {
       "text": "%md\n\n## Tab completion\n\nTab completion, especially for attributes, is a convenient way to explore the structure of any object you’re dealing with. Simply type `object_name.<TAB>` to view the object’s attributes. See the following screenshot illustrating how tab completion works in the IPython Interpreter; it will work also in the pyspark interpreter.\n![alt text](https://user-images.githubusercontent.com/164491/34858941-3f28105a-f78e-11e7-8341-2fbfd306ba5b.gif \"Logo Title Text 1\")\n\n\n\n",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T14:49:22+0000",
       "progress": 0,
       "config": {
@@ -311,11 +311,11 @@
       "dateStarted": "2022-03-03T14:49:22+0000",
       "dateFinished": "2022-03-03T14:49:22+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29946"
+      "$$hashKey": "object:43504"
     },
     {
       "text": "%md\n\n## Use of the ZeppelinContext \n\n`ZeppelinContext` is a utlity class which provide the following features\n\n* Dynamic forms\n* Show DataFrame via built-in visualisation\n\nThe ZeppelinContext is addressed via the pre-loaded object instance \"z.\" in IPython or PySpark interpreters.\n",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T14:49:32+0000",
       "progress": 0,
       "config": {
@@ -354,12 +354,12 @@
       "dateStarted": "2022-03-03T14:49:32+0000",
       "dateFinished": "2022-03-03T14:49:32+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29947"
+      "$$hashKey": "object:43505"
     },
     {
       "title": "Dynamic input forms",
       "text": "%python.ipython\n\n# dynamic form\nz.input(name='my_name', defaultValue='hello')",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T12:31:59+0000",
       "progress": 0,
       "config": {
@@ -387,7 +387,7 @@
             "displayName": "my_name",
             "defaultValue": "hello",
             "hidden": false,
-            "$$hashKey": "object:30276"
+            "$$hashKey": "object:43834"
           }
         }
       },
@@ -409,12 +409,12 @@
       "dateStarted": "2022-03-03T12:31:59+0000",
       "dateFinished": "2022-03-03T12:31:59+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29948"
+      "$$hashKey": "object:43506"
     },
     {
       "title": "Data frame formatted table display",
       "text": "%python.ipython\n\nimport pandas as pd\ndf = pd.DataFrame({'name':['a','b','c'], 'count':[12,24,18]})\n\n# visualise the data frame via the context built-in\nz.show(df)",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T12:32:02+0000",
       "progress": 0,
       "config": {
@@ -482,11 +482,11 @@
       "dateStarted": "2022-03-03T12:32:02+0000",
       "dateFinished": "2022-03-03T12:32:02+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29949"
+      "$$hashKey": "object:43507"
     },
     {
       "text": "%md\n\n## Visualisation options\n\nOne big advantage of notebooks is that you can visualise data with your within your code and mark-down cells. [Matplotlib](https://matplotlib.org) is the premier Python plotting module available on this platform and it works in much the same way as other familiar Python environments (but note that an explicit call to `show()` is not necessary - plot rendering is accomplished via a post-execute hook which tells Zeppelin to plot all currently open matplotlib figures after executing the rest of the paragraph).\n\n",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T14:49:49+0000",
       "progress": 0,
       "config": {
@@ -526,12 +526,12 @@
       "dateStarted": "2022-03-03T14:49:49+0000",
       "dateFinished": "2022-03-03T14:49:49+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29950"
+      "$$hashKey": "object:43508"
     },
     {
       "title": "Simple matplotlib example",
       "text": "%pyspark\n\nimport matplotlib.pyplot as plt\n\nplt.plot([1,2,3,4])\nplt.ylabel('some numbers')\n",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T12:40:45+0000",
       "progress": 0,
       "config": {
@@ -575,12 +575,12 @@
       "dateStarted": "2022-03-03T12:40:45+0000",
       "dateFinished": "2022-03-03T12:40:45+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29951"
+      "$$hashKey": "object:43509"
     },
     {
       "title": "Plotting from multiple cells in matplotlib",
       "text": "%md\n\nTo iteratively update a single plot, we can leverage Zeppelin's built-in Angular Display System. Currently this feature is only available for the `pyspark` interpreter for raster (png and jpg) formats. To enable this, we must set a special `angular` flag to `True` in our configuration:\n",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T14:36:34+0000",
       "progress": 0,
       "config": {
@@ -621,12 +621,12 @@
       "dateStarted": "2022-03-03T14:36:34+0000",
       "dateFinished": "2022-03-03T14:36:34+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29952"
+      "$$hashKey": "object:43510"
     },
     {
       "title": "First cell - this has the plot with the first line",
       "text": "%pyspark\n\nimport matplotlib.pyplot as plt\nplt.close() # Added here to reset the plot when rerunning the paragraph\nz.configure_mpl(angular=True, close=False)\nplt.plot([1, 2, 3], label=r'$y=x$')\n\n# ... the following related cells are placed by the side of this one by adjusting their width via the cog icon in the top right of each.",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T14:48:45+0000",
       "progress": 0,
       "config": {
@@ -669,12 +669,12 @@
       "dateStarted": "2022-03-03T14:41:03+0000",
       "dateFinished": "2022-03-03T14:41:03+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29953"
+      "$$hashKey": "object:43511"
     },
     {
       "title": "Second line",
       "text": "%pyspark\n\nplt.plot([3, 2, 1], label=r'$y=3-x$')\n",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T14:47:50+0000",
       "progress": 0,
       "config": {
@@ -717,12 +717,12 @@
       "dateStarted": "2022-03-03T14:41:05+0000",
       "dateFinished": "2022-03-03T14:41:05+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29954"
+      "$$hashKey": "object:43512"
     },
     {
       "title": "Label axes",
       "text": "%pyspark\n\nplt.xlabel(r'$x$', fontsize=20)\nplt.ylabel(r'$y$', fontsize=20)",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T14:42:40+0000",
       "progress": 0,
       "config": {
@@ -765,12 +765,12 @@
       "dateStarted": "2022-03-03T14:42:40+0000",
       "dateFinished": "2022-03-03T14:42:40+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29955"
+      "$$hashKey": "object:43513"
     },
     {
       "title": "Add legend",
       "text": "%pyspark\n\nplt.legend(loc='upper center', fontsize=20)",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T14:43:27+0000",
       "progress": 0,
       "config": {
@@ -798,12 +798,12 @@
       "id": "paragraph_1646318572568_292771953",
       "dateCreated": "2022-03-03T14:42:52+0000",
       "status": "READY",
-      "$$hashKey": "object:29956"
+      "$$hashKey": "object:43514"
     },
     {
       "title": "Add title",
       "text": "%pyspark\n\nplt.title('Inline plotting example', fontsize=20)",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T14:44:33+0000",
       "progress": 0,
       "config": {
@@ -846,12 +846,12 @@
       "dateStarted": "2022-03-03T14:44:33+0000",
       "dateFinished": "2022-03-03T14:44:33+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29957"
+      "$$hashKey": "object:43515"
     },
     {
       "title": "Pandas and matplotlib",
       "text": "%md\n\nPandas provides a high level api for visualisation of Pandas data frames. It uses matplotlib for its visualization under the hood, so the usage is the same as matplotlib. ",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T12:10:16+0000",
       "progress": 0,
       "config": {
@@ -892,11 +892,11 @@
       "dateStarted": "2022-03-03T12:10:16+0000",
       "dateFinished": "2022-03-03T12:10:16+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29958"
+      "$$hashKey": "object:43516"
     },
     {
       "text": "%python.ipython\n\nimport pandas as pd\nimport numpy as np\n\nts = pd.Series(np.random.randn(1000), index=pd.date_range('1/1/2000', periods=1000))\nts = ts.cumsum()\nts.plot()",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T12:11:02+0000",
       "progress": 0,
       "config": {
@@ -939,11 +939,11 @@
       "dateStarted": "2022-03-03T12:10:45+0000",
       "dateFinished": "2022-03-03T12:10:45+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29959"
+      "$$hashKey": "object:43517"
     },
     {
       "text": "%md\n\n## Pandas User Defined Functions (a.k.a. vectorized UDFs)\n\nA convenient feature of the PySpark SQL data frame API is the programmability afforded by user defined functions. Users who have found themselves limited by the small number of aggregate functions typically available in ADQL will find this feature particularly useful in scale-out usage scenarios. There are one or two examples of the use of UDFs in the example notebooks provided on this platform. \n\nFor further details see the [Apache Spark documentation for Pandas UDFs](https://spark.apache.org/docs/latest/api/python/user_guide/sql/arrow_pandas.html).\n\n",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T18:20:35+0000",
       "progress": 0,
       "config": {
@@ -983,11 +983,11 @@
       "dateStarted": "2022-03-03T16:40:46+0000",
       "dateFinished": "2022-03-03T16:40:46+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:29960"
+      "$$hashKey": "object:43518"
     },
     {
       "text": "%md\n",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-03T16:29:06+0000",
       "progress": 0,
       "config": {
@@ -1014,10 +1014,10 @@
       "id": "paragraph_1646324946148_1387147604",
       "dateCreated": "2022-03-03T16:29:06+0000",
       "status": "READY",
-      "$$hashKey": "object:29961"
+      "$$hashKey": "object:43519"
     }
   ],
-  "name": "Tips and tricks",
+  "name": "9. Tips and tricks",
   "id": "2GVXKC266",
   "defaultInterpreterGroup": "spark",
   "version": "0.10.0",
@@ -1058,5 +1058,5 @@
     "personalizedMode": "false"
   },
   "info": {},
-  "path": "/Public Examples/Tips and tricks"
+  "path": "/Public Examples/9. Tips and tricks"
 }

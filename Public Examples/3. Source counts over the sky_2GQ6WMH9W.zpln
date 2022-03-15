@@ -2,8 +2,8 @@
   "paragraphs": [
     {
       "text": "%md\n\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n\nThis simple example shows how to use the PySpark SQL API to execute a simple query on the main source catalogue and plot the results.\n\nNotes:\n\n* The cell containing the query below finishes instantly since it merely defines a \"transformation\" (in the language of Spark) without actually actioning it. It is only when something is done with the data selected by this transform (i.e. it is explicitly actioned as in the following cell) that execution occurs\n* Visualisation takes advantage of HEALPix pixelisation encoded in the Gaia source IDs, and the healpy Python package in conjunction with matplotlib\n* Links are provided in the final cell to the documentation for the packages used, along with other relevant resources.\n\n",
-      "user": "nch",
-      "dateUpdated": "2022-03-04T12:04:56+0000",
+      "user": "zrq",
+      "dateUpdated": "2022-03-11T16:48:24+0000",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -39,17 +39,17 @@
       "jobName": "paragraph_1639345711769_199647998",
       "id": "20210507-084613_357121151",
       "dateCreated": "2021-12-12T21:48:31+0000",
-      "dateStarted": "2022-03-04T12:04:52+0000",
-      "dateFinished": "2022-03-04T12:04:52+0000",
+      "dateStarted": "2022-03-11T16:48:24+0000",
+      "dateFinished": "2022-03-11T16:48:24+0000",
       "status": "FINISHED",
       "focus": true,
-      "$$hashKey": "object:27857"
+      "$$hashKey": "object:47010"
     },
     {
       "title": "Set the resolution level and define the query",
       "text": "%pyspark\n\nimport math\n\n# set the resolution of the counts\nhealpix_level = 7\n# HEALPix level : no. of pixels\n# 4 : 3072\n# 5 : 12288\n# 6 : 49152 ~ 1 square degree pixels\n# 7 : 196608\n\n# Note: the most significant four-byte word of the 8-byte Gaia source ID contains a HEALPix level 12 index from bit 35 and higher\nnside = int(math.pow(2, healpix_level))\npowers_of_2 = 35 + (12 - healpix_level)*2\ndivisor = int(math.pow(2, powers_of_2))\n\ndivisor\n\n# make the query: integer division via the PySpark SQL FLOOR function is used to create bin UIDs by which to group the count\ndf = spark.sql(\"SELECT FLOOR(source_id / %d\"%(divisor) + \") AS hpx_id, COUNT(*) AS n FROM gaia_source GROUP BY hpx_id\")\n\n",
-      "user": "anonymous",
-      "dateUpdated": "2022-02-24T16:28:38+0000",
+      "user": "zrq",
+      "dateUpdated": "2022-03-11T16:48:24+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -80,16 +80,16 @@
       "jobName": "paragraph_1639345711769_817858712",
       "id": "20200826-105718_1698521515",
       "dateCreated": "2021-12-12T21:48:31+0000",
-      "dateStarted": "2022-02-24T16:28:38+0000",
-      "dateFinished": "2022-02-24T16:28:38+0000",
+      "dateStarted": "2022-03-11T16:48:24+0000",
+      "dateFinished": "2022-03-11T16:48:24+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:27858"
+      "$$hashKey": "object:47011"
     },
     {
       "title": "Plot up the results",
       "text": "%pyspark\n\n# plot up the sky counts\nimport numpy as np\nimport healpy as hp\nimport matplotlib.pyplot as plot\n\n# set a figure to use along with a plot size (landscape, golden ratio)\nplot.figure(1, figsize = (16.18, 10.0))\n\n# healpy constants appropriate to the HEALPix indexing encoded in Gaia source IDs\nnpix = hp.nside2npix(nside)\n\n# do the visualisation\narray_data = np.empty(npix)\n# access the underlying Spark Resilient Distributed Data object of the data frame to get the relevant data for plotting ...\nfor item in df.rdd.collect():  array_data[item[0]] = item[1]\n# ... this is just one way of several ...\n\n# plot the counts in Mollweide projection ...\nhp.mollview(array_data, fig=1, nest=True, coord='CG', unit = 'Star counts per HEALPixel', title='Gaia EDR3 source counts at HEALPix level %d'%(healpix_level), cmap='viridis', norm = 'log')\n# ... with an Equatorial graticule\nhp.graticule(coord='C', color='white')\n",
-      "user": "anonymous",
-      "dateUpdated": "2022-02-24T16:28:38+0000",
+      "user": "zrq",
+      "dateUpdated": "2022-03-11T16:48:24+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -115,7 +115,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:920: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. This has been deprecated since 3.3 and in 3.6, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = mpl.cm.get_cmap(\"viridis\").copy()\n  newcm.set_over(newcm(1.0))\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:921: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. This has been deprecated since 3.3 and in 3.6, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = mpl.cm.get_cmap(\"viridis\").copy()\n  newcm.set_under(bgcolor)\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:922: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. This has been deprecated since 3.3 and in 3.6, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = mpl.cm.get_cmap(\"viridis\").copy()\n  newcm.set_bad(badcolor)\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:211: MatplotlibDeprecationWarning: Passing parameters norm and vmin/vmax simultaneously is deprecated since 3.3 and will become an error two minor releases later. Please pass vmin/vmax directly to the norm when creating it.\n  **kwds\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:543: UserWarning: 0.0 180.0 -180.0 180.0\n  pmin / dtor, pmax / dtor, mmin / dtor, mmax / dtor\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:658: UserWarning: The interval between parallels is 30 deg -0.00'.\n  vdeg, varcmin\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:666: UserWarning: The interval between meridians is 30 deg -0.00'.\n  vdeg, varcmin\n"
+            "data": "WARNING: IERSStaleWarning: leap-second file is expired. [astropy.utils.iers.iers]\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:920: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. This has been deprecated since 3.3 and in 3.6, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = mpl.cm.get_cmap(\"viridis\").copy()\n  newcm.set_over(newcm(1.0))\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:921: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. This has been deprecated since 3.3 and in 3.6, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = mpl.cm.get_cmap(\"viridis\").copy()\n  newcm.set_under(bgcolor)\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:922: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. This has been deprecated since 3.3 and in 3.6, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = mpl.cm.get_cmap(\"viridis\").copy()\n  newcm.set_bad(badcolor)\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:211: MatplotlibDeprecationWarning: Passing parameters norm and vmin/vmax simultaneously is deprecated since 3.3 and will become an error two minor releases later. Please pass vmin/vmax directly to the norm when creating it.\n  **kwds\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:543: UserWarning: 0.0 180.0 -180.0 180.0\n  pmin / dtor, pmax / dtor, mmin / dtor, mmax / dtor\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:658: UserWarning: The interval between parallels is 30 deg -0.00'.\n  vdeg, varcmin\n/usr/local/lib64/python3.7/site-packages/healpy/projaxes.py:666: UserWarning: The interval between meridians is 30 deg -0.00'.\n  vdeg, varcmin\n"
           },
           {
             "type": "HTML",
@@ -132,8 +132,8 @@
           "group": "spark",
           "values": [
             {
-              "jobUrl": "http://zeppelin:4040/jobs/job?id=66",
-              "$$hashKey": "object:28151"
+              "jobUrl": "http://zeppelin:4040/jobs/job?id=4",
+              "$$hashKey": "object:47304"
             }
           ],
           "interpreterSettingId": "spark"
@@ -143,16 +143,16 @@
       "jobName": "paragraph_1639345711769_2025436459",
       "id": "20200826-110030_2095441495",
       "dateCreated": "2021-12-12T21:48:31+0000",
-      "dateStarted": "2022-02-24T16:28:38+0000",
-      "dateFinished": "2022-02-24T16:29:20+0000",
+      "dateStarted": "2022-03-11T16:48:25+0000",
+      "dateFinished": "2022-03-11T16:48:53+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:27859"
+      "$$hashKey": "object:47012"
     },
     {
       "title": "Further reading and resources",
       "text": "%md\n\n* [Gaia source ID definition (for HEALPix indexing)](https://dms.cosmos.esa.int/COSMOS/doc_fetch.php?id=2779219)\n* [Python package healpy](https://healpy.readthedocs.io/en/latest/index.html)\n* [Python matplotlib plotting library](https://matplotlib.org)\n* [Handy HEALPixel characteristics for various levels](https://lambda.gsfc.nasa.gov/toolbox/tb_pixelcoords.cfm)\n",
-      "user": "anonymous",
-      "dateUpdated": "2022-02-24T16:29:20+0000",
+      "user": "zrq",
+      "dateUpdated": "2022-03-11T16:48:53+0000",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -189,87 +189,13 @@
       "jobName": "paragraph_1639345711773_149579928",
       "id": "20210507-091244_670006530",
       "dateCreated": "2021-12-12T21:48:31+0000",
-      "dateStarted": "2022-02-24T16:29:20+0000",
-      "dateFinished": "2022-02-24T16:29:20+0000",
+      "dateStarted": "2022-03-11T16:48:53+0000",
+      "dateFinished": "2022-03-11T16:48:53+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:27860"
-    },
-    {
-      "text": "%spark.pyspark\n\nf = open('/user/nch/source-counts-hpx%d.asc'%(healpix_level), mode = 'w')\nf.write('# hpx%did count\\n'%(healpix_level))\nfor i in range(len(array_data)): f.write('%d %d\\n'%(i, array_data[i]))\nf.close()\n",
-      "user": "anonymous",
-      "dateUpdated": "2022-02-24T16:29:20+0000",
-      "progress": 0,
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9,
-        "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639345711773_1695585128",
-      "id": "20200826-110146_414730471",
-      "dateCreated": "2021-12-12T21:48:31+0000",
-      "dateStarted": "2022-02-24T16:29:20+0000",
-      "dateFinished": "2022-02-24T16:29:20+0000",
-      "status": "FINISHED",
-      "$$hashKey": "object:27861"
-    },
-    {
-      "text": "%spark.pyspark\n",
-      "user": "anonymous",
-      "dateUpdated": "2022-02-24T16:29:20+0000",
-      "progress": 0,
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9,
-        "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639345711773_388680590",
-      "id": "20211029-084414_730906497",
-      "dateCreated": "2021-12-12T21:48:31+0000",
-      "dateStarted": "2022-02-24T16:29:20+0000",
-      "dateFinished": "2022-02-24T16:29:20+0000",
-      "status": "FINISHED",
-      "$$hashKey": "object:27862"
+      "$$hashKey": "object:47013"
     }
   ],
-  "name": "Source counts over the sky",
+  "name": "3. Source counts over the sky",
   "id": "2GQ6WMH9W",
   "defaultInterpreterGroup": "spark",
   "version": "0.10.0",
@@ -281,6 +207,11 @@
     "looknfeel": "default",
     "personalizedMode": "false"
   },
-  "info": {},
-  "path": "/Public Examples/Source counts over the sky"
+  "info": {
+    "isRunning": false
+  },
+  "path": "/Public Examples/3. Source counts over the sky",
+  "checkpoint": {
+    "message": "Removed last 2 paras"
+  }
 }

@@ -3,7 +3,7 @@
     {
       "title": "Introduction",
       "text": "%md\n\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n\nThe science exploitation platform currently hosts the following data sets:\n\n* The Gaia EDR3 source catalogue (a direct mirror of gaiaedr3.gaia_source from the Gaia archive);\n* Best neighbour tables for PanSTARRS DR1, 2MASS PSC and ALLWISE (again, directly mirrored from the corresponding tables in the Gaia archive under the gaiaedr3 namespace) along with the original records from the 2MASS PSC and ALLWISE catalogues, and Object Thin / Object Mean columns from PanSTARRS DR1 (respectively 2MASS, ALLWISE and PS1 hereafter) where a best neighbour is available.\n\nThese are presented as SQL-queryable resources as demonstrated in the following cells. Click on the outward-pointing arrows in the top right of each cell to show the code; click on inward-pointing arrows to hide. Each cell can be run by pressing the play icon in the top-right; click on the cog icon to see other options, e.g. to clear current output. Note that the variant of SQL here is [PySpark SQL](https://spark.apache.org/docs/3.0.0/sql-ref.html), not ADQL.",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-04T12:03:06+0000",
       "progress": 0,
       "config": {
@@ -41,11 +41,11 @@
       "jobName": "paragraph_1639345858368_1416493291",
       "id": "20210507-123801_497865463",
       "dateCreated": "2021-12-12T21:50:58+0000",
+      "dateStarted": "2022-03-04T12:03:06+0000",
+      "dateFinished": "2022-03-04T12:03:06+0000",
       "status": "FINISHED",
       "focus": true,
-      "$$hashKey": "object:23422",
-      "dateFinished": "2022-03-04T12:03:06+0000",
-      "dateStarted": "2022-03-04T12:03:06+0000"
+      "$$hashKey": "object:38640"
     },
     {
       "title": "Database and table details",
@@ -89,7 +89,7 @@
       "id": "20210507-124436_282498395",
       "dateCreated": "2021-12-12T21:50:58+0000",
       "status": "READY",
-      "$$hashKey": "object:23423"
+      "$$hashKey": "object:38641"
     },
     {
       "title": "Description and links",
@@ -133,7 +133,7 @@
       "id": "20210507-124618_1845823957",
       "dateCreated": "2021-12-12T21:50:58+0000",
       "status": "READY",
-      "$$hashKey": "object:23424"
+      "$$hashKey": "object:38642"
     },
     {
       "title": "Column listing for a table",
@@ -176,7 +176,7 @@
       "id": "20210507-133844_1243154051",
       "dateCreated": "2021-12-12T21:50:58+0000",
       "status": "READY",
-      "$$hashKey": "object:23425"
+      "$$hashKey": "object:38643"
     },
     {
       "title": "Querying the main catalogue",
@@ -219,7 +219,7 @@
       "id": "20210507-140821_1444471628",
       "dateCreated": "2021-12-12T21:50:58+0000",
       "status": "READY",
-      "$$hashKey": "object:23426"
+      "$$hashKey": "object:38644"
     },
     {
       "title": "Querying with cross-matched data",
@@ -261,7 +261,7 @@
       "id": "20210507-144257_1004220319",
       "dateCreated": "2021-12-12T21:50:58+0000",
       "status": "READY",
-      "$$hashKey": "object:23427"
+      "$$hashKey": "object:38645"
     },
     {
       "title": "Things to note",
@@ -305,7 +305,7 @@
       "id": "20210507-144728_1143294166",
       "dateCreated": "2021-12-12T21:50:58+0000",
       "status": "READY",
-      "$$hashKey": "object:23428"
+      "$$hashKey": "object:38646"
     },
     {
       "text": "%md\n",
@@ -336,10 +336,10 @@
       "id": "20210507-144934_423944230",
       "dateCreated": "2021-12-12T21:50:58+0000",
       "status": "READY",
-      "$$hashKey": "object:23429"
+      "$$hashKey": "object:38647"
     }
   ],
-  "name": "Data holdings",
+  "name": "2. Data holdings",
   "id": "2GRA39HCN",
   "defaultInterpreterGroup": "spark",
   "version": "0.10.0",
@@ -352,5 +352,5 @@
     "personalizedMode": "false"
   },
   "info": {},
-  "path": "/Public Examples/Data holdings"
+  "path": "/Public Examples/2. Data holdings"
 }
