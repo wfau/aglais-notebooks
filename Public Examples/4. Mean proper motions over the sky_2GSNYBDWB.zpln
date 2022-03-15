@@ -2,7 +2,7 @@
   "paragraphs": [
     {
       "text": "%md\n\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n\n",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-04T12:04:34+0000",
       "progress": 0,
       "config": {
@@ -24,17 +24,6 @@
         "params": {},
         "forms": {}
       },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1646395441893_1272795891",
-      "id": "paragraph_1646395441893_1272795891",
-      "dateCreated": "2022-03-04T12:04:01+0000",
-      "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:27267",
-      "dateFinished": "2022-03-04T12:04:16+0000",
-      "dateStarted": "2022-03-04T12:04:16+0000",
       "results": {
         "code": "SUCCESS",
         "msg": [
@@ -43,7 +32,18 @@
             "data": "<div class=\"markdown-body\">\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n\n</div>"
           }
         ]
-      }
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1646395441893_1272795891",
+      "id": "paragraph_1646395441893_1272795891",
+      "dateCreated": "2022-03-04T12:04:01+0000",
+      "dateStarted": "2022-03-04T12:04:16+0000",
+      "dateFinished": "2022-03-04T12:04:16+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:40534"
     },
     {
       "title": "Set HEALPix resolution",
@@ -83,8 +83,7 @@
       "dateStarted": "2022-02-24T12:18:35+0000",
       "dateFinished": "2022-02-24T12:18:35+0000",
       "status": "FINISHED",
-      "focus": true,
-      "$$hashKey": "object:26714"
+      "$$hashKey": "object:40535"
     },
     {
       "title": "Define a data frame by SQL query",
@@ -124,7 +123,7 @@
       "dateStarted": "2022-02-24T12:18:35+0000",
       "dateFinished": "2022-02-24T12:18:35+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26715"
+      "$$hashKey": "object:40536"
     },
     {
       "title": "Mean RA proper motion plot",
@@ -183,7 +182,7 @@
       "dateStarted": "2022-02-24T12:18:35+0000",
       "dateFinished": "2022-02-24T12:19:15+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26716"
+      "$$hashKey": "object:40537"
     },
     {
       "title": "Mean Dec proper motion plot",
@@ -242,7 +241,7 @@
       "dateStarted": "2022-02-24T12:19:15+0000",
       "dateFinished": "2022-02-24T12:19:16+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26717"
+      "$$hashKey": "object:40538"
     },
     {
       "title": "Further reading and resources",
@@ -288,7 +287,7 @@
       "dateStarted": "2022-02-24T12:19:16+0000",
       "dateFinished": "2022-02-24T12:19:16+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26718"
+      "$$hashKey": "object:40539"
     },
     {
       "title": "Tidy-up",
@@ -329,7 +328,7 @@
       "dateStarted": "2022-02-24T12:19:16+0000",
       "dateFinished": "2022-02-24T12:19:16+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26719"
+      "$$hashKey": "object:40540"
     },
     {
       "text": "%pyspark\n",
@@ -366,10 +365,10 @@
       "dateStarted": "2022-02-24T12:19:16+0000",
       "dateFinished": "2022-02-24T12:19:16+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:26720"
+      "$$hashKey": "object:40541"
     }
   ],
-  "name": "Mean proper motions over the sky",
+  "name": "4. Mean proper motions over the sky",
   "id": "2GSNYBDWB",
   "defaultInterpreterGroup": "spark",
   "version": "0.10.0",
@@ -382,5 +381,5 @@
     "personalizedMode": "false"
   },
   "info": {},
-  "path": "/Public Examples/Mean proper motions over the sky"
+  "path": "/Public Examples/4. Mean proper motions over the sky"
 }

@@ -2,7 +2,7 @@
   "paragraphs": [
     {
       "text": "%md\n\n<!--\n\n    Gaia Data Processing and Analysis Consortium (DPAC) \n    Co-ordination Unit 9 Work Package 930\n    \n    (c) 2005-2025 Gaia DPAC\n    \n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n    -->\n\n# Using ML to define an astrometrically clean sample of stars\n\nFollows the Gaia EDR3 performance verification \"The Gaia Catalogue of Nearby Stars\" (Smart et al. 2021) in classifying astrometric solutions as good or bad via supervised ML. Employs a Random Forrest classifier plus appropriately defined training sets - see https://arxiv.org/abs/2012.02061 for further details. The work flow implemented here follows closely that described in Section 2, \"GCNS Generation\" (GCNS = Gaia Catalogue of Nearby Stars) and is designed to clean up a 100pc (= nearby) sample.\n\n   ",
-      "user": "nch",
+      "user": "anonymous",
       "dateUpdated": "2022-03-04T12:03:31+0000",
       "progress": 0,
       "config": {
@@ -43,7 +43,7 @@
       "dateFinished": "2022-03-04T12:03:31+0000",
       "status": "FINISHED",
       "focus": true,
-      "$$hashKey": "object:24626"
+      "$$hashKey": "object:41547"
     },
     {
       "title": "Basic catalogue query selections and predicates",
@@ -83,7 +83,7 @@
       "dateStarted": "2022-02-24T12:20:41+0000",
       "dateFinished": "2022-02-24T12:20:41+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24627"
+      "$$hashKey": "object:41548"
     },
     {
       "title": "Raw catalogue with selected columns",
@@ -142,13 +142,13 @@
       "dateStarted": "2022-02-24T12:20:41+0000",
       "dateFinished": "2022-02-24T12:26:14+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24628"
+      "$$hashKey": "object:41549"
     },
     {
       "title": "Visualisation (colour / absolute-magnitue diagram) of the raw catalogue",
       "text": "%spark.pyspark\n\n# plot an observational Hertzsprung-Russell diagram (aka colour / absolute magnitude diagram) for the unclassified sample to show the problem,\n# include the photometric consistency filter to show the problem is astrometric in addition to photometric\nunclassified_camd_df = spark.sql('SELECT phot_g_mean_mag + 5.0*LOG10(parallax/100.0) AS m_g, g_rp FROM raw_sources WHERE parallax > +8.0' + quick_plot_filter)# + photometric_consistency_filter)\n\nimport matplotlib.pyplot as plot\nplot.figure(0, figsize = (9.0, 9.0))\nx = list(unclassified_camd_df.select('g_rp').toPandas()['g_rp'])\ny = list(unclassified_camd_df.select('m_g').toPandas()['m_g'])\nplot.scatter(x, y, marker = '.', s = 1)\nplot.ylim(21.0, -3.0)\nplot.ylabel('Stellar brightness (absolute G magnitude) -->', fontsize = 16)\nplot.xlabel('<-- Stellar temperature (G - RP magnitude)', fontsize = 16)\nplot.show()\n\n",
       "user": "anonymous",
-      "dateUpdated": "2022-02-24T12:26:14+0000",
+      "dateUpdated": "2022-03-14T16:59:34+0000",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -160,7 +160,7 @@
         "colWidth": 12,
         "editorMode": "ace/mode/python",
         "fontSize": 9,
-        "editorHide": true,
+        "editorHide": false,
         "title": true,
         "results": {},
         "enabled": true
@@ -205,7 +205,7 @@
       "dateStarted": "2022-02-24T12:26:14+0000",
       "dateFinished": "2022-02-24T12:26:17+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24629"
+      "$$hashKey": "object:41550"
     },
     {
       "text": "%md\n\n<br>The problem: while we see astrophysically interesting locii in the colour / absolute-magnitude diagram in the previous cell, the lower right (cool, low temperature) regime is dominated by systematic errors (not random uncertainties - the data should be equally precise in all parts of this data space) that create contamination in the raw sample. We wish to clean the sample to obtain high reliability\n\n* without compromising completeness;\n* utilising astrometric quality features in the raw catalogue for a volume-complete sample;\n* and efficiently; \n\ni.e. without endless iterations of manual, subjective, axis-parallel and arbitrary cuts on available catalogue attributes. A neat solution to this is to use supervised ML. In the Gaia EDR3 performance verification paper \"Gaia Catalogue of Nearby Stars\" (Smart, Sarro, Rybicki, et al. 2020) we use a Random Forest of decision trees on selected features having first defined a training set based on the data itself. \n\nAn 8 mas training set of \"good\" examples is \"cleaned\" of highly probable spurious sources using <i>independent</i> photometric criteria, i.e. we require consistency of optical colours. The \"bad\" examples are selected having (unphysical) parallax < -8 mas, i.e. using parallax measurements that are formally highly significant, yet obviously spurious. Under the assumption of normally distributed uncertainties on the parallax measurements, this bad sample should be representative of the corresponding spurious measurements having parallax > 8 mas that contaminate the parallax-selected sample and, in particular, create the contamination illustrated in the plot above.\n",
@@ -249,7 +249,7 @@
       "dateStarted": "2022-02-24T12:26:17+0000",
       "dateFinished": "2022-02-24T12:26:17+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24630"
+      "$$hashKey": "object:41551"
     },
     {
       "title": "Define the training samples",
@@ -316,7 +316,7 @@
       "dateStarted": "2022-02-24T12:26:17+0000",
       "dateFinished": "2022-02-24T12:26:20+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24631"
+      "$$hashKey": "object:41552"
     },
     {
       "title": "Assemble training and reserve test sets",
@@ -356,7 +356,7 @@
       "dateStarted": "2022-02-24T12:26:20+0000",
       "dateFinished": "2022-02-24T12:26:20+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24632"
+      "$$hashKey": "object:41553"
     },
     {
       "title": "Train up the Random Forrest",
@@ -442,7 +442,7 @@
       "dateStarted": "2022-02-24T12:26:20+0000",
       "dateFinished": "2022-02-24T12:29:21+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24633"
+      "$$hashKey": "object:41554"
     },
     {
       "title": "Check feature set for nulls",
@@ -482,7 +482,7 @@
       "dateStarted": "2022-02-24T12:29:22+0000",
       "dateFinished": "2022-02-24T12:29:22+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24634"
+      "$$hashKey": "object:41555"
     },
     {
       "title": "Classify the reserved test sets",
@@ -522,7 +522,7 @@
       "dateStarted": "2022-02-24T12:29:22+0000",
       "dateFinished": "2022-02-24T12:29:22+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24635"
+      "$$hashKey": "object:41556"
     },
     {
       "title": "Classification confusion matrix",
@@ -585,7 +585,7 @@
       "dateStarted": "2022-02-24T12:29:22+0000",
       "dateFinished": "2022-02-24T12:29:36+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24636"
+      "$$hashKey": "object:41557"
     },
     {
       "title": "Relative importance of the selected features",
@@ -630,7 +630,7 @@
       "dateStarted": "2022-02-24T12:29:36+0000",
       "dateFinished": "2022-02-24T12:29:36+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24637"
+      "$$hashKey": "object:41558"
     },
     {
       "title": "Apply the classification model and plot sample results",
@@ -701,7 +701,7 @@
       "dateStarted": "2022-02-24T12:29:36+0000",
       "dateFinished": "2022-02-24T12:29:50+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24638"
+      "$$hashKey": "object:41559"
     },
     {
       "title": "Histogram of classification probability",
@@ -764,7 +764,7 @@
       "dateStarted": "2022-02-24T12:29:50+0000",
       "dateFinished": "2022-02-24T12:30:11+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24639"
+      "$$hashKey": "object:41560"
     },
     {
       "title": "Sky distribution of good source sample",
@@ -831,7 +831,7 @@
       "dateStarted": "2022-02-24T12:30:11+0000",
       "dateFinished": "2022-02-24T12:30:16+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24640"
+      "$$hashKey": "object:41561"
     },
     {
       "title": "Sky distribution of bad source sample",
@@ -898,7 +898,7 @@
       "dateStarted": "2022-02-24T12:30:16+0000",
       "dateFinished": "2022-02-24T12:30:21+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24641"
+      "$$hashKey": "object:41562"
     },
     {
       "title": "Further reading and resources",
@@ -944,7 +944,7 @@
       "dateStarted": "2022-02-24T12:30:21+0000",
       "dateFinished": "2022-02-24T12:30:21+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24642"
+      "$$hashKey": "object:41563"
     },
     {
       "text": "%pyspark\n",
@@ -981,10 +981,10 @@
       "dateStarted": "2022-02-24T12:30:21+0000",
       "dateFinished": "2022-02-24T12:30:21+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:24643"
+      "$$hashKey": "object:41564"
     }
   ],
-  "name": "Good astrometric solutions via ML Random Forrest classifier",
+  "name": "7. Good astrometric solutions via ML Random Forrest classifier",
   "id": "2GQDKZ59J",
   "defaultInterpreterGroup": "spark",
   "version": "0.10.0",
@@ -997,5 +997,5 @@
     "personalizedMode": "false"
   },
   "info": {},
-  "path": "/Public Examples/Good astrometric solutions via ML Random Forrest classifier"
+  "path": "/Public Examples/7. Good astrometric solutions via ML Random Forrest classifier"
 }
