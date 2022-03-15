@@ -43,7 +43,7 @@
       "dateFinished": "2022-03-11T16:48:24+0000",
       "status": "FINISHED",
       "focus": true,
-      "$$hashKey": "object:39673"
+      "$$hashKey": "object:47010"
     },
     {
       "title": "Set the resolution level and define the query",
@@ -83,7 +83,7 @@
       "dateStarted": "2022-03-11T16:48:24+0000",
       "dateFinished": "2022-03-11T16:48:24+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:39674"
+      "$$hashKey": "object:47011"
     },
     {
       "title": "Plot up the results",
@@ -133,7 +133,7 @@
           "values": [
             {
               "jobUrl": "http://zeppelin:4040/jobs/job?id=4",
-              "$$hashKey": "object:39967"
+              "$$hashKey": "object:47304"
             }
           ],
           "interpreterSettingId": "spark"
@@ -146,7 +146,7 @@
       "dateStarted": "2022-03-11T16:48:25+0000",
       "dateFinished": "2022-03-11T16:48:53+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:39675"
+      "$$hashKey": "object:47012"
     },
     {
       "title": "Further reading and resources",
@@ -192,81 +192,7 @@
       "dateStarted": "2022-03-11T16:48:53+0000",
       "dateFinished": "2022-03-11T16:48:53+0000",
       "status": "FINISHED",
-      "$$hashKey": "object:39676"
-    },
-    {
-      "text": "%spark.pyspark\n\nf = open('/user/nch/source-counts-hpx%d.asc'%(healpix_level), mode = 'w')\nf.write('# hpx%did count\\n'%(healpix_level))\nfor i in range(len(array_data)): f.write('%d %d\\n'%(i, array_data[i]))\nf.close()\n",
-      "user": "zrq",
-      "dateUpdated": "2022-03-11T16:48:53+0000",
-      "progress": 0,
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9,
-        "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639345711773_1695585128",
-      "id": "20200826-110146_414730471",
-      "dateCreated": "2021-12-12T21:48:31+0000",
-      "dateStarted": "2022-03-11T16:48:53+0000",
-      "dateFinished": "2022-03-11T16:48:55+0000",
-      "status": "FINISHED",
-      "$$hashKey": "object:39677"
-    },
-    {
-      "text": "%spark.pyspark\n",
-      "user": "zrq",
-      "dateUpdated": "2022-03-11T16:48:55+0000",
-      "progress": 0,
-      "config": {
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "colWidth": 12,
-        "editorMode": "ace/mode/python",
-        "fontSize": 9,
-        "results": {},
-        "enabled": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "runtimeInfos": {},
-      "progressUpdateIntervalMs": 500,
-      "jobName": "paragraph_1639345711773_388680590",
-      "id": "20211029-084414_730906497",
-      "dateCreated": "2021-12-12T21:48:31+0000",
-      "dateStarted": "2022-03-11T16:48:55+0000",
-      "dateFinished": "2022-03-11T16:48:55+0000",
-      "status": "FINISHED",
-      "$$hashKey": "object:39678"
+      "$$hashKey": "object:47013"
     }
   ],
   "name": "3. Source counts over the sky",
@@ -284,5 +210,8 @@
   "info": {
     "isRunning": false
   },
-  "path": "/Public Examples/3. Source counts over the sky"
+  "path": "/Public Examples/3. Source counts over the sky",
+  "checkpoint": {
+    "message": "Removed last 2 paras"
+  }
 }
