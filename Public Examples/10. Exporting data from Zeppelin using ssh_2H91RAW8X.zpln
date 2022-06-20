@@ -1,0 +1,234 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%md\n## Copying files from Zeppelin to local machine\n\nThis notebook describes the process by which you can export data from your Zeppelin home directory, onto your local desktop. \nThis involves copying your public ssh key onto Zeppelin, after which you can either ssh into Zeppelin or you can copy files from it using scp.",
+      "user": "Phioji8Eir0a",
+      "dateUpdated": "2022-06-20T15:40:48+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h2>Copying files from Zeppelin to local machine</h2>\n<p>This notebook describes the process by which you can export data from your Zeppelin home directory, onto your local desktop.<br />\nThis involves copying your public ssh key onto Zeppelin, after which you can either ssh into Zeppelin or you can copy files from it using scp.</p>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1655737447252_884311407",
+      "id": "paragraph_1655737447252_884311407",
+      "dateCreated": "2022-06-20T15:04:07+0000",
+      "dateStarted": "2022-06-20T15:40:48+0000",
+      "dateFinished": "2022-06-20T15:40:48+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:4378"
+    },
+    {
+      "text": "%md\n### First copy your public ssh key into your Zeppelin home directory's authorized_keys file\n\n\n    %sh\n    user=\"$(whoami)\"\n    \n    echo \"{PASTE-YOUR-PUBLIC-SSH-KEY-HERE}\" >> /home/$user/.ssh/authorized_keys\n",
+      "user": "Phioji8Eir0a",
+      "dateUpdated": "2022-06-20T15:40:49+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h3>First copy your public ssh key into your Zeppelin home directory&rsquo;s authorized_keys file</h3>\n<pre><code>%sh\nuser=&quot;$(whoami)&quot;\n\necho &quot;{PASTE-YOUR-PUBLIC-SSH-KEY-HERE}&quot; &gt;&gt; /home/$user/.ssh/authorized_keys\n</code></pre>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1655738466869_575627986",
+      "id": "paragraph_1655738466869_575627986",
+      "dateCreated": "2022-06-20T15:21:06+0000",
+      "dateStarted": "2022-06-20T15:40:49+0000",
+      "dateFinished": "2022-06-20T15:40:49+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:4379"
+    },
+    {
+      "text": "%md\n### Create or copy the data file you wish to export into your public directory (Zeppelin) \n\n    %sh\n    user=\"$(whoami)\"\n    touch /home/$user/data",
+      "user": "Phioji8Eir0a",
+      "dateUpdated": "2022-06-20T15:40:49+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h3>Create or copy the data file you wish to export into your public directory (Zeppelin)</h3>\n<pre><code>%sh\nuser=&quot;$(whoami)&quot;\ntouch /home/$user/data\n</code></pre>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1655738660924_1926259876",
+      "id": "paragraph_1655738660924_1926259876",
+      "dateCreated": "2022-06-20T15:24:20+0000",
+      "dateStarted": "2022-06-20T15:40:49+0000",
+      "dateFinished": "2022-06-20T15:40:49+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:4380"
+    },
+    {
+      "text": "%md\n### From your local machine you can now either ssh into Zeppelin\n#### Note: Run on your own dekstop\n\n    ssh {YOUR-USERNAME-HERE}@zeppelin.gaia-dmp.uk",
+      "user": "Phioji8Eir0a",
+      "dateUpdated": "2022-06-20T15:40:49+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h3>From your local machine you can now either ssh into Zeppelin</h3>\n<h4>Note: Run on your own dekstop</h4>\n<pre><code>ssh {YOUR-USERNAME-HERE}@zeppelin.gaia-dmp.uk\n</code></pre>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1655738745714_630183461",
+      "id": "paragraph_1655738745714_630183461",
+      "dateCreated": "2022-06-20T15:25:45+0000",
+      "dateStarted": "2022-06-20T15:40:49+0000",
+      "dateFinished": "2022-06-20T15:40:49+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:4381"
+    },
+    {
+      "text": "%md\n### Or you can copy your files from Zeppelin using scp\n#### Note: Run the following from your local desktop\n#### Replace ‘data’ with the name of the file you want to download, and /tmp/data with the path on your local desktop where you want to store it)\n\n    scp {YOUR-USERNAME-HERE}@zeppelin.gaia-dmp.uk:/home/{YOUR-USERNAME-HERE}/data /tmp/data",
+      "user": "Phioji8Eir0a",
+      "dateUpdated": "2022-06-20T15:40:49+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h3>Or you can copy your files from Zeppelin using scp</h3>\n<h4>Note: Run the following from your local desktop</h4>\n<h4>Replace ‘data’ with the name of the file you want to download, and /tmp/data with the path on your local desktop where you want to store it)</h4>\n<pre><code>scp {YOUR-USERNAME-HERE}@zeppelin.gaia-dmp.uk:/home/{YOUR-USERNAME-HERE}/data /tmp/data\n</code></pre>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1655738796591_1845799429",
+      "id": "paragraph_1655738796591_1845799429",
+      "dateCreated": "2022-06-20T15:26:36+0000",
+      "dateStarted": "2022-06-20T15:40:49+0000",
+      "dateFinished": "2022-06-20T15:40:49+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:4382"
+    }
+  ],
+  "name": "9. Exporting data from Zeppelin using ssh",
+  "id": "2H91RAW8X",
+  "defaultInterpreterGroup": "sh",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {
+    "isRunning": false
+  },
+  "path": "/9. Exporting data from Zeppelin using ssh"
+}
