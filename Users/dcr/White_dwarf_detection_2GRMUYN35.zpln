@@ -3,7 +3,7 @@
     {
       "title": "Intro",
       "text": "%md\n\n# Training a Random Forest to identify White Dwarf Stars\n\nUses the list of White Dwarf stars from https://arxiv.org/abs/1807.03315 - WD catalogue henceforth -  to train a Random Forest.\nThe method is similar to Section 5.8 from https://arxiv.org/abs/2012.02061 - GCNS henceforth. (GCNS \u003d Gaia Catalogue of Nearby Stars)\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.566",
       "progress": 0,
       "config": {
@@ -45,7 +45,7 @@
     },
     {
       "text": "%md\n# TO DO:\n\n- Update to Pyspark v3.X to allow Weighted training",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.566",
       "progress": 0,
       "config": {
@@ -87,7 +87,7 @@
     {
       "title": "Import_modules",
       "text": "%spark.pyspark\n\nimport numpy as np\nimport pandas as pd\nimport pyspark.ml as ml\nfrom scipy.stats import kde\nimport matplotlib.pylab as plt\nfrom collections import Counter\nfrom pyspark.ml.feature import VectorAssembler\nfrom pyspark.sql.types import ArrayType, DoubleType\nfrom pyspark.sql.functions import lit, col, when, udf, greatest, log10\nfrom pyspark.ml.classification import RandomForestClassifier\nfrom pyspark.ml.evaluation import MulticlassClassificationEvaluator\n\ndef return_columns(how \u003d \u0027list\u0027):\n    if how \u003d\u003d \u0027list\u0027:\n        return [\u0027source_id\u0027, \u0027parallax\u0027, \u0027ra\u0027, \u0027dec\u0027, \u0027l\u0027, \u0027b\u0027, \u0027phot_g_mean_flux\u0027,\n                \u0027phot_g_mean_mag\u0027, \u0027phot_bp_mean_flux\u0027, \u0027phot_bp_mean_mag\u0027, \u0027phot_rp_mean_flux\u0027,\n                \u0027phot_rp_mean_mag\u0027, \u0027bp_rp\u0027, \u0027bp_g\u0027, \u0027g_rp\u0027, \u0027Pwd\u0027]\n\n    elif how \u003d\u003d\u0027str\u0027:\n        return f\u0027source_id, parallax, ra, dec, l, b, phot_g_mean_flux,\\\n                phot_g_mean_mag, phot_bp_mean_flux, phot_bp_mean_mag, phot_rp_mean_flux,\\\n                phot_rp_mean_mag, bp_rp, bp_g, g_rp\u0027\n                \n                \ndef return_training_columns(how \u003d \u0027list\u0027):\n    if how \u003d\u003d \u0027list\u0027:\n        # return [\u0027source_id\u0027, \u0027parallax\u0027, \u0027phot_g_mean_flux\u0027, \u0027phot_g_mean_mag\u0027,\n        #     \u0027phot_bp_mean_flux\u0027, \u0027phot_bp_mean_mag\u0027, \u0027phot_rp_mean_flux\u0027,\n        #     \u0027phot_rp_mean_mag\u0027, \u0027bp_rp\u0027, \u0027bp_g\u0027, \u0027g_rp\u0027, \u0027m_g\u0027, \u0027is_wd\u0027]\n         return [\u0027source_id\u0027, \u0027parallax\u0027, \u0027bp_rp\u0027, \u0027bp_g\u0027, \u0027g_rp\u0027, \u0027m_g\u0027, \u0027is_wd\u0027]\n    elif how \u003d\u003d\u0027str\u0027:\n        # return \u0027source_id, parallax, phot_g_mean_flux, phot_g_mean_mag,\\\n        #         phot_bp_mean_flux, phot_bp_mean_mag, phot_rp_mean_flux,\\\n        #         phot_rp_mean_mag, bp_rp, bp_g, g_rp, m_g, is_wd\u0027\n        return \u0027source_id, parallax, bp_rp, bp_g, g_rp, m_g, is_wd\u0027\n            \nuser_home \u003d \u0027file:///user/dcr/\u0027\ndev_run \u003d False",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.566",
       "progress": 0,
       "config": {
@@ -123,7 +123,7 @@
     {
       "title": "save functions",
       "text": "%spark.pyspark\ndef savefigs(filename, dpi \u003d 450):\n    plt.savefig(f\u0027/user/dcr/WD_detection/plots/edr3_WDs/{filename}.png\u0027,\n                dpi\u003ddpi, bbox_inches \u003d \u0027tight\u0027)\n    plt.savefig(f\u0027/user/dcr/WD_detection/plots/edr3_WDs/{filename}.pdf\u0027,\n                dpi\u003ddpi, bbox_inches \u003d \u0027tight\u0027)\n    plt.savefig(f\u0027/user/dcr/WD_detection/plots/edr3_WDs/{filename}.jpeg\u0027,\n                dpi\u003d100, bbox_inches \u003d \u0027tight\u0027)\n                \ndef savetxt(df, filename):\n    if type(df) \u003d\u003d list:\n        import json\n        with open(f\u0027/user/dcr/WD_detection/plots/edr3_WDs/data/{filename}.json\u0027, \u0027w\u0027) as f:\n            json.dump(df, f, indent\u003d2)\n            \ndef opentxt(filename):\n    if filename.split(\u0027.\u0027)[-1] \u003d\u003d \u0027json\u0027:\n        import json\n        with open(filename, \u0027r\u0027) as f:\n            score \u003d json.load(f)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.566",
       "progress": 0,
       "config": {
@@ -160,7 +160,7 @@
     {
       "title": "makeSpuriousSourceQueryable",
       "text": "%spark.pyspark\n\ndef vector_to_array(col):\n    def to_array_(v):\n        return v.toArray().tolist()\n    # Important: asNondeterministic requires Spark 2.3 or later\n    # It can be safely removed i.e.\n    # return udf(to_array_, ArrayType(DoubleType()))(col)\n    # but at the cost of decreased performance\n    return udf(to_array_, ArrayType(DoubleType())).asNondeterministic()(col)\n    \n    \ndef queryableSpuriousSources(filename):\n    \u0027\u0027\u0027opens result from ML_cuts and makes queryable \u0027\u0027\u0027\n\n    QC_cuts \u003d spark.read.parquet(\u0027file:///user/dcr//ML_cuts/results/allDataMatchPS1.parquet\u0027)\n    QC_cuts \u003d QC_cuts.withColumn(\"probability\", vector_to_array(col(\"probability\")))\\\n                       .select([\u0027source_id\u0027, \u0027prediction\u0027] + [col(\"probability\")[i] for i in range(2)])\\\n                        .withColumn(\u0027confidence\u0027, greatest(col(\u0027probability[0]\u0027), col(\u0027probability[1]\u0027)))\\\n                        .select([\u0027source_id\u0027, \u0027prediction\u0027, \u0027confidence\u0027])\\\n                        .withColumnRenamed(\u0027prediction\u0027, \u0027is_good\u0027)\n     \n    QC_cuts.createOrReplaceTempView(\u0027dcr_spurious_sources\u0027)\n\nqueryableSpuriousSources(filename \u003d \u0027file:///user/dcr//ML_cuts/results/allDataMatchPS1.parquet\u0027, )\n# source_id \u003d\u003d gaia edr3 source id\n#   is_good \u003d\u003d flag for good astrometric sources (0.0 \u003d bad, 1.0 \u003d good)\n# confidence \u003d\u003d confidence in prediction.\n\nspark.catalog.listTables()",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.566",
       "progress": 0,
       "config": {
@@ -202,8 +202,8 @@
     {
       "title": "Open_eDR3/WD_catalogue",
       "text": "%spark.pyspark\n\n# define the data source and select required columns\nsqlContext.clearCache()\n\ndef initial_query(columns, how, limit \u003d None, tablename \u003d \u0027dcr_raw_sources\u0027, make_queryable \u003d False, return_table \u003d False):\n    if how \u003d\u003d \u0027NoLimit\u0027:\n        raw_sources_df \u003d spark.sql(f\u0027SELECT {columns} FROM gaia_source\u0027)\n    elif how \u003d\u003d \u0027limited\u0027:\n        raw_sources_df \u003d spark.sql(f\u0027SELECT {columns} FROM gaia_source \\\n                                        WHERE (1/parallax \u003c limit)\u0027)\n    elif how \u003d\u003d \u0027sampled\u0027:\n        sample_filter \u003d f\u0027 WHERE MOD(source_id, {limit}) \u003d 0\u0027\n        raw_sources_df \u003d spark.sql(f\u0027SELECT {columns} FROM gaia_source \\\n                                    {sample_filter}\u0027)\n\n    else: raise NameError(\u0027how must equal: [\"NoLimit\", \"limited\"]\u0027)\n    \n    if make_queryable:\n        raw_sources_df.createOrReplaceTempView(tablename)\n        print(f\u0027data at: {tablename}\u0027)\n    if return_table:\n        return raw_sources_df\n        \ndef applyQualityControl(catalogue, QCcatalogue, threshold \u003d 0.0, return_confidence \u003d True):\n    if return_confidence:\n            cols \u003d \u0027a.*, b.is_good, b.confidence\u0027\n    else:   cols \u003d \u0027a.*\u0027\n    df \u003d spark.sql(f\u0027SELECT {cols} \\\n                FROM {catalogue} as a, \\\n                {QCcatalogue} as b\\\n                WHERE (b.source_id \u003d\u003d a.source_id AND b.is_good \u003d\u003d 1.0 AND b.confidence \u003e {threshold})\u0027)\n    return df\n    \ndef addAbsoluteMag(df, passband \u003d \u0027g\u0027):\n    return df.withColumn(f\u0027m_{passband}\u0027, col(f\u0027phot_{passband}_mean_mag\u0027) \\\n                             + 5.0*log10(col(\u0027parallax\u0027)/100))\n        \ndef get_data(wd_filename, makeQueryable \u003d \u0027dcr_raw_sources\u0027,\n             qualityControl \u003d False, limit \u003d 5000, threshold \u003d 0.0,\n             addAbsolute \u003d False, add_weighting \u003d False):\n    \u0027\u0027\u0027 Gets a subsample of eDR3 data and appends the wds. (labelled) \u0027\u0027\u0027\n    \n    # df \u003d initial_query(columns \u003d return_columns(how \u003d \u0027str\u0027), how \u003d \u0027sampled\u0027, limit \u003d limit, \n    #                     return_table \u003d True)\n    # df \u003d df.select(return_columns()[:-1]).withColumn(\u0027is_wd\u0027, lit(0))\n    # if add_weighting:\n    #     df \u003d df.withColumn(\u0027Pwd\u0027, lit(0))\n    \n\n    # open the WD catalogue and select required columns\n    wd \u003d sqlContext.read.format(\u0027com.databricks.spark.csv\u0027).options(\n    header\u003d\u0027true\u0027, inferschema\u003d\u0027true\u0027).load(wd_filename)\n    \n    bad_wds \u003d wd.filter((col(\u0027Pwd\u0027)\u003c0.70))\n    wd \u003d wd.filter(col(\u0027Pwd\u0027)\u003e0.75)\n    # wd \u003d wd.filter(col(\u0027parallax\u0027) \u003e 0) # Change to extensive quality cut\n    wd \u003d wd.select(return_columns()).withColumn(\u0027is_wd\u0027, lit(1))\n    bad_wds \u003d bad_wds.select(return_columns()).withColumn(\u0027is_wd\u0027, lit(0))\n    \n    # df \u003d df.union(wd.select(df.columns)) # Join WD\u0027s to background data ensuring matching column order\n    df \u003d wd.union(bad_wds.select(wd.columns))\n    \n    if addAbsolute:\n        df \u003d addAbsoluteMag(df \u003d df, passband \u003d \u0027g\u0027)\n    \n    if makeQueryable:\n        print(f\u0027data queryable from {makeQueryable}\u0027)\n        df.createOrReplaceTempView(makeQueryable)\n        \n    print(df.columns)\n        \n    if qualityControl:\n        if not makeQueryable:\n            raise nameError(\u0027For quality control makeQueryable must be True\u0027)\n        df \u003d applyQualityControl(catalogue \u003d makeQueryable, QCcatalogue \u003d \u0027dcr_spurious_sources\u0027, threshold \u003d threshold)\n        df.createOrReplaceTempView(makeQueryable)\n    return df\n    \n# limit \u003d 5000, [3,164,528 sources with 265,678 WD\u0027s]\n# limit \u003d 5000, is_good, threshold \u003d\u003d 0.5: [1,902,909 sources with XX WD\u0027s]\n# limit \u003d 5000, is_good, [1,902,909 sources with 242,443 WD\u0027s]",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:52:58.566",
+      "user": "anonymous",
+      "dateUpdated": "2022-03-17 11:16:05.341",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -215,7 +215,7 @@
         "colWidth": 12.0,
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
-        "editorHide": true,
+        "editorHide": false,
         "title": true,
         "results": {},
         "enabled": true
@@ -239,7 +239,7 @@
     {
       "title": "getData",
       "text": "%spark.pyspark\ndf \u003d get_data(wd_filename \u003d f\u0027file:///user/dcr/data/edr3_WDs.csv\u0027, makeQueryable \u003d \u0027dcr_raw_sources\u0027,\n             qualityControl \u003d True, limit \u003d 3000, threshold \u003d 0.5, addAbsolute \u003d True, add_weighting \u003d True)\n             \n# df.count()",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.566",
       "progress": 0,
       "config": {
@@ -289,7 +289,7 @@
     {
       "title": "define plotTypes",
       "text": "%spark.pyspark\ndef selectPlotType(x, y, plotType \u003d \u0027scatter\u0027, ax \u003d False, cmap \u003d None, color \u003d None,\n                  label \u003d None, s \u003d 1, white_nan \u003d False, bins \u003d 100, cbar \u003d True,\n                  alpha \u003d 1.0, cbarLabel \u003d None, cbarShrink \u003d 1.0, cbarLocation \u003d None,\n                  cbarPad \u003d 0.15):\n    if plotType \u003d\u003d \u0027scatter\u0027:\n        scatter(x, y, ax \u003d ax,\n                color \u003d color, label \u003d label, s \u003d s, alpha \u003d alpha)\n    elif plotType \u003d\u003d \u0027kdeHeatmap\u0027:\n         kdeHeatmap(x, y, ax \u003d ax, cmap \u003d cmap, \n           white_nan \u003d True, bins \u003d bins, cbar \u003d cbar)\n           \n    elif plotType \u003d\u003d \u00272Dhist\u0027:\n         hist2d(x,y, ax \u003d ax, cmap \u003d cmap, \n                white_nan \u003d True, bins \u003d bins, cbar \u003d cbar, cbarPad \u003d cbarPad,\n                cbarLabel \u003d cbarLabel, cbarShrink \u003d cbarShrink, cbarLocation \u003d cbarLocation)\n                \n    elif plotType \u003d\u003d \u00272DhistSub\u0027:\n         hist2dSubplots(x,y, ax \u003d ax, cmap \u003d cmap, \n           white_nan \u003d True, bins \u003d bins, cbar \u003d cbar)\n    else: raise nameError(\u0027plotType must be one of [\"scatter\", \"kdeHeatmap\", \"2Dhist\", 2DhistSub]\u0027)\n        \ndef kdeHeatmap(x,y, ax \u003d False, cmap \u003d \u0027cividis\u0027, white_nan \u003d False, bins \u003d 100, cbar \u003d True):\n    \u0027\u0027\u0027creates a kdeHeatmap\u0027\u0027\u0027\n    \n    if not ax:\n        ax \u003d plt.figure(111)\n    if white_nan:\n        cmap \u003d whiteNan(cmap)\n\n    # Evaluate a gaussian kde on a regular grid of nbins x nbins over data extents\n    nbins\u003dbins\n    k \u003d kde.gaussian_kde([x,y])\n    xi, yi \u003d np.mgrid[x.min():x.max():nbins*1j, y.min():y.max():nbins*1j]\n    zi \u003d k(np.vstack([xi.flatten(), yi.flatten()]))\n\n    # Make the plot\n    im \u003d ax.pcolormesh(xi, yi, zi.reshape(xi.shape), shading\u003d\u0027auto\u0027, cmap \u003d cmap)\n    \n#     if cbar:\n#         add_colorbar(cmap \u003d cmap, im \u003d im)\n    \ndef scatter(x,y, ax \u003d False, color \u003d None, label \u003d None, s \u003d 1, alpha \u003d 1.0):\n    \u0027\u0027\u0027creates a scatter plot\u0027\u0027\u0027\n    if not ax:\n        ax \u003d plt.figure(111)\n    ax.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d s, c \u003d color, label \u003d label, alpha \u003d alpha)\n    \n\ndef add_colorbar(cmap, im, label \u003d None, shrink \u003d 1.0, location \u003d None, pad \u003d 0.05):\n    import matplotlib.pyplot as plt\n    h \u003d im[0]\n    sm \u003d plt.cm.ScalarMappable(cmap\u003dcmap, norm\u003dplt.Normalize(vmin\u003dnp.min(h), vmax\u003dnp.max(h)))\n    plt.colorbar(sm,  label \u003d label, shrink \u003d shrink, location \u003d location, pad \u003d pad)\n    \ndef hist2dSubplots(x,y, ax \u003d False, cmap \u003d \u0027cividis\u0027, white_nan \u003d False, bins \u003d 100, cbar \u003d True):\n    \u0027\u0027\u0027creates a 2dhist plot\u0027\u0027\u0027\n    \n    if not ax:\n        ax \u003d plt.figure(111)\n    if white_nan:\n        cmap \u003d whiteNan(cmap)\n    im \u003d ax.hist2d(x, y, bins\u003dbins, cmap\u003dcmap)\n    if cbar:\n        addColorbarSubplots(cmap \u003d cmap, im \u003d im, ax \u003d ax)\n\ndef addColorbarSubplots(cmap, im, ax):\n    from mpl_toolkits.axes_grid1 import make_axes_locatable\n    h \u003d im[0]\n    divider \u003d make_axes_locatable(ax)\n    cax \u003d divider.append_axes(\u0027right\u0027, size\u003d\u00275%\u0027, pad\u003d0.05)\n    sm \u003d plt.cm.ScalarMappable(cmap\u003dcmap, norm\u003dplt.Normalize(vmin\u003dnp.min(h), vmax\u003dnp.max(h)))\n    plt.colorbar(sm, cax \u003d cax)\n    \n    \ndef hist2d(x,y, ax \u003d False, cmap \u003d \u0027cividis\u0027, white_nan \u003d False, bins \u003d 100, cbar \u003d True,\n            cbarLabel \u003d None, cbarShrink \u003d 1.0, cbarLocation \u003d None, cbarPad \u003d 0.05):\n    \u0027\u0027\u0027creates a 2dhist plot\u0027\u0027\u0027\n    \n    if not ax:\n        ax \u003d plt.figure(111)\n    if white_nan:\n        cmap \u003d whiteNan(cmap)\n    im \u003d ax.hist2d(x, y, bins\u003dbins, cmap\u003dcmap)\n    if cbar:\n        add_colorbar(cmap \u003d cmap, im \u003d im, label \u003d cbarLabel, shrink \u003d cbarShrink, \n                     location \u003d cbarLocation, pad \u003d cbarPad)\n    \ndef whiteNan(cmap):\n    \u0027\u0027\u0027adds white base for colormaps\u0027\u0027\u0027\n    \n    from matplotlib import cm\n    from matplotlib.colors import ListedColormap\n    \n    cmap \u003d cm.get_cmap(cmap, 256)\n    newcolors \u003d cmap(np.linspace(0, 1, 256))\n    white \u003d np.array([1, 1, 1, 0])\n    newcolors[:2, :] \u003d white\n    cmap \u003d ListedColormap(newcolors)\n    return cmap",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.566",
       "progress": 0,
       "config": {
@@ -326,7 +326,7 @@
     {
       "title": "def CAMD",
       "text": "%spark.pyspark\ndef CAMD(passbands, catalogue, classes, colors \u003d [\u0027k\u0027, \u0027darkred\u0027, \u0027darkblue\u0027], ms \u003d 1, \n         labels \u003d None, plotType \u003d \u0027scatter\u0027, cmap \u003d \u0027cividis\u0027, bins \u003d [100, 100], colorbar \u003d True,\n         limit \u003d 10000, alpha \u003d 1.0, save \u003d False):\n    \u0027\u0027\u0027plot an observational Hertzsprung-Russell diagram (aka colour / absolute magnitude diagram)\n    for the unclassified sample to show the problem,\n    include the photometric consistency filter to show the problem is astrometric in addition to photometric \u0027\u0027\u0027\n    \n    import matplotlib.pylab as plt\n    fig, ax \u003d plt.subplots(figsize \u003d (7.0, 9.0))\n    \n    quick_plot_filter \u003d f\u0027 AND MOD(a.source_id, {limit}) \u003d 0\u0027\n    tmp_df \u003d spark.sql(f\u0027SELECT a.phot_{passbands[0]}_mean_mag + 5.0*LOG10(a.parallax/100.0) \\\n                        AS m_{passbands[0]}, a.{passbands[1]}, a.is_wd FROM {catalogue} as a\u0027)\n    # #                 {quick_plot_filter}\u0027)\n    tmp_df \u003d tmp_df.toPandas().dropna()\n\n    for c, value in enumerate(classes):\n        if type(ms) \u003d\u003d list:\n            s \u003d ms[c]\n        else: s \u003d ms\n        if type(labels) \u003d\u003d type(None):\n            label \u003d value\n        else: label \u003d labels[c]\n        color \u003d None\n        if plotType \u003d\u003d \u0027scatter\u0027:\n            color \u003d colors[c]\n        else: cmp \u003d cmap[c]; bns \u003d bins[c]\n\n        tmp \u003d tmp_df[tmp_df[\u0027is_wd\u0027] \u003d\u003d c]\n        selectPlotType(x \u003d tmp[f\u0027{passbands[1]}\u0027], y \u003d tmp[f\u0027m_{passbands[0]}\u0027], \n                       plotType \u003d plotType, ax \u003d ax, cmap \u003d cmp, color \u003d color,\n                       label \u003d label, s \u003d s, white_nan \u003d True, bins \u003d bns, cbar \u003d colorbar)\n        \n    plt.ylim(18.0, -5.0)\n    plt.xlim(-1, 2.0)\n    plt.ylabel(\u0027Stellar brightness (absolute G magnitude) --\u003e\u0027, fontsize \u003d 16)\n    plt.xlabel(\u0027\u003c-- Stellar temperature (G - RP magnitude)\u0027, fontsize \u003d 16)\n    if plotType \u003d\u003d \u0027scatter\u0027:\n        lgnd \u003d plt.legend(fontsize \u003d 12, markerscale \u003d 1)\n    if save:\n        if not dev_run:\n            savefigs(save)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.566",
       "progress": 0,
       "config": {
@@ -363,7 +363,7 @@
     {
       "title": "plot CAMD",
       "text": "%spark.pyspark\nCAMD(passbands \u003d [\u0027g\u0027, \u0027g_rp\u0027], catalogue \u003d \u0027dcr_raw_sources\u0027, alpha \u003d 0.5, \n     cmap \u003d [\u0027cividis\u0027, \u0027inferno\u0027], colors \u003d [\u0027k\u0027, \u0027darkblue\u0027], \n     classes \u003d [\u0027Other Source Type\u0027, \u0027White Dwarf\u0027], ms \u003d 4, limit \u003d 5000,\n     plotType \u003d \u0027kdeHeatmap\u0027, bins \u003d [200, 100], save \u003d \u0027Training_CAMD\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.566",
       "progress": 0,
       "config": {
@@ -409,7 +409,7 @@
     {
       "title": "def spacialDistributionSubplotHex",
       "text": "%spark.pyspark\ndef spacialDistributionSubplotHex(class_val \u003d 0, label \u003d None, limit \u003d None, labelCol \u003d \u0027label\u0027, color \u003d \u0027k\u0027, \n                                save \u003d False, vmax \u003d None, cmap \u003d [\u0027cividis\u0027, \u0027cividis\u0027], bins \u003d 100,\n                                catalogue \u003d \u0027dcr_training_sources\u0027, fontsize \u003d 14, scale \u003d [None, None]):\n\n    plt.figure(2, figsize \u003d (24.18, 7.0))\n    plt.rcParams[\u0027font.size\u0027] \u003d fontsize\n    \n    dat \u003d spark.sql(f\u0027SELECT a.{labelCol}, a.l, a.b FROM {catalogue} as a\u0027)\n    dat \u003d dat.withColumn(\u0027l_rad\u0027, (col(\u0027l\u0027) - 180.0) * np.pi / 180.0)\\\n                .withColumn(\u0027b_rad\u0027, (col(\u0027b\u0027) * np.pi / 180.0))\\\n                    .select([\u0027l_rad\u0027, \u0027b_rad\u0027, labelCol])\\\n                        .toPandas()\n    \n    print(\u0027data in Pandas\u0027)\n    for i, value in enumerate(class_val):\n        tmp \u003d dat[dat[labelCol] \u003d\u003d value]\n        plt.subplot(1,2,i+1, projection\u003d\u0027aitoff\u0027)\n        plt.grid(True)\n        if vmax:\n            vm \u003d vmax[i]; extend \u003d \u0027max\u0027\n        else: vm \u003d None; extend \u003d None\n        plt.title(f\u0027{label[i]}\u0027, fontsize \u003d fontsize+4)\n        image \u003d plt.hexbin(tmp[\u0027l_rad\u0027].values, tmp[\u0027b_rad\u0027].values, cmap\u003dcmap[i], \n                   gridsize\u003dbins, mincnt\u003d1, bins\u003dscale[i], vmax \u003d vm, alpha \u003d 1.0) \n        cb \u003d plt.colorbar(image, extend \u003d extend, spacing \u003d \u0027proportional\u0027, shrink \u003d 0.8) \n        print(cb.boundaries)\n    plt.tight_layout()\n    if save:\n        if not dev_run:\n            savefigs(save)\n    plt.show()",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.567",
       "progress": 0,
       "config": {
@@ -446,7 +446,7 @@
     {
       "title": "spacial Distribution Hex",
       "text": "%spark.pyspark\nspacialDistributionSubplotHex(class_val \u003d [1,0], label \u003d [\u0027White Dwarfs \\n\u0027, \u0027Other Source Type \\n\u0027],\n                           color \u003d [\u0027k\u0027, \u0027darkred\u0027], limit \u003d 500, labelCol \u003d \u0027is_wd\u0027, \n                           catalogue \u003d \u0027dcr_raw_sources\u0027, cmap \u003d [\u0027inferno\u0027, \u0027cividis\u0027],\n                           fontsize \u003d 16, scale \u003d [\u0027log\u0027, \u0027log\u0027], bins \u003d 250,\n                           save \u003d \u0027training_spacial_distribution_galactic_log\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.567",
       "progress": 0,
       "config": {
@@ -492,7 +492,7 @@
     {
       "title": "Split into Training and test data",
       "text": "%spark.pyspark\n\ndef split_training_data(df, columns \u003d \u0027*\u0027, label \u003d None, split \u003d 0.8, seed \u003d 0):\n    \u0027\u0027\u0027splits df into trianing and test set. \"label\" [type int] creates a column for classification,\n    if label is present set label \u003d None\u0027\u0027\u0027\n    \n    # Select relevent columns\n    df \u003d df.select(columns)\n    if label !\u003d None:\n        df \u003d df.withColumn(\u0027label\u0027, lit(label))\n    # Split the data into train and test with seed for repeatability\n    train, test \u003d df.randomSplit([split, 1-split], seed)\n    \n    return train, test\n\ntrain, test \u003d split_training_data(df, columns \u003d return_training_columns(),\n                                         split \u003d 0.8, seed \u003d 42)\n\n# count \u003d test.count()                   \n# print(count, count*5)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.583",
       "progress": 0,
       "config": {
@@ -534,7 +534,7 @@
     {
       "title": "FeatureDenseVectors",
       "text": "%spark.pyspark\ndef transform_datasets(df, ignore \u003d [], combine \u003d True):\n    \u0027\u0027\u0027combines two dataframes into a single transformed dataFrame for spark.ml \n    classifier for training or validation\u0027\u0027\u0027\n    \n    # Annotate and transform appropriate to the input required by the classifier\u0027s API.\n    # Need a dataframe with labels and features: use vector assembler.\n    assembler \u003d VectorAssembler(inputCols\u003d[i for i in df.columns if i not in ignore], \n                            outputCol \u003d \u0027features\u0027, handleInvalid \u003d \u0027skip\u0027)\n    \n\n    df \u003d assembler.transform(df)\n    return df\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.583",
       "progress": 0,
       "config": {
@@ -570,7 +570,7 @@
     },
     {
       "text": "%md\n\n# Normalisation\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.583",
       "progress": 0,
       "config": {
@@ -612,7 +612,7 @@
     {
       "title": "getScalar",
       "text": "%pyspark\n\ndef getScaler(scalerType):\n    \u0027\u0027\u0027Returns correct scaler for chosen normalization.\u0027\u0027\u0027\n    \n    if scalerType \u003d\u003d \u0027standard\u0027: \n        from pyspark.ml.feature import StandardScaler\n        Scaler \u003d StandardScaler(withMean\u003dTrue, withStd \u003d True)\n    elif scalerType \u003d\u003d \u0027MinMax\u0027:\n        from pyspark.ml.feature import MinMaxScaler\n        Scaler \u003d MinMaxScaler()\n    else: raise NameError(f\u0027scalerType can be either \"MinMax\" or \"standard\" not {scaler}\u0027)\n    return Scaler\n\n\ndef getScalerModel(df, scalerType \u003d \u0027standard\u0027, featuresCol \u003d \u0027features\u0027,\n                       outCol \u003d \u0027norm_features\u0027, save \u003d False):\n    \u0027\u0027\u0027normalizes DenseVectors for MLlib\u0027\u0027\u0027\n\n    scaler \u003d getScaler(scalerType \u003d scalerType) # Get scaler\n    scaler.setInputCol(featuresCol)         # Set feature column name\n    scaler.setOutputCol(outCol)\n    model \u003d scaler.fit(df)\n    if save:\n        model.write().overwrite().save(f\u0027{save}/{scalerType}_normalisation_model\u0027)\n        print(f\u0027Normalisation model saved at \"{save}/{scalerType}_normalisation_model\"\u0027)\n    return model\n\ndef normaliseData(df, model,):\n    \u0027\u0027\u0027normalizes featureCol of df using model from \"getScalerModel\" \u0027\u0027\u0027\n\n    return model.transform(df)\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.583",
       "progress": 0,
       "config": {
@@ -649,7 +649,7 @@
     {
       "title": "getTrainTest",
       "text": "%pyspark\ndef dataSparkML(train, test, labelCol \u003d \u0027labels\u0027, featuresCol \u003d \u0027features\u0027, \n                normalise \u003d False, scalerType \u003d \u0027standard\u0027, save_normalization \u003d False,\n                nonFeatureCols \u003d None):\n    \u0027\u0027\u0027get train and test dataset for input using pyspark.ml\u0027\u0027\u0027\n    \n    train \u003d transform_datasets(df\u003dtrain, ignore \u003d nonFeatureCols)\n    test \u003d transform_datasets(df \u003d test, ignore \u003d nonFeatureCols)\n    \n    if normalise:\n        # We rename featuresCol to maintain col name for later analysis\n        model \u003d getScalerModel(train.withColumnRenamed(featuresCol, \u0027inputFeatures\u0027),\n                               scalerType \u003d scalerType, featuresCol \u003d \u0027inputFeatures\u0027, \n                               outCol \u003d featuresCol, save \u003d save_normalization)\n        \n        # Normalise each dataset with the training data distributions\n        train \u003d normaliseData(train.withColumnRenamed(featuresCol, \u0027inputFeatures\u0027), model)\n        test  \u003d normaliseData( test.withColumnRenamed(featuresCol, \u0027inputFeatures\u0027), model)\n        print(\u0027data is normalised using training data distributions\u0027)\n        # print(f\u0027Training data \u003d {train.count()} sources\u0027)\n    \n    return (train, test)\n    \nnonFeatureCols \u003d [\u0027is_wd\u0027, \u0027source_id\u0027, \u0027ra\u0027, \u0027dec\u0027, \u0027l\u0027, \u0027b\u0027, \u0027weighting\u0027]\n    \ntrain, test \u003d dataSparkML(train, test, labelCol \u003d \u0027is_wd\u0027, featuresCol \u003d \u0027features\u0027, \n                           normalise \u003d True, scalerType \u003d \u0027standard\u0027, nonFeatureCols \u003d nonFeatureCols,\n                          save_normalization \u003d f\u0027{user_home}/WD_detection/edr3_WDs_no_background\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.583",
       "progress": 0,
       "config": {
@@ -690,7 +690,7 @@
     {
       "title": "Train_model",
       "text": "%pyspark\n# This cell does the business, given the data and training sets. Follows the example Python code at \n# https://spark.apache.org/docs/3.1.2/api/python/pyspark.ml.html#pyspark.ml.classification.RandomForestClassifier\n# Weighting will become a feature after Spark 3.x is implimented\n\ndef train_model(save \u003d False, weightCol \u003d None):\n    # instantiate a trained RF classifier, seeded for repeatability at this stage:\n    rf \u003d RandomForestClassifier(featureSubsetStrategy \u003d \u0027sqrt\u0027, featuresCol \u003d \u0027features\u0027, labelCol \u003d \u0027is_wd\u0027,\n                                numTrees \u003d 100, impurity \u003d \u0027entropy\u0027, maxDepth \u003d 10, minInstancesPerNode \u003d 1,\n                                seed \u003d 42)\n    model \u003d rf.fit(train)\n\n    if save:\n        if not dev_run:\n            prefix_save \u003d f\u0027{user_home}/WD_detection/models/\u0027\n            print(f\u0027{prefix_save}/{save}/\u0027)\n            model.write().overwrite().save(f\u0027{prefix_save}/{save}/randomForestClassifier/\u0027)\n    return model\n    \nmodel \u003d train_model(save \u003d \u0027edr3_WDs_no_background\u0027, weightCol \u003d \u0027weighting\u0027) # save \u003d \u0027randomForest_WD_detection",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.583",
       "progress": 0,
       "config": {
@@ -731,7 +731,7 @@
     {
       "title": "MLlib_confusion_matrix",
       "text": "%spark.pyspark\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pylab as plt\nfrom collections import Counter\n\nclass MLlib_confusion_matrix():\n    \u0027\u0027\u0027subclass to plot confusion matrix\u0027\u0027\u0027\n    def __init__(self, df, labelCol \u003d \u0027label\u0027, classes \u003d None, normalize \u003d True):\n        self.df               \u003d df\n        self.getLabelCol      \u003d labelCol\n        self.grouped          \u003d df.groupBy(labelCol, \u0027prediction\u0027).count().toPandas()\n        self.matrix           \u003d self.getConfusionMatrix()\n        self.normMatrix       \u003d self.getNormConfusionMatrix()\n        self.confusion_matrix \u003d self.confusionMatrix(classes, normalize)\n\n    def __repr__(self) : return f\"\"\"Class for plotting confusion matrix {self.normMatrix}\"\"\"\n\n    def getConfusionMatrix(self):\n        \u0027\u0027\u0027returns confusion matrix based on values\u0027\u0027\u0027\n\n        N_classes \u003d len(set(self.grouped[self.getLabelCol]))\n        matrix \u003d np.empty((N_classes, N_classes))\n        for i in range(N_classes):\n            for j in range(N_classes):\n                c \u003d self.grouped[(self.grouped[self.getLabelCol] \u003d\u003d i) \u0026 \n                                 (self.grouped.prediction \u003d\u003d j)][\u0027count\u0027].values\n                if len(c) \u003d\u003d 0:\n                    c \u003d 0 \n                matrix[i][j] \u003d  c\n        return matrix\n\n    def getNormConfusionMatrix(self):\n        \u0027\u0027\u0027returns confusion matrix based on values\u0027\u0027\u0027\n\n        N_classes \u003d len(set(self.grouped[self.getLabelCol]))\n        matrix \u003d np.empty((N_classes, N_classes))\n        for i in range(N_classes):\n            for j in range(N_classes):\n                c \u003d self.grouped[(self.grouped[self.getLabelCol] \u003d\u003d i) \u0026 \n                        (self.grouped.prediction \u003d\u003d j)][\u0027count\u0027].values\\\n                            /sum(self.grouped[(self.grouped[self.getLabelCol] \u003d\u003d i)][\u0027count\u0027])\n                if len(c) \u003d\u003d 0:\n                    c \u003d 0 \n                matrix[i][j] \u003d  np.round(c , 4)\n        return matrix\n    \n    def confusionMatrix(self, classes \u003d None, normalize \u003d True, save \u003d False):\n        \u0027\u0027\u0027prints rich version of confusion matrix\u0027\u0027\u0027\n        if normalize: matrix \u003d self.normMatrix\n        else: matrix \u003d self.matrix\n        if classes \u003d\u003d None:\n            classes \u003d range(len(matrix))\n\n        N_classes \u003d range(len(classes))\n        plt.rcParams[\u0027figure.figsize\u0027] \u003d (6,6)\n\n        plt.imshow(matrix, cmap \u003d \u0027Greens\u0027, alpha \u003d 0.75)\n        for i in N_classes: # Add values to max pooling\n            for j in N_classes:\n                text \u003d plt.text(j, i, matrix[i][j],\n                               ha\u003d\"center\", va\u003d\"center\", color\u003d\"k\", fontsize \u003d 20)\n\n        #Add thick line to matrix\n        axis \u003d plt.gca()\n        axis.set_yticks(np.arange(-0.5, len(classes)-0.5, 1), minor\u003d\u0027True\u0027)\n        axis.set_xticks(np.arange(-0.5, len(classes)-0.5, 1), minor\u003d\u0027True\u0027)\n        axis.yaxis.grid(True, which\u003d\u0027minor\u0027, color \u003d \u0027k\u0027, lw \u003d 2)\n        axis.xaxis.grid(True, which\u003d\u0027minor\u0027, color \u003d \u0027k\u0027, lw \u003d 2)\n        plt.xticks(N_classes, classes, rotation \u003d0, fontsize \u003d 14)\n        plt.yticks(N_classes, classes, rotation \u003d0, fontsize \u003d 14)\n        plt.xlabel(\u0027Predicted Class\u0027, fontsize \u003d 16)\n        plt.ylabel(\u0027True Class\u0027, fontsize \u003d 16)\n        if save:\n            if not dev_run:\n                savefigs(save)\n                savetxt(matrix, save)\n        \n        \nclass MLlibMultiClassEvaluator(MLlib_confusion_matrix):\n    \u0027\u0027\u0027class to calculate parameters of NN performance for binary classification\u0027\u0027\u0027\n    \n    def __init__(self, df, labelCol \u003d \u0027label\u0027):\n        self.df            \u003d df\n        self.getLabelCol   \u003d labelCol\n        self.show          \u003d df.show\n        # self.count         \u003d df.count\n        # self.shape         \u003d (df.count(), len(df.columns))\n        # self.grouped       \u003d df.groupBy(labelCol, \u0027prediction\u0027).count().toPandas()\n        self.matrix        \u003d self.getConfusionMatrix()\n        \n    # def __len__(self)         : return self.df.count()\n    # def __repr__(self)        : return f\"\"\"Evaluate ML performance for {len(self)} datapoints.\"\"\"\n    \n    def getAnalysis(self):\n        \u0027\u0027\u0027returns a pd.DataFrame for analysis\u0027\u0027\u0027\n        data \u003d self.df.select(self.getLabelCol,\u0027probability\u0027, \u0027prediction\u0027).toPandas()\n        for i in range(max(data[self.getLabelCol])+1):\n            data[f\u0027prob\u0027] \u003d [max(j) for j in data.probability]\n        return data\n    \n    def getTruePositives(self, step \u003d np.arange(0.0, 0.95, 0.01)):\n        \u0027\u0027\u0027calculates how True Positives change by threshold\u0027\u0027\u0027\n        conMat \u003d self.getConfusionMatrix()\n        data \u003d self.getAnalysis()\n        tp \u003d {}\n        for cat in range(len(conMat)):\n            tp[cat] \u003d []\n        for cat in range(len(conMat)):\n            for threshold in step:\n                tmp \u003d Counter(data[(data[\u0027prediction\u0027] \u003d\u003d data[self.getLabelCol]) \u0026 \n                                   (data[f\u0027prob\u0027]\u003ethreshold)][self.getLabelCol])\n                for cat in range(len(conMat)):\n                    tp[cat].append(tmp[cat])\n            return tp\n        \n        \n    def getFalsePositives(self, step \u003d np.arange(0.0, 0.95, 0.01)):\n        \u0027\u0027\u0027calculates how True Positives change by threshold\u0027\u0027\u0027\n        conMat \u003d self.getConfusionMatrix()\n        data \u003d self.getAnalysis()\n        fp \u003d {}\n        for cat in range(len(conMat)):\n            fp[cat] \u003d []\n        for cat in range(len(conMat)):\n            for threshold in step:\n                tmp \u003d Counter(data[(data[\u0027prediction\u0027] !\u003d data[self.getLabelCol]) \u0026 \n                                   (data[f\u0027prob\u0027]\u003ethreshold)].prediction)\n                for cat in range(len(conMat)):\n                    fp[cat].append(tmp[cat])\n            return fp        \n        \n    def getFalseNegatives(self, step \u003d np.arange(0.0, 0.95, 0.01)):\n        \u0027\u0027\u0027calculates how False Positives change by threshold\u0027\u0027\u0027\n        conMat \u003d self.getConfusionMatrix()\n        data \u003d self.getAnalysis()\n        fn \u003d {}\n        for cat in range(len(conMat)):\n            fn[cat] \u003d []\n        for cat in range(len(conMat)):\n            for threshold in step:\n                tmp \u003d Counter(data[(data[\u0027prediction\u0027] !\u003d data[self.getLabelCol]) \u0026 \n                                   (data[f\u0027prob\u0027]\u003ethreshold)][self.getLabelCol])\n                for cat in range(len(conMat)):\n                    fn[cat].append(tmp[cat])\n            return fn\n        \n    def getPrecision(self, step \u003d np.arange(0.0, 0.95, 0.01)):\n        \u0027\u0027\u0027calculate precision\u0027\u0027\u0027\n        precision \u003d {}; true_positives \u003d self.getTruePositives(step); \n        false_positives \u003d self.getFalsePositives(step)\n        conMat \u003d self.getConfusionMatrix()\n        precision \u003d {}\n        for cat in range(len(conMat)):\n            precision[cat] \u003d conMat[cat][cat]\n            for cat in range(len(conMat)):\n                precision[cat] \u003d [tp / (tp+fp) for tp, fp in zip(true_positives[cat],false_positives[cat])]\n        return precision\n    \n    def getRecall(self, step \u003d np.arange(0.0, 0.95, 0.01)):\n        \u0027\u0027\u0027calculate recall\u0027\u0027\u0027\n        conMat \u003d self.getConfusionMatrix()\n        recall \u003d {}; true_positives \u003d self.getTruePositives(step); \n        false_negatives \u003d self.getFalseNegatives(step)\n        for cat in range(len(conMat)):\n            recall[cat] \u003d []\n            for cat in range(len(conMat)):\n                recall[cat] \u003d [tp / (tp+fn) for tp, fn in zip(true_positives[cat],false_negatives[cat])]\n        return recall\n    \n    \nclass plottingThreshold(MLlibMultiClassEvaluator):\n    \u0027\u0027\u0027subclass of \"threshold\" for various plots of useful threshold parameters.\u0027\u0027\u0027\n    \n    def __repr__(self): return f\"\"\"Plotting software for \u0027threshold\u0027 objects\"\"\"\n    def __init__(self, df, labelCol \u003d \u0027label\u0027, classLabels \u003d False):\n        self.df            \u003d df\n        self.getLabelCol   \u003d labelCol\n        self.show          \u003d df.show\n        # self.count         \u003d df.count\n        # self.shape         \u003d (df.count(), len(df.columns))\n        self.grouped       \u003d df.groupBy(labelCol, \u0027prediction\u0027).count().toPandas()\n        self.matrix        \u003d self.getConfusionMatrix()\n        self.classLabels   \u003d classLabels\n        \n        \n    def getAxes(self,ax):\n        if ax \u003d\u003d None:\n            ax \u003d plt.subplot(111)\n        return ax\n\n    def plot_true_positives(self, ax \u003d None, step \u003d np.arange(0.0, 0.95, 0.01), normalize \u003d True, \n                            legend \u003d True, save \u003d False):\n        ax \u003d self.getAxes(ax); true_positives \u003d self.getTruePositives(step); \n        conMat \u003d self.getConfusionMatrix()\n        for cat in range(len(conMat)):\n            if normalize \u003d\u003d True:\n                y \u003d [i/max(true_positives[cat]) for i in true_positives[cat]]\n                ax.set_ylabel(\u0027Fraction of Total True Positives --\u003e\u0027)\n            else:\n                y \u003d [i/len(self.data[self.data.true_label \u003d\u003d cat]) for i in true_positives[cat]]\n                ax.set_ylabel(\u0027True Positives --\u003e\u0027)\n            label \u003d self.getLabels(count \u003d cat)\n            ax.plot(step, y, label \u003d label)\n            if save:\n                if not dev_run:\n                    savetxt(step, save+\u0027_step\u0027)\n                    savetxt(y, save+f\u0027_true_positives_{label}\u0027)\n        if legend:\n            ax.legend()\n        ax.grid(\u0027on\u0027)\n        ax.set_xlabel(\u0027Threshold\u0027)\n        \n\n    def plot_false_positives(self, ax \u003d None, step \u003d np.arange(0.0, 0.95, 0.01), \n                            legend \u003d True, save \u003d False):\n        ax \u003d self.getAxes(ax); false_positives \u003d self.getFalsePositives(step)\n        conMat \u003d self.getConfusionMatrix()\n        for cat in range(len(conMat)):\n            if max(false_positives[cat]) !\u003d 0:\n                y \u003d [i/max(false_positives[cat]) for i in false_positives[cat]]\n            else: y \u003d [i for i in false_positives[cat]]\n            label \u003d self.getLabels(count \u003d cat)\n            ax.plot(step, y, label \u003d label)\n            if save:\n                if not dev_run:\n                    savetxt(y, save+f\u0027_false_positives_{label}\u0027)\n        if legend:\n            ax.legend()\n        ax.grid(\u0027on\u0027)\n        ax.set_xlabel(\u0027Threshold\u0027)\n        ax.set_ylabel(\u0027\u003c-- Fraction of Total False Positives\u0027)\n        \n\n    def plot_precision(self, ax \u003d None, step \u003d np.arange(0.0, 0.95, 0.01), \n                        legend \u003d True, save \u003d False):\n        ax \u003d self.getAxes(ax); precision \u003d self.getPrecision(step)\n        conMat \u003d self.getConfusionMatrix()\n        for cat in range(len(conMat)):\n            y \u003d precision[cat]\n            label \u003d self.getLabels(count \u003d cat)\n            ax.plot(step, y, label \u003d label)\n            if save:\n                if not dev_run:\n                    savetxt(y, save+f\u0027_precision_{label}\u0027)\n        if legend:\n            ax.legend()\n        ax.grid(\u0027on\u0027)\n        ax.set_xlabel(\u0027Threshold\u0027)\n        ax.set_ylabel(\u0027Precision --\u003e\u0027)\n\n    def plot_recall(self, ax \u003d None, step \u003d np.arange(0.0, 0.95, 0.01), \n                    legend \u003d True, save \u003d False):\n        ax \u003d self.getAxes(ax); recall \u003d self.getRecall(step)\n        conMat \u003d self.getConfusionMatrix()\n        for cat in range(len(conMat)):\n            y \u003d recall[cat]\n            label \u003d self.getLabels(count \u003d cat)\n            ax.plot(step, y, label \u003d label)\n            if save:\n                if not dev_run:\n                    savetxt(y, save+f\u0027_recall_{label}\u0027)\n        if legend:\n            ax.legend()\n        ax.grid(\u0027on\u0027)\n        ax.set_xlabel(\u0027Threshold\u0027)\n        ax.set_ylabel(\u0027Recall --\u003e\u0027)\n        \n    def getLabels(self, count):\n        if self.classLabels:\n            label \u003d self.classLabels[count]\n        else:\n            label \u003d count\n        return label\n\n    def threshold_subplots(self, step \u003d np.arange(0.0, 0.95, 0.01), figsize\u003d(15, 8), save \u003d False):\n        import matplotlib.gridspec as gridspec\n        fig \u003d plt.figure(figsize \u003d figsize)\n        gs \u003d gridspec.GridSpec(ncols\u003d2, nrows\u003d2, figure\u003dfig)\n        ax1 \u003d fig.add_subplot(gs[0, 0])\n        ax2 \u003d fig.add_subplot(gs[0, 1])\n        ax3 \u003d fig.add_subplot(gs[1, 0])\n        ax4 \u003d fig.add_subplot(gs[1, 1])\n\n        axs \u003d [ax1, ax2, ax3, ax4]\n        self.plot_precision      (ax \u003d axs[0], step \u003d step, legend \u003d False, save \u003d save)\n        self.plot_recall         (ax \u003d axs[1], step \u003d step, legend \u003d False, save \u003d save)\n        self.plot_true_positives (ax \u003d axs[2], step \u003d step, legend \u003d True , save \u003d save)\n        self.plot_false_positives(ax \u003d axs[3], step \u003d step, legend \u003d True , save \u003d save)\n        plt.tight_layout()\n        \n        if save:\n            if not dev_run:\n                savefigs(save)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.583",
       "progress": 0,
       "config": {
@@ -768,7 +768,7 @@
     {
       "title": "Define EvaluateModel",
       "text": "%spark.pyspark\ndef evaluateModel(rfModel, df, labelCol \u003d \u0027label\u0027, evaluate \u003d False,\n                  normalise \u003d True, classLabels \u003d False, save \u003d False,\n                  step \u003d np.arange(0.5, 0.99, 0.05)):\n    \u0027\u0027\u0027Apply a NN to new data, with the option to evaluate if test dataset\u0027\u0027\u0027\n    \n    # compute accuracy on the test set\n    result \u003d rfModel.transform(df)\n#     print(\"Test set accuracy \u003d \" + str(evaluator.evaluate(predictionAndLabels)))\n    \n    if evaluate:\n        # predictionAndLabels \u003d result.select(\"prediction\", labelCol)\n        # evaluator \u003d MulticlassClassificationEvaluator(metricName\u003d\"accuracy\")\\\n        #                     .setLabelCol(labelCol)\n        # Call MLlib_confusion_matrix class to plot confusion matrix\n        print(save+\u0027_confusion_matrix\u0027)\n        res \u003d MLlib_confusion_matrix(result, labelCol \u003d labelCol)\n        res.confusionMatrix(classes \u003d [\u0027Bad\u0027, \u0027Good\u0027], normalize \u003d normalise, save \u003d save+\u0027_confusion_matrix\u0027)\n        \n        if evaluate !\u003d \u0027minimal\u0027:\n        \n            # Call plottingThreshold to explore the effect of Thresholding\n            plottingThreshold(result, labelCol \u003d labelCol, classLabels \u003d classLabels)\\\n                .threshold_subplots(step \u003d step, save \u003d save+\u0027_thresholds\u0027)\n\n    return result",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.583",
       "progress": 0,
       "config": {
@@ -805,7 +805,7 @@
     {
       "title": "Evaluate Model",
       "text": "%spark.pyspark\nresult \u003d evaluateModel(rfModel \u003d model, df \u003d test, normalise \u003d True,  evaluate \u003d True, \n                       labelCol \u003d \u0027is_wd\u0027,  classLabels \u003d [\u0027Other Sources\u0027, \"Known WD\u0027s\"],\n                       save \u003d \u0027edr3_WDs_no_background\u0027)\n                       \nresult.createOrReplaceTempView(\u0027ML_res\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.583",
       "progress": 0,
       "config": {
@@ -858,7 +858,7 @@
     {
       "title": "BinaryClassifier",
       "text": "%spark.pyspark\ndef binaryClassifier(df, positives \u003d 1, labelCol \u003d \u0027label\u0027, return_df \u003d True, cache \u003d True):\n    \u0027\u0027\u0027splits the df into objects classified correctly \"true\" and wrongly \"false\".\n    Returns two df if \"return_df\" \u003d True and/or caches both if \"cache\" \u003d True\u0027\u0027\u0027\n    \n    # Split data into true and falsely classified data\n    tp \u003d df.filter((col(labelCol)\u003d\u003dcol(\u0027prediction\u0027)) \u0026 (col(labelCol) \u003d\u003d positives))\n    tn \u003d df.filter((col(labelCol)\u003d\u003dcol(\u0027prediction\u0027)) \u0026 (col(labelCol) !\u003d positives))\n    fp \u003d df.filter((col(labelCol)!\u003dcol(\u0027prediction\u0027)) \u0026 (col(labelCol) \u003d\u003d positives))\n    fn \u003d df.filter((col(labelCol)!\u003dcol(\u0027prediction\u0027)) \u0026 (col(labelCol) !\u003d positives))\n    \n    if cache \u003d\u003d True:\n        tp.createOrReplaceTempView(\u0027true_positives\u0027)\n        tn.createOrReplaceTempView(\u0027true_negatives\u0027)\n        fp.createOrReplaceTempView(\u0027false_positives\u0027)\n        fn.createOrReplaceTempView(\u0027false_negatives\u0027)\n    if return_df \u003d\u003d True:\n        return (tp, tn, fp, fn)\n    else: return 0\n    \ntp, tn, fp, fn \u003d binaryClassifier(result, labelCol \u003d \u0027is_wd\u0027, cache \u003d True)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.584",
       "progress": 0,
       "config": {
@@ -894,7 +894,7 @@
     {
       "title": "def resCAMD",
       "text": "%spark.pyspark\ndef resCAMD(passbands, catalogues, colors \u003d [\u0027k\u0027, \u0027darkred\u0027, \u0027darkblue\u0027], ms \u003d 1, \n         labels \u003d None, plotType \u003d \u0027scatter\u0027, cmap \u003d \u0027cividis\u0027, bins \u003d [100, 100], colorbar \u003d True,\n         limit \u003d 10000, alpha \u003d 1.0, save \u003d False, fontsize \u003d 14):\n    \u0027\u0027\u0027plot an observational Hertzsprung-Russell diagram (aka colour / absolute magnitude diagram)\n    for the unclassified sample to show the problem,\n    include the photometric consistency filter to show the problem is astrometric in addition to photometric \u0027\u0027\u0027\n    \n    import matplotlib.pylab as plt\n    plt.rcParams[\u0027font.size\u0027] \u003d fontsize\n    fig, ax \u003d plt.subplots(figsize \u003d (9.0, 9.0))\n    \n    quick_plot_filter \u003d f\u0027 AND MOD(a.source_id, {limit}) \u003d 0\u0027\n\n    for c, catalogue in enumerate(catalogues):\n        if type(ms) \u003d\u003d list:\n            s \u003d ms[c]\n        else: s \u003d ms\n        if type(labels) \u003d\u003d type(None):\n            label \u003d catalogue\n        else: label \u003d labels[c]\n        color \u003d None\n        \n        if not type(plotType) \u003d\u003d str:\n            pType \u003d plotType[c]\n        else: pType \u003d plotType\n        \n        if pType \u003d\u003d \u0027scatter\u0027:\n            color \u003d colors[c]; cmp \u003d None; bns \u003d None\n        else: cmp \u003d cmap[c]; bns \u003d bins[c]\n        \n        tmp \u003d spark.sql(f\u0027SELECT m_{passbands[0]}, {passbands[1]} FROM {catalogue}\u0027)\n        \n        tmp \u003d tmp.toPandas().dropna()\n        \n        selectPlotType(x \u003d tmp[f\u0027{passbands[1]}\u0027], y \u003d tmp[f\u0027m_{passbands[0]}\u0027], \n                       plotType \u003d pType, ax \u003d ax, cmap \u003d cmp, color \u003d color,\n                       label \u003d label, s \u003d s, white_nan \u003d True, bins \u003d bns, cbar \u003d colorbar)\n        \n    plt.ylim(21.0, -3.0)\n    plt.xlim(-1, 3)\n    plt.ylabel(\u0027Stellar brightness (absolute G magnitude) --\u003e\u0027, fontsize \u003d fontsize)\n    plt.xlabel(\u0027\u003c-- Stellar temperature (G - RP magnitude)\u0027, fontsize \u003d fontsize)\n    plt.legend()\n    if plotType \u003d\u003d \u0027scatter\u0027:\n        lgnd \u003d plt.legend(fontsize \u003d 12, markerscale \u003d 1)\n#         for i in range(len(catalogues)):\n#             lgnd.legendHandles[i]._sizes \u003d [25]\n    if save:\n        if not dev_run:\n            savefigs(save)\n\n\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.584",
       "progress": 0,
       "config": {
@@ -931,7 +931,7 @@
     {
       "title": "plot resCAMD",
       "text": "%spark.pyspark\ncatalogues \u003d [\u0027true_positives\u0027, \u0027true_negatives\u0027, \u0027false_positives\u0027, \u0027false_negatives\u0027]\nresCAMD(passbands \u003d [\u0027g\u0027, \u0027g_rp\u0027], catalogues \u003d catalogues, alpha \u003d 0.5, fontsize \u003d 18,\n     cmap \u003d [\u0027inferno\u0027, \u0027cividis\u0027], colors\u003d[\u0027blue\u0027, \u0027k\u0027, \u0027darkred\u0027, \u0027slategrey\u0027],\n     ms \u003d [2,2,55,55], limit \u003d 5000, plotType \u003d [\u0027kdeHeatmap\u0027, \u0027kdeHeatmap\u0027, \u0027scatter\u0027,\u0027scatter\u0027],\n     bins \u003d [200, 200, 100, 100], colorbar \u003d True, save \u003d \u0027CAMD_results\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.584",
       "progress": 0,
       "config": {
@@ -976,7 +976,7 @@
     {
       "title": "Feature Importance",
       "text": "%spark.pyspark\ndef feature_importance(model, save \u003d False, fontsize \u003d 14):\n    \n    plt.rcParams[\u0027font.size\u0027] \u003d fontsize\n    columns \u003d return_training_columns()\n    FI \u003d list(model.featureImportances)\n    # for i in range(len(FI)):\n    #     print(columns[i+1], FI[i])\n\n    plt.rcParams[\u0027figure.figsize\u0027] \u003d 16,5\n    plt.bar(columns[1:-1], FI, color \u003d \u0027darkslategrey\u0027)\n    plt.xticks(rotation\u003d45)\n    plt.ylabel(\u0027Importance\u0027, fontsize \u003d 15)\n    plt.xlabel(\u0027Feature\u0027, fontsize \u003d 15)\n    if save:\n        if not dev_run:\n            savefigs(save)\n            savetxt([columns[1:-1], FI], filename \u003d \u0027feature_importance\u0027)\n    plt.show()\n    return FI\n\nfeatureImport \u003d feature_importance(model, save \u003d \u0027feature_importance_final\u0027, fontsize \u003d 16)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1021,7 +1021,7 @@
     },
     {
       "text": "%spark.pyspark\ndef plot_probabilities(df, colors \u003d [\u0027darkblue\u0027, \u0027red\u0027], bins \u003d 25, alpha \u003d 1.0,\n                       label \u003d [\u0027class0\u0027, \u0027class1\u0027], class_value \u003d [0,1],\n                      fontsize \u003d 14, ec \u003d \u0027k\u0027, save \u003d False):\n    \u0027\u0027\u0027histogram of the classification probabilities: cf. GCNS paper Figure 3\u0027\u0027\u0027\n\n    plt.figure(1, figsize \u003d (9.7, 6.0))\n    dat \u003d df.select([\u0027is_wd\u0027, \u0027probability\u0027]).toPandas()\n    dat[\u0027probability\u0027] \u003d [j[1] for j in dat[\u0027probability\u0027].values]\n    tmp \u003d np.zeros(len(class_value), dtype \u003d \u0027object\u0027)\n    for i, value in enumerate(class_value):\n        tmp[i] \u003d dat[dat[\u0027is_wd\u0027] \u003d\u003d i][\u0027probability\u0027]\n    plt.hist(tmp, color \u003d colors, bins\u003dbins,\n                           log \u003d True, label \u003d label, alpha \u003d alpha, ec \u003d ec)\n    plt.xlabel(\u0027WD Probability --\u003e\u0027, fontsize \u003d fontsize)\n    plt.ylabel(\u0027N\u0027, fontsize \u003d fontsize)\n    plt.xlim(0,1.0)\n    plt.legend(label)\n    if save:\n        if not dev_run:\n            savefigs(save)\n    \nplot_probabilities(df \u003d result, bins \u003d 20, colors \u003d [\u0027grey\u0027, \u0027goldenrod\u0027], alpha \u003d 1, ec \u003d \u0027k\u0027,\n                   label \u003d [\"Non-WD\u0027s\", \"WD\u0027s\"], fontsize \u003d 18, save \u003d \u0027training_distribution_WDs\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1064,7 +1064,7 @@
     },
     {
       "text": "%md\n# Hyperparam Optimisation\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1106,7 +1106,7 @@
     {
       "title": "Hyperparam Optimisation",
       "text": "%spark.pyspark\n\nfrom pyspark.ml.evaluation import BinaryClassificationEvaluator\nfrom pyspark.ml.tuning import CrossValidator, ParamGridBuilder\n\nrf \u003d RandomForestClassifier(featureSubsetStrategy \u003d \u0027sqrt\u0027, featuresCol \u003d \u0027features\u0027,\n                            labelCol \u003d \u0027is_wd\u0027, seed\u003d42) # Defines fixed parameters for tuning\n\n# Provide the grid of training hyperparmas, this step is computationally expensive so limit the variables to best guesses and previously optimised models where possible.\ngrid \u003d ParamGridBuilder()\\\n                 .addGrid(rf.impurity, [\u0027entropy\u0027])\\\n                    .addGrid(rf.minInstancesPerNode, [1])\\\n                        .addGrid(rf.numTrees, [100])\\\n                            .addGrid(rf.maxDepth, [10]).build()\n\ndef hyperparamOptimiser(grid, rf, train, test \u003d None, parallelism \u003d 5, numFolds \u003d 5, ):\n    \n    evaluator \u003d BinaryClassificationEvaluator().setLabelCol(\u0027is_wd\u0027)\n    cv \u003d CrossValidator(estimator\u003drf, estimatorParamMaps\u003dgrid, evaluator\u003devaluator,\n                   parallelism\u003dparallelism, numFolds\u003dnumFolds)\n    cvModel \u003d cv.fit(train)\n    return cvModel.bestModel\n    \nbestModel \u003d hyperparamOptimiser(grid \u003d grid, rf \u003d rf, train \u003d train, numFolds \u003d 4, parallelism \u003d 6)\n\nbestModel.extractParamMap()\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1148,7 +1148,7 @@
     {
       "title": "Evaluate Optimised Model",
       "text": "%spark.pyspark\nevaluateModel(rfModel \u003d bestModel, df \u003d test, normalise \u003d True,  \n              evaluate \u003d \u0027minimal\u0027, labelCol \u003d \u0027is_wd\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1185,7 +1185,7 @@
     {
       "title": "Save Model",
       "text": "%spark.pyspark\n# save \u003d f\u0027{user_home}/WD_detection/models/\u0027\n# print(f\u0027{save}/randomForest_optimised/\u0027)\n# bestModel.write().overwrite().save(f\u0027{save}/randomForest_optimised/\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1226,7 +1226,7 @@
     },
     {
       "text": "%md\n\n# Apply to all Good Sources\n\n- Cut m_g\u003e 6 + 5×(BP-RP)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1267,7 +1267,7 @@
     },
     {
       "text": "%pyspark\nspark.catalog.listTables()\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1307,7 +1307,7 @@
     {
       "title": "Load Model",
       "text": "%spark.pyspark\n\ndef loadScaler(filename, scalerType \u003d \u0027standard\u0027):\n    \u0027\u0027\u0027loads scaler based of scaler type\u0027\u0027\u0027\n    if scalerType \u003d\u003d \u0027standard\u0027:\n        from pyspark.ml.feature import StandardScalerModel\n        model \u003d StandardScalerModel.load(filename)\n    \n    elif scaterType \u003d\u003d \u0027MinMax\u0027:\n        from pyspark.ml.feature import MinMaxScalerModel\n        model \u003d MinMaxScalerModel.load(filename)\n    else: raise NameError(f\u0027scalerType can be either \"MinMax\" or \"standard\" not {scalerType}\u0027)\n    return model\n        \ndef rfLoadModel(filepath):\n    \u0027\u0027\u0027loads NN from savefile\u0027\u0027\u0027\n    from pyspark.ml.classification import RandomForestClassificationModel\n    return RandomForestClassificationModel.load(filepath)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1344,7 +1344,7 @@
     {
       "title": "select unlabelled data",
       "text": "%pyspark\ndef select_unlabelled_data(table, filename, featuresCol \u003d \u0027features\u0027, sample \u003d False,\n                           normalise \u003d False, scalerType \u003d \u0027standard\u0027, features \u003d \u0027*\u0027,\n                           linear_cut \u003d True, labelCol \u003d \u0027is_good\u0027):\n    \u0027\u0027\u0027selects full table to apply the trained model\u0027\u0027\u0027\n    \n    if sample: \n        quick_plot_filter \u003d \u0027 WHERE MOD(source_id, 10000) \u003d 0\u0027\n    else: quick_plot_filter \u003d \u0027\u0027\n    \n    # Get unlabelled data\n    df \u003d spark.sql(f\u0027SELECT a.*, a.phot_g_mean_mag + 5.0*LOG10(a.parallax/100.0) \\\n                                         AS m_g, a.g_rp FROM {table} as a \\\n                                         {quick_plot_filter}\u0027)\n    if linear_cut:\n        df.filter(col(\u0027m_g\u0027) \u003e 6 + 5*(col(\u0027phot_bp_mean_mag\u0027)-col(\u0027phot_rp_mean_mag\u0027)))\n    \n    # Assemble training features into DenseVector\n    assembler \u003d VectorAssembler(inputCols\u003dfeatures,\n                                outputCol\u003dfeaturesCol,\n                                handleInvalid \u003d \u0027keep\u0027)\n                                \n    df \u003d assembler.transform(df)\\\n                .select([\u0027source_id\u0027, \u0027m_g\u0027, \u0027g_rp\u0027, featuresCol])\n                \n    if normalise:\n        # Scale the independent test data with a loaded scaler\n        scaler \u003d loadScaler(f\u0027{filename}/{scalerType}_normalisation_model\u0027, scalerType \u003d scalerType)\n        df \u003d normaliseData(df.withColumnRenamed(featuresCol, \u0027inputFeatures\u0027), model \u003d scaler)\n        \n    # Evaluate data with trained model\n    rfModelRead \u003d rfLoadModel(filepath \u003d f\u0027{filename}/randomForestClassifier\u0027)\n    df \u003d evaluateModel(rfModel \u003d rfModelRead, df \u003d df, normalise \u003d True,  evaluate \u003d False, \n                       labelCol \u003d labelCol)\n                       \n    return df\n\n# new \u003d select_unlabelled_data(table \u003d \u0027gaia_source\u0027, filename \u003d f\u0027{user_home}/WD_detection/models/randomForest_WD_detection\u0027,\n#                       normalise \u003d True, scalerType \u003d \u0027standard\u0027, features \u003d return_training_columns()[1:-1])",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1381,7 +1381,7 @@
     {
       "title": "Evaluate all Data",
       "text": "%pyspark\n\ndef applyThresholding(df, threshold \u003d False, thresholdCol \u003d \u0027confidence\u0027, predictionCol \u003d \u0027prediction\u0027):\n    if type(threshold) \u003d\u003d float:\n        df \u003d df.filter(col(thresholdCol) \u003e threshold)\n    elif type(threshold) \u003d\u003d list:\n        print(\u0027Warning: If length of threshold !\u003d number of classes, the thresholding may work unpredictably\u0027)\n        for i,value in enumerate(threshold):\n            df \u003d df.filter(((col(predictionCol) \u003d\u003d i) \u0026 (col(thresholdCol) \u003e value)) | \\\n                            (col(predictionCol) !\u003d i))\n    elif not threshold: return df\n    else: raise nameError(\u0027\"threshold\" must be either be a float or list of length equal to the number of classes\u0027)\n    return df\n\ndef vector_to_array(col):\n    def to_array_(v):\n        return v.toArray().tolist()\n    return udf(to_array_, ArrayType(DoubleType())).asNondeterministic()(col)\n\ndef evaluateAllData(filename, save \u003d False, queryable \u003d \u0027dcr_WD_res\u0027, sample \u003d False, featureCols \u003d None,\n                    threshold \u003d False, QCthreshold \u003d 0.5, qualityControl \u003d True, labelCol \u003d \u0027is_good\u0027):\n    \n    df \u003d select_unlabelled_data(table \u003d \u0027gaia_source\u0027, filename \u003d filename, features \u003d featureCols,\n                      normalise \u003d True, scalerType \u003d \u0027standard\u0027, sample \u003d sample, labelCol \u003d labelCol)\n\n    df \u003d df.select([\u0027source_id\u0027, \u0027probability\u0027, \u0027prediction\u0027])\n\n    df \u003d df.withColumn(\"probability\", vector_to_array(col(\"probability\")))\\\n                    .select([\u0027source_id\u0027, \u0027prediction\u0027] + [col(\"probability\")[i] for i in range(2)])\\\n                        .withColumn(\u0027confidence\u0027, greatest(col(\u0027probability[0]\u0027), col(\u0027probability[1]\u0027)))\\\n                            .select([\u0027source_id\u0027, \u0027prediction\u0027, \u0027confidence\u0027])\n\n    if save:\n        if not dev_run:\n            df.write.mode(\u0027overwrite\u0027).save(f\"{user_home}/WD_detection/results/{save}.parquet\", format\u003d\"parquet\")\n            print(f\u0027data saved at {user_home}/ML_cuts/results/{save}.parquet\u0027)\n            \n    if threshold:\n        df \u003d applyThresholding(df \u003d df, threshold \u003d threshold, thresholdCol \u003d \u0027confidence\u0027, predictionCol \u003d \u0027prediction\u0027)\n    \n    if queryable:\n        df.createOrReplaceTempView(queryable)\n        \n    if qualityControl:\n        if not queryable:\n            raise nameError(\u0027For quality control makeQueryable must be True\u0027)\n        df \u003d applyQualityControl(catalogue \u003d queryable, QCcatalogue \u003d \u0027dcr_spurious_sources\u0027, \n                                 threshold \u003d QCthreshold, return_confidence \u003d False)\n        df.createOrReplaceTempView(queryable)\n        \n    return df",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1418,7 +1418,7 @@
     {
       "title": "getSources",
       "text": "%pyspark\n\nallRes \u003d evaluateAllData(queryable \u003d \u0027dcr_WD_res\u0027, filename \u003d f\u0027{user_home}/WD_detection/models/edr3_WDs_no_background/\u0027,\n                         sample \u003d False, featureCols \u003d return_training_columns()[1:-1], threshold \u003d False,\n                         qualityControl \u003d True, QCthreshold \u003d 0.8, labelCol \u003d \u0027is_wd\u0027) # save \u003d \u0027allDataWD_Check\u0027\n                         \n# allRes[col(\u0027prediction\u0027) \u003d\u003d 0].count(), allRes[col(\u0027prediction\u0027) \u003d\u003d 1].count()\n\n# Previous work not for eDR3 data with new Bad training Set.\n#    Without thresholding,  or QC cuts: [Non-WD\u0027s/WD\u0027s] \u003d [2,576,142 / 322,708] - [89%/11%]\n# [0.5, 0.9] thresholding,  no QC cuts: [Non-WD\u0027s/WD\u0027s] \u003d [2,576,142 / 120,148] - [95.5%/4.5%]\n# [0.5, 0.9] thresholding, 0.5 QC cuts: [Non-WD\u0027s/WD\u0027s] \u003d [  954,607 /     598] - [99.9%/0.05%]\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1455,7 +1455,7 @@
     {
       "title": "def getResData",
       "text": "%pyspark\ndef getResData(class_val \u003d 0, label \u003d None, limit \u003d None, labelCol \u003d \u0027label\u0027, color \u003d \u0027k\u0027, \n                                save \u003d False, sourceCat \u003d \u0027gaia_source\u0027, vmax \u003d None, projection \u003d \u0027galactic\u0027,\n                                trainingCat \u003d \u0027dcr_training_sources\u0027, fontsize \u003d 14, scale \u003d None, bins \u003d 100,\n                                absPassbands \u003d [\u0027g\u0027]):\n\n    plt.figure(2, figsize \u003d (24.18, 7.0))\n    plt.rcParams[\u0027font.size\u0027] \u003d fontsize\n    \n    # Allows a choice of projections.\n    if projection \u003d\u003d \u0027equitorial\u0027: coord_cols \u003d [\u0027ra\u0027, \u0027dec\u0027]\n    elif projection \u003d\u003d \u0027galactic\u0027: coord_cols \u003d [\u0027l\u0027, \u0027b\u0027]\n    \n    if limit \u003d\u003d None:\n        quick_plot_filter \u003d f\u0027\u0027\n    elif type(limit) \u003d\u003d int:\n        quick_plot_filter \u003d f\u0027 AND ((MOD(a.source_id, {limit}) \u003d 0) or (b.{labelCol} \u003d\u003d 1))\u0027 #  AND MOD (a.source_id, {limit/200}) \u003d 0))\u0027\n    \n    \n    dat \u003d spark.sql(f\u0027SELECT b.{labelCol}, a.{coord_cols[0]}, a.{coord_cols[1]}, a.bp_rp, a.g_rp,\\\n                      a.phot_{absPassbands[0]}_mean_mag + 5.0*LOG10(a.parallax/100.0) \\\n                            AS m_{absPassbands[0]} FROM {sourceCat} as a, \\\n                                                 {trainingCat} as b \\\n                                                 WHERE a.source_id \u003d b.source_id \\\n                                                 {quick_plot_filter} \\\n                                                 AND a.phot_{absPassbands[0]}_mean_mag + 5.0*LOG10(a.parallax/100.0) \u003e 6 + 5*(a.bp_rp)\u0027) # Focuses on sources near the WD population\n    dat \u003d dat.withColumn(f\u0027{coord_cols[0]}_rad\u0027, (col(coord_cols[0]) - 180.0) * np.pi / 180.0)\\\n                .withColumn(f\u0027{coord_cols[1]}_rad\u0027, (col(coord_cols[1]) * np.pi / 180.0))\\\n                    .toPandas()\n                    # .select([f\u0027{coord_cols[0]}_rad\u0027, f\u0027{coord_cols[1]}_rad\u0027, labelCol])\\\n                        \n    return dat\n    \ndef hexplot(dat, class_val \u003d 0, label \u003d None, labelCol \u003d \u0027label\u0027, color \u003d \u0027k\u0027, projection \u003d \u0027galactic\u0027,\n            save \u003d False, vmax \u003d None, fontsize \u003d 14, scale \u003d None, bins \u003d 100, cmap \u003d [\u0027inferno\u0027, \u0027cividis\u0027]):\n            \n    plt.figure(2, figsize \u003d (24.18, 7.0))\n    plt.rcParams[\u0027font.size\u0027] \u003d fontsize\n    \n    if projection \u003d\u003d \u0027equitorial\u0027: coord_cols \u003d [\u0027ra\u0027, \u0027dec\u0027]\n    elif projection \u003d\u003d \u0027galactic\u0027: coord_cols \u003d [\u0027l\u0027, \u0027b\u0027]\n    \n    for i, value in enumerate(class_val):\n        tmp \u003d dat[dat[labelCol] \u003d\u003d value]\n        plt.subplot(1,2,i+1, projection\u003d\u0027aitoff\u0027)\n        plt.grid(True)\n        if vmax:\n            vm \u003d vmax[i]; extend \u003d \u0027max\u0027\n        else: vm \u003d None; extend \u003d None\n        plt.title(f\u0027{label[i]}\u0027, fontsize \u003d fontsize+4)\n        image \u003d plt.hexbin(tmp[f\u0027{coord_cols[0]}_rad\u0027].values, tmp[f\u0027{coord_cols[1]}_rad\u0027].values, cmap\u003dcmap[i], \n                   gridsize\u003dbins, mincnt\u003d1, bins\u003dscale, vmax \u003d vm, alpha \u003d 1.0) \n        cb \u003d plt.colorbar(image, extend \u003d extend, spacing \u003d \u0027proportional\u0027) \n    plt.tight_layout()\n    if save:\n        if not dev_run:\n            savefigs(save)\n    plt.show()\n    \n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1492,7 +1492,7 @@
     {
       "title": "spacialDist plot",
       "text": "%pyspark\ndat \u003d getResData(class_val \u003d [1,0], label \u003d [\u0027White Dwarfs Preds \\n\u0027, \"Non-WD\u0027s Preds \\n\"], \n                           color \u003d [\u0027k\u0027, \u0027darkred\u0027], limit \u003d None, labelCol \u003d \u0027prediction\u0027, \n                           sourceCat \u003d \u0027gaia_source\u0027, trainingCat \u003d \u0027dcr_WD_res\u0027,\n                          fontsize \u003d 14, projection \u003d \u0027galactic\u0027, scale \u003d \u0027log\u0027, bins \u003d 100,)\n                        #   save \u003d \u0027ALLresults_Spacial_distribution_equitorial_log_edr3\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1533,7 +1533,7 @@
     },
     {
       "text": "%pyspark\ndat[dat.prediction \u003d\u003d 1][\u0027prediction\u0027].count()/dat[dat.prediction \u003d\u003d 0][\u0027prediction\u0027].count()",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1572,7 +1572,7 @@
     },
     {
       "text": "%pyspark\ndat[dat.prediction \u003d\u003d 1][\u0027prediction\u0027].count(), dat[dat.prediction \u003d\u003d 0][\u0027prediction\u0027].count()",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1611,7 +1611,7 @@
     },
     {
       "text": "%pyspark\nhexplot(dat \u003d dat, class_val \u003d [1,0], \n    label \u003d [\u0027White Dwarfs Preds \\n\u0027, \"Non-WD\u0027s Preds \\n\"], \n    color \u003d [\u0027k\u0027, \u0027darkred\u0027], labelCol \u003d \u0027prediction\u0027,\n    fontsize \u003d 14, scale \u003d \u0027log\u0027, bins \u003d 250, vmax \u003d [100, 100],)\n    # save \u003d \u0027ALLresults_Spacial_distribution_equitorial_log_edr3\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.585",
       "progress": 0,
       "config": {
@@ -1655,7 +1655,7 @@
     {
       "title": "def dfCAMD",
       "text": "%pyspark\n\ndef dfCAMD(df, classes, colors \u003d [\u0027k\u0027, \u0027darkred\u0027, \u0027darkblue\u0027], ms \u003d 1, passbands \u003d [\u0027m_g\u0027, \u0027g_rp\u0027],\n         labels \u003d None, plotType \u003d \u0027scatter\u0027, cmap \u003d \u0027cividis\u0027, bins \u003d [100, 100], colorbar \u003d True,\n         alpha \u003d 1.0, save \u003d False, labelCol \u003d \u0027is_wd\u0027, ylim \u003d (18.0, -5.0), xlim \u003d (-1, 2.0),\n         cbarLabel \u003d None, cbarShrink \u003d 1.0, cbarLocation \u003d None, cbarPad \u003d 0.05, figsize \u003d  (7.0, 9.0)):\n    \u0027\u0027\u0027plot an observational Hertzsprung-Russell diagram (aka colour / absolute magnitude diagram)\n    for the unclassified sample to show the problem,\n    include the photometric consistency filter to show the problem is astrometric in addition to photometric \u0027\u0027\u0027\n    \n    import matplotlib.pylab as plt\n    fig, ax \u003d plt.subplots(figsize \u003d figsize)\n    \n    for c, value in enumerate(classes):\n        if type(ms) \u003d\u003d list:\n            s \u003d ms[c]\n        else: s \u003d ms\n        if type(labels) \u003d\u003d type(None):\n            label \u003d value\n        else: label \u003d labels[c]\n        color \u003d None\n        if plotType \u003d\u003d \u0027scatter\u0027:\n            color \u003d colors[c]; cmp \u003d None; bns \u003d None\n        else: cmp \u003d cmap[c]; bns \u003d bins[c]\n        if colorbar:\n            clabel \u003d cbarLabel[c]; clocation \u003d cbarLocation[c]\n            cPad \u003d cbarPad[c]\n        else: clabel \u003d None; clocation \u003d None; cbarPad \u003d 0.05\n\n        tmp \u003d df[df[labelCol] \u003d\u003d c].dropna(subset \u003d passbands)\n        print(f\u0027length \u003d {tmp.shape}\u0027)\n        selectPlotType(x \u003d tmp[f\u0027{passbands[1]}\u0027], y \u003d tmp[f\u0027{passbands[0]}\u0027], \n                       plotType \u003d plotType, ax \u003d ax, cmap \u003d cmp, color \u003d color, alpha \u003d alpha,\n                       label \u003d label, s \u003d s, white_nan \u003d True, bins \u003d bns, cbar \u003d colorbar, \n                       cbarLabel \u003d clabel, cbarShrink \u003d cbarShrink, cbarLocation \u003d clocation,\n                       cbarPad \u003d cPad)\n                       \n    if passbands[1] \u003d\u003d \u0027bp_rp\u0027:\n        x \u003d np.arange(-1, 2.0, 0.1)\n        plt.plot(x, 6 + 5*x, \u0027k--\u0027)\n        \n    plt.ylim(ylim)\n    plt.xlim(xlim)\n    plt.ylabel(\u0027Stellar brightness (absolute G magnitude) --\u003e\u0027, fontsize \u003d 16)\n    plt.xlabel(\u0027\u003c-- Stellar temperature (G - RP magnitude)\u0027, fontsize \u003d 16)\n    if plotType \u003d\u003d \u0027scatter\u0027:\n        lgnd \u003d plt.legend(fontsize \u003d 12, markerscale \u003d 1, loc \u003d \u0027upper right\u0027)\n    if save:\n        if not dev_run:\n            savefigs(save)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.593",
       "progress": 0,
       "config": {
@@ -1691,7 +1691,7 @@
     },
     {
       "text": "%pyspark\ndfCAMD(df \u003d dat, passbands \u003d [\u0027m_g\u0027, \u0027bp_rp\u0027],\n     cmap \u003d [\u0027cividis\u0027, \u0027inferno\u0027], colors \u003d [\u0027k\u0027, \u0027darkblue\u0027], alpha \u003d 0.5, \n     classes \u003d [\u0027Other Source Type\u0027, \u0027White Dwarf\u0027], ms \u003d 4,\n     plotType \u003d \u0027kdeHeatmap\u0027, bins \u003d [200, 200], labelCol \u003d \u0027prediction\u0027,)\n    #  save \u003d \u0027allResCAMD_edr3\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.593",
       "progress": 0,
       "config": {
@@ -1734,7 +1734,7 @@
     },
     {
       "text": "%pyspark\ndfCAMD(df \u003d dat, passbands \u003d [\u0027m_g\u0027, \u0027bp_rp\u0027], colorbar \u003d True, cbarLocation \u003d [\u0027right\u0027, \u0027right\u0027],\n     cmap \u003d [\u0027cividis\u0027, \u0027inferno\u0027], colors \u003d [\u0027k\u0027, \u0027darkblue\u0027], alpha \u003d 0.5, cbarShrink \u003d 0.75, cbarPad \u003d [0.05, 0.05],\n     classes \u003d [\u0027Non-White Dwarf\u0027, \u0027White Dwarf\u0027], ms \u003d 4, xlim \u003d (-1.5,3), ylim \u003d (18, 0),  figsize \u003d (9.0, 8.0),\n     plotType \u003d  \u00272Dhist\u0027, bins \u003d [100, 100], labelCol \u003d \u0027prediction\u0027, cbarLabel \u003d [\u0027Non-White Dwarf Population\u0027, \u0027White Dwarf Population\u0027],)\n    #  save \u003d \u0027allResScatterCAMD_edr3\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.593",
       "progress": 0,
       "config": {
@@ -1777,7 +1777,7 @@
     },
     {
       "text": "%spark.pyspark\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.594",
       "progress": 0,
       "config": {
@@ -1807,7 +1807,7 @@
     },
     {
       "text": "%spark.pyspark\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.594",
       "progress": 0,
       "config": {
@@ -1838,7 +1838,7 @@
     },
     {
       "text": "%spark.pyspark\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:52:58.594",
       "progress": 0,
       "config": {

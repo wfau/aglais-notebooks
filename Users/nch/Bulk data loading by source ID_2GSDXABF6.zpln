@@ -3,8 +3,8 @@
     {
       "title": "Title cell",
       "text": "%md\n\nScript for loading up data sets from csv into parquet format with partitioning, bucketting and sorting by source ID\n\nTODOs:\n* decide on the final location for the ingested datasets\n\n",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:49:48.997",
+      "user": "anonymous",
+      "dateUpdated": "2022-06-24 09:00:11.764",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -17,7 +17,7 @@
         "colWidth": 12.0,
         "editorMode": "ace/mode/markdown",
         "fontSize": 9.0,
-        "editorHide": false,
+        "editorHide": true,
         "title": true,
         "results": {},
         "enabled": true
@@ -46,7 +46,7 @@
     {
       "title": "Define structure types for the data sets to be loaded",
       "text": "%pyspark\n\n# schemas defined from WFAU MS SQL schema files, excluding the spatial indexing attributes (which are not included in the original CSVs distributed by the respective Data Centres of course)\n\nfrom pyspark.sql.types import *\n\ngaia_source_schema \u003d StructType([\n    StructField(\u0027solution_id\u0027, LongType(), True),\n    StructField(\u0027designation\u0027, StringType(), True),\n    StructField(\u0027source_id\u0027, LongType(), True),\n    StructField(\u0027random_index\u0027, LongType(), True),\n    StructField(\u0027ref_epoch\u0027, FloatType(), True),\n    StructField(\u0027ra\u0027, DoubleType(), True),\n    StructField(\u0027ra_error\u0027, DoubleType(), True),\n    StructField(\u0027dec\u0027, DoubleType(), True),\n    StructField(\u0027dec_error\u0027, DoubleType(), True),\n    StructField(\u0027parallax\u0027, DoubleType(), True),\n    StructField(\u0027parallax_error\u0027, DoubleType(), True),\n    StructField(\u0027parallax_over_error\u0027, FloatType(), True),\n    StructField(\u0027pm\u0027, FloatType(), True),\n    StructField(\u0027pmra\u0027, DoubleType(), True),\n    StructField(\u0027pmra_error\u0027, FloatType(), True),\n    StructField(\u0027pmdec\u0027, DoubleType(), True),\n    StructField(\u0027pmdec_error\u0027, FloatType(), True),\n    StructField(\u0027ra_dec_corr\u0027, FloatType(), True),\n    StructField(\u0027ra_parallax_corr\u0027, FloatType(), True),\n    StructField(\u0027ra_pmra_corr\u0027, FloatType(), True),\n    StructField(\u0027ra_pmdec_corr\u0027, FloatType(), True),\n    StructField(\u0027dec_parallax_corr\u0027, FloatType(), True),\n    StructField(\u0027dec_pmra_corr\u0027, FloatType(), True),\n    StructField(\u0027dec_pmdec_corr\u0027, FloatType(), True),\n    StructField(\u0027parallax_pmra_corr\u0027, FloatType(), True),\n    StructField(\u0027parallax_pmdec_corr\u0027, FloatType(), True),\n    StructField(\u0027pmra_pmdec_corr\u0027, FloatType(), True),\n    StructField(\u0027astrometric_n_obs_al\u0027, ShortType(), True),\n    StructField(\u0027astrometric_n_obs_ac\u0027, ShortType(), True),\n    StructField(\u0027astrometric_n_good_obs_al\u0027, ShortType(), True),\n    StructField(\u0027astrometric_n_bad_obs_al\u0027, ShortType(), True),\n    StructField(\u0027astrometric_gof_al\u0027, FloatType(), True),\n    StructField(\u0027astrometric_chi2_al\u0027, FloatType(), True),\n    StructField(\u0027astrometric_excess_noise\u0027, FloatType(), True),\n    StructField(\u0027astrometric_excess_noise_sig\u0027, FloatType(), True),\n    StructField(\u0027astrometric_params_solved\u0027, ShortType(), True),\n    StructField(\u0027astrometric_primary_flag\u0027, BooleanType(), True),\n    StructField(\u0027nu_eff_used_in_astrometry\u0027, FloatType(), True),\n    StructField(\u0027pseudocolour\u0027, FloatType(), True),\n    StructField(\u0027pseudocolour_error\u0027, FloatType(), True),\n    StructField(\u0027ra_pseudocolour_corr\u0027, FloatType(), True),\n    StructField(\u0027dec_pseudocolour_corr\u0027, FloatType(), True),\n    StructField(\u0027parallax_pseudocolour_corr\u0027, FloatType(), True),\n    StructField(\u0027pmra_pseudocolour_corr\u0027, FloatType(), True),\n    StructField(\u0027pmdec_pseudocolour_corr\u0027, FloatType(), True),\n    StructField(\u0027astrometric_matched_transits\u0027, ShortType(), True),\n    StructField(\u0027visibility_periods_used\u0027, ShortType(), True),\n    StructField(\u0027astrometric_sigma5d_max\u0027, FloatType(), True),\n    StructField(\u0027matched_transits\u0027, ShortType(), True),\n    StructField(\u0027new_matched_transits\u0027, ShortType(), True),\n    StructField(\u0027matched_transits_removed\u0027, ShortType(), True),\n    StructField(\u0027ipd_gof_harmonic_amplitude\u0027, FloatType(), True),\n    StructField(\u0027ipd_gof_harmonic_phase\u0027, FloatType(), True),\n    StructField(\u0027ipd_frac_multi_peak\u0027, ShortType(), True),\n    StructField(\u0027ipd_frac_odd_win\u0027, ShortType(), True),\n    StructField(\u0027ruwe\u0027, FloatType(), True),\n    StructField(\u0027scan_direction_strength_k1\u0027, FloatType(), True),\n    StructField(\u0027scan_direction_strength_k2\u0027, FloatType(), True),\n    StructField(\u0027scan_direction_strength_k3\u0027, FloatType(), True),\n    StructField(\u0027scan_direction_strength_k4\u0027, FloatType(), True),\n    StructField(\u0027scan_direction_mean_k1\u0027, FloatType(), True),\n    StructField(\u0027scan_direction_mean_k2\u0027, FloatType(), True),\n    StructField(\u0027scan_direction_mean_k3\u0027, FloatType(), True),\n    StructField(\u0027scan_direction_mean_k4\u0027, FloatType(), True),\n    StructField(\u0027duplicated_source\u0027, BooleanType(), True),\n    StructField(\u0027phot_g_n_obs\u0027, ShortType(), True),\n    StructField(\u0027phot_g_mean_flux\u0027, DoubleType(), True),\n    StructField(\u0027phot_g_mean_flux_error\u0027, FloatType(), True),\n    StructField(\u0027phot_g_mean_flux_over_error\u0027, FloatType(), True),\n    StructField(\u0027phot_g_mean_mag\u0027, FloatType(), True),\n    StructField(\u0027phot_bp_n_obs\u0027, ShortType(), True),\n    StructField(\u0027phot_bp_mean_flux\u0027, DoubleType(), True),\n    StructField(\u0027phot_bp_mean_flux_error\u0027, FloatType(), True),\n    StructField(\u0027phot_bp_mean_flux_over_error\u0027, FloatType(), True),\n    StructField(\u0027phot_bp_mean_mag\u0027, FloatType(), True),\n    StructField(\u0027phot_rp_n_obs\u0027, ShortType(), True),\n    StructField(\u0027phot_rp_mean_flux\u0027, DoubleType(), True),\n    StructField(\u0027phot_rp_mean_flux_error\u0027, FloatType(), True),\n    StructField(\u0027phot_rp_mean_flux_over_error\u0027, FloatType(), True),\n    StructField(\u0027phot_rp_mean_mag\u0027, FloatType(), True),\n    StructField(\u0027phot_bp_n_contaminated_transits\u0027, ShortType(), True),\n    StructField(\u0027phot_bp_n_blended_transits\u0027, ShortType(), True),\n    StructField(\u0027phot_rp_n_contaminated_transits\u0027, ShortType(), True),\n    StructField(\u0027phot_rp_n_blended_transits\u0027, ShortType(), True),\n    StructField(\u0027phot_proc_mode\u0027, ShortType(), True),\n    StructField(\u0027phot_bp_rp_excess_factor\u0027, FloatType(), True),\n    StructField(\u0027bp_rp\u0027, FloatType(), True),\n    StructField(\u0027bp_g\u0027, FloatType(), True),\n    StructField(\u0027g_rp\u0027, FloatType(), True),\n    StructField(\u0027dr2_radial_velocity\u0027, FloatType(), True),\n    StructField(\u0027dr2_radial_velocity_error\u0027, FloatType(), True),\n    StructField(\u0027dr2_rv_nb_transits\u0027, ShortType(), True),\n    StructField(\u0027dr2_rv_template_teff\u0027, FloatType(), True),\n    StructField(\u0027dr2_rv_template_logg\u0027, FloatType(), True),\n    StructField(\u0027dr2_rv_template_fe_h\u0027, FloatType(), True),\n    StructField(\u0027l\u0027, DoubleType(), True),\n    StructField(\u0027b\u0027, DoubleType(), True),\n    StructField(\u0027ecl_lon\u0027, DoubleType(), True),\n    StructField(\u0027ecl_lat\u0027, DoubleType(), True),\n])\n\ntwomass_psc_schema \u003d StructType([\n    StructField(\u0027ra\u0027, DoubleType(), True),\n    StructField(\u0027dec\u0027, DoubleType(), True),\n    StructField(\u0027err_maj\u0027, FloatType(), True),\n    StructField(\u0027err_min\u0027, FloatType(), True),\n    StructField(\u0027err_ang\u0027, ShortType(), True),\n    StructField(\u0027designation\u0027, StringType(), True),\n    StructField(\u0027j_m\u0027, FloatType(), True),\n    StructField(\u0027j_cmsig\u0027, FloatType(), True),\n    StructField(\u0027j_msigcom\u0027, FloatType(), True),\n    StructField(\u0027j_snr\u0027, FloatType(), True),\n    StructField(\u0027h_m\u0027, FloatType(), True),\n    StructField(\u0027h_cmsig\u0027, FloatType(), True),\n    StructField(\u0027h_msigcom\u0027, FloatType(), True),\n    StructField(\u0027h_snr\u0027, FloatType(), True),\n    StructField(\u0027k_m\u0027, FloatType(), True),\n    StructField(\u0027k_cmsig\u0027, FloatType(), True),\n    StructField(\u0027k_msigcom\u0027, FloatType(), True),\n    StructField(\u0027k_snr\u0027, FloatType(), True),\n    StructField(\u0027ph_qual\u0027, StringType(), True),\n    StructField(\u0027rd_flg\u0027, StringType(), True),\n    StructField(\u0027bl_flg\u0027, StringType(), True),\n    StructField(\u0027cc_flg\u0027, StringType(), True),\n    StructField(\u0027ndet\u0027, StringType(), True),\n    StructField(\u0027prox\u0027, FloatType(), True),\n    StructField(\u0027pxpa\u0027, ShortType(), True),\n    StructField(\u0027pxcntr\u0027, IntegerType(), True),\n    StructField(\u0027gal_contam\u0027, ShortType(), True),\n    StructField(\u0027mp_flg\u0027, ShortType(), True),\n    StructField(\u0027pts_key\u0027, IntegerType(), True),\n    StructField(\u0027hemis\u0027, StringType(), True),\n    StructField(\u0027date\u0027, DateType(), True),\n    StructField(\u0027scan\u0027, ShortType(), True),\n    StructField(\u0027glon\u0027, FloatType(), True),\n    StructField(\u0027glat\u0027, FloatType(), True),\n    StructField(\u0027x_scan\u0027, FloatType(), True),\n    StructField(\u0027jdate\u0027, DoubleType(), True),\n    StructField(\u0027j_psfchi\u0027, FloatType(), True),\n    StructField(\u0027h_psfchi\u0027, FloatType(), True),\n    StructField(\u0027k_psfchi\u0027, FloatType(), True),\n    StructField(\u0027j_m_stdap\u0027, FloatType(), True),\n    StructField(\u0027j_msig_stdap\u0027, FloatType(), True),\n    StructField(\u0027h_m_stdap\u0027, FloatType(), True),\n    StructField(\u0027h_msig_stdap\u0027, FloatType(), True),\n    StructField(\u0027k_m_stdap\u0027, FloatType(), True),\n    StructField(\u0027k_msig_stdap\u0027, FloatType(), True),\n    StructField(\u0027dist_edge_ns\u0027, IntegerType(), True),\n    StructField(\u0027dist_edge_ew\u0027, IntegerType(), True),\n    StructField(\u0027dist_edge_flg\u0027, StringType(), True),\n    StructField(\u0027dup_src\u0027, ShortType(), True),\n    StructField(\u0027use_src\u0027, ShortType(), True),\n    StructField(\u0027a\u0027, StringType(), True),\n    StructField(\u0027dist_opt\u0027, FloatType(), True),\n    StructField(\u0027phi_opt\u0027, ShortType(), True),\n    StructField(\u0027b_m_opt\u0027, FloatType(), True),\n    StructField(\u0027vr_m_opt\u0027, FloatType(), True),\n    StructField(\u0027nopt_mchs\u0027, ShortType(), True),\n    StructField(\u0027ext_key\u0027, IntegerType(), True),\n    StructField(\u0027scan_key\u0027, IntegerType(), True),\n    StructField(\u0027coadd_key\u0027, IntegerType(), True),\n    StructField(\u0027coadd\u0027, ShortType(), True),\n])\n\nallwise_sc_schema \u003d StructType([\n    StructField(\u0027designation\u0027, StringType(), True),\n    StructField(\u0027ra\u0027, DoubleType(), True),\n    StructField(\u0027dec\u0027, DoubleType(), True),\n    StructField(\u0027sigra\u0027, DoubleType(), True),\n    StructField(\u0027sigdec\u0027, DoubleType(), True),\n    StructField(\u0027sigradec\u0027, DoubleType(), True),\n    StructField(\u0027glon\u0027, DoubleType(), True),\n    StructField(\u0027glat\u0027, DoubleType(), True),\n    StructField(\u0027elon\u0027, DoubleType(), True),\n    StructField(\u0027elat\u0027, DoubleType(), True),\n    StructField(\u0027wx\u0027, DoubleType(), True),\n    StructField(\u0027wy\u0027, DoubleType(), True),\n    StructField(\u0027cntr\u0027, LongType(), True),\n    StructField(\u0027src_id\u0027, StringType(), True),\n    StructField(\u0027coadd_id\u0027, StringType(), True),\n    StructField(\u0027src\u0027, IntegerType(), True),\n    StructField(\u0027w1mpro\u0027, DoubleType(), True),\n    StructField(\u0027w1sigmpro\u0027, DoubleType(), True),\n    StructField(\u0027w1snr\u0027, DoubleType(), True),\n    StructField(\u0027w1rchi2\u0027, FloatType(), True),\n    StructField(\u0027w2mpro\u0027, DoubleType(), True),\n    StructField(\u0027w2sigmpro\u0027, DoubleType(), True),\n    StructField(\u0027w2snr\u0027, DoubleType(), True),\n    StructField(\u0027w2rchi2\u0027, FloatType(), True),\n    StructField(\u0027w3mpro\u0027, DoubleType(), True),\n    StructField(\u0027w3sigmpro\u0027, DoubleType(), True),\n    StructField(\u0027w3snr\u0027, DoubleType(), True),\n    StructField(\u0027w3rchi2\u0027, FloatType(), True),\n    StructField(\u0027w4mpro\u0027, DoubleType(), True),\n    StructField(\u0027w4sigmpro\u0027, DoubleType(), True),\n    StructField(\u0027w4snr\u0027, DoubleType(), True),\n    StructField(\u0027w4rchi2\u0027, FloatType(), True),\n    StructField(\u0027rchi2\u0027, FloatType(), True),\n    StructField(\u0027nb\u0027, IntegerType(), True),\n    StructField(\u0027na\u0027, IntegerType(), True),\n    StructField(\u0027w1sat\u0027, DoubleType(), True),\n    StructField(\u0027w2sat\u0027, DoubleType(), True),\n    StructField(\u0027w3sat\u0027, DoubleType(), True),\n    StructField(\u0027w4sat\u0027, DoubleType(), True),\n    StructField(\u0027satnum\u0027, StringType(), True),\n    StructField(\u0027ra_pm\u0027, DoubleType(), True),\n    StructField(\u0027dec_pm\u0027, DoubleType(), True),\n    StructField(\u0027sigra_pm\u0027, DoubleType(), True),\n    StructField(\u0027sigdec_pm\u0027, DoubleType(), True),\n    StructField(\u0027sigradec_pm\u0027, DoubleType(), True),\n    StructField(\u0027pmra\u0027, IntegerType(), True),\n    StructField(\u0027sigpmra\u0027, IntegerType(), True),\n    StructField(\u0027pmdec\u0027, IntegerType(), True),\n    StructField(\u0027sigpmdec\u0027, IntegerType(), True),\n    StructField(\u0027w1rchi2_pm\u0027, FloatType(), True),\n    StructField(\u0027w2rchi2_pm\u0027, FloatType(), True),\n    StructField(\u0027w3rchi2_pm\u0027, FloatType(), True),\n    StructField(\u0027w4rchi2_pm\u0027, FloatType(), True),\n    StructField(\u0027rchi2_pm\u0027, FloatType(), True),\n    StructField(\u0027pmcode\u0027, StringType(), True),\n    StructField(\u0027cc_flags\u0027, StringType(), True),\n    StructField(\u0027rel\u0027, StringType(), True),\n    StructField(\u0027ext_flg\u0027, IntegerType(), True),\n    StructField(\u0027var_flg\u0027, StringType(), True),\n    StructField(\u0027ph_qual\u0027, StringType(), True),\n    StructField(\u0027det_bit\u0027, IntegerType(), True),\n    StructField(\u0027moon_lev\u0027, StringType(), True),\n    StructField(\u0027w1nm\u0027, IntegerType(), True),\n    StructField(\u0027w1m\u0027, IntegerType(), True),\n    StructField(\u0027w2nm\u0027, IntegerType(), True),\n    StructField(\u0027w2m\u0027, IntegerType(), True),\n    StructField(\u0027w3nm\u0027, IntegerType(), True),\n    StructField(\u0027w3m\u0027, IntegerType(), True),\n    StructField(\u0027w4nm\u0027, IntegerType(), True),\n    StructField(\u0027w4m\u0027, IntegerType(), True),\n    StructField(\u0027w1cov\u0027, DoubleType(), True),\n    StructField(\u0027w2cov\u0027, DoubleType(), True),\n    StructField(\u0027w3cov\u0027, DoubleType(), True),\n    StructField(\u0027w4cov\u0027, DoubleType(), True),\n    StructField(\u0027w1cc_map\u0027, IntegerType(), True),\n    StructField(\u0027w1cc_map_str\u0027, StringType(), True),\n    StructField(\u0027w2cc_map\u0027, IntegerType(), True),\n    StructField(\u0027w2cc_map_str\u0027, StringType(), True),\n    StructField(\u0027w3cc_map\u0027, IntegerType(), True),\n    StructField(\u0027w3cc_map_str\u0027, StringType(), True),\n    StructField(\u0027w4cc_map\u0027, IntegerType(), True),\n    StructField(\u0027w4cc_map_str\u0027, StringType(), True),\n    StructField(\u0027best_use_cntr\u0027, LongType(), True),\n    StructField(\u0027ngrp\u0027, ShortType(), True),\n    StructField(\u0027w1flux\u0027, FloatType(), True),\n    StructField(\u0027w1sigflux\u0027, FloatType(), True),\n    StructField(\u0027w1sky\u0027, DoubleType(), True),\n    StructField(\u0027w1sigsk\u0027, DoubleType(), True),\n    StructField(\u0027w1conf\u0027, DoubleType(), True),\n    StructField(\u0027w2flux\u0027, FloatType(), True),\n    StructField(\u0027w2sigflux\u0027, FloatType(), True),\n    StructField(\u0027w2sky\u0027, DoubleType(), True),\n    StructField(\u0027w2sigsk\u0027, DoubleType(), True),\n    StructField(\u0027w2conf\u0027, DoubleType(), True),\n    StructField(\u0027w3flux\u0027, FloatType(), True),\n    StructField(\u0027w3sigflux\u0027, FloatType(), True),\n    StructField(\u0027w3sky\u0027, DoubleType(), True),\n    StructField(\u0027w3sigsk\u0027, DoubleType(), True),\n    StructField(\u0027w3conf\u0027, DoubleType(), True),\n    StructField(\u0027w4flux\u0027, FloatType(), True),\n    StructField(\u0027w4sigflux\u0027, FloatType(), True),\n    StructField(\u0027w4sky\u0027, DoubleType(), True),\n    StructField(\u0027w4sigsk\u0027, DoubleType(), True),\n    StructField(\u0027w4conf\u0027, DoubleType(), True),\n    StructField(\u0027w1mag\u0027, DoubleType(), True),\n    StructField(\u0027w1sigm\u0027, DoubleType(), True),\n    StructField(\u0027w1flg\u0027, IntegerType(), True),\n    StructField(\u0027w1mcor\u0027, DoubleType(), True),\n    StructField(\u0027w2mag\u0027, DoubleType(), True),\n    StructField(\u0027w2sigm\u0027, DoubleType(), True),\n    StructField(\u0027w2flg\u0027, IntegerType(), True),\n    StructField(\u0027w2mcor\u0027, DoubleType(), True),\n    StructField(\u0027w3mag\u0027, DoubleType(), True),\n    StructField(\u0027w3sigm\u0027, DoubleType(), True),\n    StructField(\u0027w3flg\u0027, IntegerType(), True),\n    StructField(\u0027w3mcor\u0027, DoubleType(), True),\n    StructField(\u0027w4mag\u0027, DoubleType(), True),\n    StructField(\u0027w4sigm\u0027, DoubleType(), True),\n    StructField(\u0027w4flg\u0027, IntegerType(), True),\n    StructField(\u0027w4mcor\u0027, DoubleType(), True),\n    StructField(\u0027w1mag_1\u0027, DoubleType(), True),\n    StructField(\u0027w1sigm_1\u0027, DoubleType(), True),\n    StructField(\u0027w1flg_1\u0027, IntegerType(), True),\n    StructField(\u0027w2mag_1\u0027, DoubleType(), True),\n    StructField(\u0027w2sigm_1\u0027, DoubleType(), True),\n    StructField(\u0027w2flg_1\u0027, IntegerType(), True),\n    StructField(\u0027w3mag_1\u0027, DoubleType(), True),\n    StructField(\u0027w3sigm_1\u0027, DoubleType(), True),\n    StructField(\u0027w3flg_1\u0027, IntegerType(), True),\n    StructField(\u0027w4mag_1\u0027, DoubleType(), True),\n    StructField(\u0027w4sigm_1\u0027, DoubleType(), True),\n    StructField(\u0027w4flg_1\u0027, IntegerType(), True),\n    StructField(\u0027w1mag_2\u0027, DoubleType(), True),\n    StructField(\u0027w1sigm_2\u0027, DoubleType(), True),\n    StructField(\u0027w1flg_2\u0027, IntegerType(), True),\n    StructField(\u0027w2mag_2\u0027, DoubleType(), True),\n    StructField(\u0027w2sigm_2\u0027, DoubleType(), True),\n    StructField(\u0027w2flg_2\u0027, IntegerType(), True),\n    StructField(\u0027w3mag_2\u0027, DoubleType(), True),\n    StructField(\u0027w3sigm_2\u0027, DoubleType(), True),\n    StructField(\u0027w3flg_2\u0027, IntegerType(), True),\n    StructField(\u0027w4mag_2\u0027, DoubleType(), True),\n    StructField(\u0027w4sigm_2\u0027, DoubleType(), True),\n    StructField(\u0027w4flg_2\u0027, IntegerType(), True),\n    StructField(\u0027w1mag_3\u0027, DoubleType(), True),\n    StructField(\u0027w1sigm_3\u0027, DoubleType(), True),\n    StructField(\u0027w1flg_3\u0027, IntegerType(), True),\n    StructField(\u0027w2mag_3\u0027, DoubleType(), True),\n    StructField(\u0027w2sigm_3\u0027, DoubleType(), True),\n    StructField(\u0027w2flg_3\u0027, IntegerType(), True),\n    StructField(\u0027w3mag_3\u0027, DoubleType(), True),\n    StructField(\u0027w3sigm_3\u0027, DoubleType(), True),\n    StructField(\u0027w3flg_3\u0027, IntegerType(), True),\n    StructField(\u0027w4mag_3\u0027, DoubleType(), True),\n    StructField(\u0027w4sigm_3\u0027, DoubleType(), True),\n    StructField(\u0027w4flg_3\u0027, IntegerType(), True),\n    StructField(\u0027w1mag_4\u0027, DoubleType(), True),\n    StructField(\u0027w1sigm_4\u0027, DoubleType(), True),\n    StructField(\u0027w1flg_4\u0027, IntegerType(), True),\n    StructField(\u0027w2mag_4\u0027, DoubleType(), True),\n    StructField(\u0027w2sigm_4\u0027, DoubleType(), True),\n    StructField(\u0027w2flg_4\u0027, IntegerType(), True),\n    StructField(\u0027w3mag_4\u0027, DoubleType(), True),\n    StructField(\u0027w3sigm_4\u0027, DoubleType(), True),\n    StructField(\u0027w3flg_4\u0027, IntegerType(), True),\n    StructField(\u0027w4mag_4\u0027, DoubleType(), True),\n    StructField(\u0027w4sigm_4\u0027, DoubleType(), True),\n    StructField(\u0027w4flg_4\u0027, IntegerType(), True),\n    StructField(\u0027w1mag_5\u0027, DoubleType(), True),\n    StructField(\u0027w1sigm_5\u0027, DoubleType(), True),\n    StructField(\u0027w1flg_5\u0027, IntegerType(), True),\n    StructField(\u0027w2mag_5\u0027, DoubleType(), True),\n    StructField(\u0027w2sigm_5\u0027, DoubleType(), True),\n    StructField(\u0027w2flg_5\u0027, IntegerType(), True),\n    StructField(\u0027w3mag_5\u0027, DoubleType(), True),\n    StructField(\u0027w3sigm_5\u0027, DoubleType(), True),\n    StructField(\u0027w3flg_5\u0027, IntegerType(), True),\n    StructField(\u0027w4mag_5\u0027, DoubleType(), True),\n    StructField(\u0027w4sigm_5\u0027, DoubleType(), True),\n    StructField(\u0027w4flg_5\u0027, IntegerType(), True),\n    StructField(\u0027w1mag_6\u0027, DoubleType(), True),\n    StructField(\u0027w1sigm_6\u0027, DoubleType(), True),\n    StructField(\u0027w1flg_6\u0027, IntegerType(), True),\n    StructField(\u0027w2mag_6\u0027, DoubleType(), True),\n    StructField(\u0027w2sigm_6\u0027, DoubleType(), True),\n    StructField(\u0027w2flg_6\u0027, IntegerType(), True),\n    StructField(\u0027w3mag_6\u0027, DoubleType(), True),\n    StructField(\u0027w3sigm_6\u0027, DoubleType(), True),\n    StructField(\u0027w3flg_6\u0027, IntegerType(), True),\n    StructField(\u0027w4mag_6\u0027, DoubleType(), True),\n    StructField(\u0027w4sigm_6\u0027, DoubleType(), True),\n    StructField(\u0027w4flg_6\u0027, IntegerType(), True),\n    StructField(\u0027w1mag_7\u0027, DoubleType(), True),\n    StructField(\u0027w1sigm_7\u0027, DoubleType(), True),\n    StructField(\u0027w1flg_7\u0027, IntegerType(), True),\n    StructField(\u0027w2mag_7\u0027, DoubleType(), True),\n    StructField(\u0027w2sigm_7\u0027, DoubleType(), True),\n    StructField(\u0027w2flg_7\u0027, IntegerType(), True),\n    StructField(\u0027w3mag_7\u0027, DoubleType(), True),\n    StructField(\u0027w3sigm_7\u0027, DoubleType(), True),\n    StructField(\u0027w3flg_7\u0027, IntegerType(), True),\n    StructField(\u0027w4mag_7\u0027, DoubleType(), True),\n    StructField(\u0027w4sigm_7\u0027, DoubleType(), True),\n    StructField(\u0027w4flg_7\u0027, IntegerType(), True),\n    StructField(\u0027w1mag_8\u0027, DoubleType(), True),\n    StructField(\u0027w1sigm_8\u0027, DoubleType(), True),\n    StructField(\u0027w1flg_8\u0027, IntegerType(), True),\n    StructField(\u0027w2mag_8\u0027, DoubleType(), True),\n    StructField(\u0027w2sigm_8\u0027, DoubleType(), True),\n    StructField(\u0027w2flg_8\u0027, IntegerType(), True),\n    StructField(\u0027w3mag_8\u0027, DoubleType(), True),\n    StructField(\u0027w3sigm_8\u0027, DoubleType(), True),\n    StructField(\u0027w3flg_8\u0027, IntegerType(), True),\n    StructField(\u0027w4mag_8\u0027, DoubleType(), True),\n    StructField(\u0027w4sigm_8\u0027, DoubleType(), True),\n    StructField(\u0027w4flg_8\u0027, IntegerType(), True),\n    StructField(\u0027w1magp\u0027, DoubleType(), True),\n    StructField(\u0027w1sigp1\u0027, DoubleType(), True),\n    StructField(\u0027w1sigp2\u0027, DoubleType(), True),\n    StructField(\u0027w1k\u0027, DoubleType(), True),\n    StructField(\u0027w1ndf\u0027, IntegerType(), True),\n    StructField(\u0027w1mlq\u0027, DoubleType(), True),\n    StructField(\u0027w1mjdmin\u0027, DoubleType(), True),\n    StructField(\u0027w1mjdmax\u0027, DoubleType(), True),\n    StructField(\u0027w1mjdmean\u0027, DoubleType(), True),\n    StructField(\u0027w2magp\u0027, DoubleType(), True),\n    StructField(\u0027w2sigp1\u0027, DoubleType(), True),\n    StructField(\u0027w2sigp2\u0027, DoubleType(), True),\n    StructField(\u0027w2k\u0027, DoubleType(), True),\n    StructField(\u0027w2ndf\u0027, IntegerType(), True),\n    StructField(\u0027w2mlq\u0027, DoubleType(), True),\n    StructField(\u0027w2mjdmin\u0027, DoubleType(), True),\n    StructField(\u0027w2mjdmax\u0027, DoubleType(), True),\n    StructField(\u0027w2mjdmean\u0027, DoubleType(), True),\n    StructField(\u0027w3magp\u0027, DoubleType(), True),\n    StructField(\u0027w3sigp1\u0027, DoubleType(), True),\n    StructField(\u0027w3sigp2\u0027, DoubleType(), True),\n    StructField(\u0027w3k\u0027, DoubleType(), True),\n    StructField(\u0027w3ndf\u0027, IntegerType(), True),\n    StructField(\u0027w3mlq\u0027, DoubleType(), True),\n    StructField(\u0027w3mjdmin\u0027, DoubleType(), True),\n    StructField(\u0027w3mjdmax\u0027, DoubleType(), True),\n    StructField(\u0027w3mjdmean\u0027, DoubleType(), True),\n    StructField(\u0027w4magp\u0027, DoubleType(), True),\n    StructField(\u0027w4sigp1\u0027, DoubleType(), True),\n    StructField(\u0027w4sigp2\u0027, DoubleType(), True),\n    StructField(\u0027w4k\u0027, DoubleType(), True),\n    StructField(\u0027w4ndf\u0027, IntegerType(), True),\n    StructField(\u0027w4mlq\u0027, DoubleType(), True),\n    StructField(\u0027w4mjdmin\u0027, DoubleType(), True),\n    StructField(\u0027w4mjdmax\u0027, DoubleType(), True),\n    StructField(\u0027w4mjdmean\u0027, DoubleType(), True),\n    StructField(\u0027rho12\u0027, IntegerType(), True),\n    StructField(\u0027rho23\u0027, IntegerType(), True),\n    StructField(\u0027rho34\u0027, IntegerType(), True),\n    StructField(\u0027q12\u0027, IntegerType(), True),\n    StructField(\u0027q23\u0027, IntegerType(), True),\n    StructField(\u0027q34\u0027, IntegerType(), True),\n    StructField(\u0027xscprox\u0027, DoubleType(), True),\n    StructField(\u0027w1rsemi\u0027, DoubleType(), True),\n    StructField(\u0027w1ba\u0027, DoubleType(), True),\n    StructField(\u0027w1pa\u0027, DoubleType(), True),\n    StructField(\u0027w1gmag\u0027, DoubleType(), True),\n    StructField(\u0027w1gerr\u0027, DoubleType(), True),\n    StructField(\u0027w1gflg\u0027, IntegerType(), True),\n    StructField(\u0027w2rsemi\u0027, DoubleType(), True),\n    StructField(\u0027w2ba\u0027, DoubleType(), True),\n    StructField(\u0027w2pa\u0027, DoubleType(), True),\n    StructField(\u0027w2gmag\u0027, DoubleType(), True),\n    StructField(\u0027w2gerr\u0027, DoubleType(), True),\n    StructField(\u0027w2gflg\u0027, IntegerType(), True),\n    StructField(\u0027w3rsemi\u0027, DoubleType(), True),\n    StructField(\u0027w3ba\u0027, DoubleType(), True),\n    StructField(\u0027w3pa\u0027, DoubleType(), True),\n    StructField(\u0027w3gmag\u0027, DoubleType(), True),\n    StructField(\u0027w3gerr\u0027, DoubleType(), True),\n    StructField(\u0027w3gflg\u0027, IntegerType(), True),\n    StructField(\u0027w4rsemi\u0027, DoubleType(), True),\n    StructField(\u0027w4ba\u0027, DoubleType(), True),\n    StructField(\u0027w4pa\u0027, DoubleType(), True),\n    StructField(\u0027w4gmag\u0027, DoubleType(), True),\n    StructField(\u0027w4gerr\u0027, DoubleType(), True),\n    StructField(\u0027w4gflg\u0027, IntegerType(), True),\n    StructField(\u0027tmass_key\u0027, IntegerType(), True),\n    StructField(\u0027r_2mass\u0027, DoubleType(), True),\n    StructField(\u0027pa_2mass\u0027, DoubleType(), True),\n    StructField(\u0027n_2mass\u0027, IntegerType(), True),\n    StructField(\u0027j_m_2mass\u0027, DoubleType(), True),\n    StructField(\u0027j_msig_2mass\u0027, DoubleType(), True),\n    StructField(\u0027h_m_2mass\u0027, DoubleType(), True),\n    StructField(\u0027h_msig_2mass\u0027, DoubleType(), True),\n    StructField(\u0027k_m_2mass\u0027, DoubleType(), True),\n    StructField(\u0027k_msig_2mass\u0027, DoubleType(), True),\n    StructField(\u0027x\u0027, DoubleType(), True),\n    StructField(\u0027y\u0027, DoubleType(), True),\n    StructField(\u0027z\u0027, DoubleType(), True),\n    StructField(\u0027spt_ind\u0027, IntegerType(), True),\n    StructField(\u0027htm20\u0027, LongType(), True),\n    StructField(\u0027spare\u0027, BooleanType(), True)\n])\n# N.B. that last column is the easiest way to work around the IPAC files having a trailing \"|\" at the end of each record which is interpereted as another column... d\u0027oh\n\npanstarrs_dr1_otmo_schema \u003d StructType([\n    StructField(\u0027obj_id\u0027, LongType(), True),\n    StructField(\u0027projection_id\u0027, ShortType(), True),\n    StructField(\u0027sky_cell_id\u0027, ShortType(), True),\n    StructField(\u0027obj_info_flag\u0027, IntegerType(), True),\n    StructField(\u0027quality_flag\u0027, ShortType(), True),\n    StructField(\u0027ra_mean\u0027, DoubleType(), True),\n    StructField(\u0027dec_mean\u0027, DoubleType(), True),\n    StructField(\u0027ra_mean_err\u0027, FloatType(), True),\n    StructField(\u0027dec_mean_err\u0027, FloatType(), True),\n    StructField(\u0027epoch_mean\u0027, DoubleType(), True),\n    StructField(\u0027n_stack_detections\u0027, ShortType(), True),\n    StructField(\u0027n_detections\u0027, ShortType(), True),\n    StructField(\u0027ng\u0027, ShortType(), True),\n    StructField(\u0027nr\u0027, ShortType(), True),\n    StructField(\u0027ni\u0027, ShortType(), True),\n    StructField(\u0027nz\u0027, ShortType(), True),\n    StructField(\u0027ny\u0027, ShortType(), True),\n    StructField(\u0027g_qf_perfect\u0027, FloatType(), True),\n    StructField(\u0027g_mean_psf_mag\u0027, FloatType(), True),\n    StructField(\u0027g_mean_psf_mag_err\u0027, FloatType(), True),\n    StructField(\u0027g_mean_psf_mag_std\u0027, FloatType(), True),\n    StructField(\u0027g_mean_psf_mag_npt\u0027, ShortType(), True),\n    StructField(\u0027g_mean_psf_mag_min\u0027, FloatType(), True),\n    StructField(\u0027g_mean_psf_mag_max\u0027, FloatType(), True),\n    StructField(\u0027g_mean_kron_mag\u0027, FloatType(), True),\n    StructField(\u0027g_mean_kron_mag_err\u0027, FloatType(), True),\n    StructField(\u0027g_flags\u0027, IntegerType(), True),\n    StructField(\u0027r_qf_perfect\u0027, FloatType(), True),\n    StructField(\u0027r_mean_psf_mag\u0027, FloatType(), True),\n    StructField(\u0027r_mean_psf_mag_err\u0027, FloatType(), True),\n    StructField(\u0027r_mean_psf_mag_std\u0027, FloatType(), True),\n    StructField(\u0027r_mean_psf_mag_npt\u0027, ShortType(), True),\n    StructField(\u0027r_mean_psf_mag_min\u0027, FloatType(), True),\n    StructField(\u0027r_mean_psf_mag_max\u0027, FloatType(), True),\n    StructField(\u0027r_mean_kron_mag\u0027, FloatType(), True),\n    StructField(\u0027r_mean_kron_mag_err\u0027, FloatType(), True),\n    StructField(\u0027r_flags\u0027, IntegerType(), True),\n    StructField(\u0027i_qf_perfect\u0027, FloatType(), True),\n    StructField(\u0027i_mean_psf_mag\u0027, FloatType(), True),\n    StructField(\u0027i_mean_psf_mag_err\u0027, FloatType(), True),\n    StructField(\u0027i_mean_psf_mag_std\u0027, FloatType(), True),\n    StructField(\u0027i_mean_psf_mag_npt\u0027, ShortType(), True),\n    StructField(\u0027i_mean_psf_mag_min\u0027, FloatType(), True),\n    StructField(\u0027i_mean_psf_mag_max\u0027, FloatType(), True),\n    StructField(\u0027i_mean_kron_mag\u0027, FloatType(), True),\n    StructField(\u0027i_mean_kron_mag_err\u0027, FloatType(), True),\n    StructField(\u0027i_flags\u0027, IntegerType(), True),\n    StructField(\u0027z_qf_perfect\u0027, FloatType(), True),\n    StructField(\u0027z_mean_psf_mag\u0027, FloatType(), True),\n    StructField(\u0027z_mean_psf_mag_err\u0027, FloatType(), True),\n    StructField(\u0027z_mean_psf_mag_std\u0027, FloatType(), True),\n    StructField(\u0027z_mean_psf_mag_npt\u0027, ShortType(), True),\n    StructField(\u0027z_mean_psf_mag_min\u0027, FloatType(), True),\n    StructField(\u0027z_mean_psf_mag_max\u0027, FloatType(), True),\n    StructField(\u0027z_mean_kron_mag\u0027, FloatType(), True),\n    StructField(\u0027z_mean_kron_mag_err\u0027, FloatType(), True),\n    StructField(\u0027z_flags\u0027, IntegerType(), True),\n    StructField(\u0027y_qf_perfect\u0027, FloatType(), True),\n    StructField(\u0027y_mean_psf_mag\u0027, FloatType(), True),\n    StructField(\u0027y_mean_psf_mag_err\u0027, FloatType(), True),\n    StructField(\u0027y_mean_psf_mag_std\u0027, FloatType(), True),\n    StructField(\u0027y_mean_psf_mag_npt\u0027, ShortType(), True),\n    StructField(\u0027y_mean_psf_mag_min\u0027, FloatType(), True),\n    StructField(\u0027y_mean_psf_mag_max\u0027, FloatType(), True),\n    StructField(\u0027y_mean_kron_mag\u0027, FloatType(), True),\n    StructField(\u0027y_mean_kron_mag_err\u0027, FloatType(), True),\n    StructField(\u0027y_flags\u0027, IntegerType(), True),\n])\n\n\n# crossmatch table schemas:\n\n# PS1\npanstarrs1_best_neighbour_schema \u003d StructType([\n    StructField(\u0027source_id\u0027, LongType(), True),\n    StructField(\u0027clean_panstarrs1_oid\u0027, LongType(), True),\n    StructField(\u0027original_ext_source_id\u0027, LongType(), True),\n    StructField(\u0027angular_distance\u0027, FloatType(), True),\n    StructField(\u0027number_of_neighbours\u0027, ByteType(), True),\n    StructField(\u0027number_of_mates\u0027, ByteType(), True),\n    StructField(\u0027xm_flag\u0027, ShortType(), True),\n])\n\n# ALLWISE:\nallwise_best_neighbour_schema \u003d StructType([\n    StructField(\u0027source_id\u0027, LongType(), True),\n    StructField(\u0027original_ext_source_id\u0027, StringType(), True),\n    StructField(\u0027angular_distance\u0027, FloatType(), True),\n    StructField(\u0027xm_flag\u0027, ShortType(), True),\n    StructField(\u0027allwise_oid\u0027, IntegerType(), True),\n    StructField(\u0027number_of_neighbours\u0027, ByteType(), True),\n    StructField(\u0027number_of_mates\u0027, ByteType(), True),\n])\n\n# 2MASS:\ntmasspscxsc_best_neighbour_schema \u003d StructType([\n    StructField(\u0027source_id\u0027, LongType(), True),\n    StructField(\u0027original_ext_source_id\u0027, StringType(), True),\n    StructField(\u0027angular_distance\u0027, FloatType(), True),\n    StructField(\u0027xm_flag\u0027, ShortType(), True),\n    StructField(\u0027clean_tmass_psc_xsc_oid\u0027, IntegerType(), True),\n    StructField(\u0027number_of_neighbours\u0027, ByteType(), True),\n    StructField(\u0027number_of_mates\u0027, ByteType(), True),\n])\n\n\n# sanity checks:\n#print (gaia_source_schema)\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.997",
       "progress": 0,
       "config": {
@@ -84,8 +84,8 @@
     {
       "title": "Convenience function definitions",
       "text": "%pyspark\n\n# useful definitions\n\n# number of buckets for our platform\nNUM_BUCKETS \u003d 2048\n\n# the following based on example code kindly supplied by Enrique Utrilla:\n\n# Save a dataframe to a set of bucketed parquet files, repartitioning beforehand and sorting by source UID within the buckets:\ndef saveToBinnedParquet(df, outputParquetPath, name, mode \u003d \"error\", nBuckets \u003d NUM_BUCKETS):\n    df \u003d df.repartition(nBuckets, \"source_id\")\n    df.write.format(\"parquet\") \\\n            .mode(mode) \\\n            .bucketBy(nBuckets, \"source_id\") \\\n            .sortBy(\"source_id\") \\\n            .option(\"path\", outputParquetPath) \\\n            .saveAsTable(name)\n\n# and to re-establish the resource in a new (or reset) spark context:\ndef reattachParquetFileResourceToSparkContext(table_name, file_path, *schema_structures):\n    \"\"\"\n    Creates a Spark (in-memory) meta-record for the table resource specified for querying \n    through the PySpark SQL API.\n    \n    Assumes that the table contains the Gaia source_id attribute and that the files have \n    been previously partitioned, bucketed and sorted on this field in parquet format\n    - see function saveToBinnedParquet().  If the table name specified already exists in the\n    catalogue IT WILL BE REMOVED (but the underlying data, assumed external, will remain).\n    \n    Parameters\n    ----------\n    table_name : str\n        The table name to be used as the identifier in SQL queries etc.\n    file_path : str\n        The full disk file system path name to the folder containing the parquet file set. \n    schema_structures : StructType\n        One or more schema structures expressed as a StructType object containing a list of\n        StructField(field_name : str, type : data_type : DataType(), nullable : boolean)\n    \"\"\"\n\n    # put in the columns and their data types ...\n    table_create_statement \u003d \"CREATE TABLE `\" + table_name + \"` (\"\n    for schema_structure in schema_structures:\n        for field in schema_structure:\n            table_create_statement +\u003d \"`\" + field.name + \"` \" + field.dataType.simpleString() + \",\"\n    # ... zapping that extraneous comma at the end\n    table_create_statement \u003d table_create_statement[:-1]\n        \n    # append the organisational details \n    table_create_statement +\u003d \") USING parquet OPTIONS (path \u0027\" + file_path + \"\u0027) \"\n    table_create_statement +\u003d \"CLUSTERED BY (source_id) SORTED BY (source_id) INTO %d\"%(NUM_BUCKETS) + \" BUCKETS\"\n    \n    # sanity check\n    print(table_create_statement)\n    \n    # scrub any existing record - N.B. tables defined in this way are EXTERNAL, so this statement will not scrub\n    # the underlying file data set. Also if the table doesn\u0027t exist, this will silently do nothing (no exception\n    # will be thrown).\n    spark.sql(\"DROP TABLE IF EXISTS \" + table_name)\n    \n    # create the table resource\n    spark.sql(table_create_statement)\n",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:49:48.997",
+      "user": "anonymous",
+      "dateUpdated": "2022-06-24 09:00:16.676",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -97,7 +97,7 @@
         "colWidth": 12.0,
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
-        "editorHide": false,
+        "editorHide": true,
         "title": true,
         "results": {},
         "enabled": true
@@ -121,7 +121,7 @@
     {
       "title": "Load, partition and save Gaia EDR from csv to Parquet",
       "text": "%pyspark\n\n# Gaia EDR3\n\nimport sys\n# 1%:\n#gaia_source_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(gaia_source_schema).csv(\u0027file:////user/nch/CSV/GEDR3/*11.csv\u0027)\n# 10%:\n#gaia_source_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(gaia_source_schema).csv(\u0027file:////user/nch/CSV/GEDR3/*1.csv\u0027)\n# full monty (correcting spelling mistake in original column structure set)\ngaia_source_df \u003d sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/TESTS/GEDR3/*.parquet\u0027).withColumnRenamed(\"astrometric_sigma_5d_max\", \"astrometric_sigma5d_max\")\nspark.sql(\"DROP TABLE IF EXISTS gaia_source_bucketed_by_source_id\")\nsaveToBinnedParquet(gaia_source_df, \u0027hdfs://master01:9000/partitioned/GEDR3\u0027, name \u003d \u0027gaia_source_bucketed_by_source_id\u0027, mode \u003d \u0027overwrite\u0027)\n# original (slow) CephFS: file:///user/nch/PARQUET/SOURCEID_BUCKETS/GEDR3\n# N.B. could also try hdfs: eg. \u0027hdfs://master01:9000/partitioned/gaia/edr3\u0027 etc.\n\n\n# Plain load without partitioning/bucketting/sorting took 21 hours 22 min 44 sec in fail-fast-mode; raw parquet binaries take up 537 GB of storage.\n\n# Start time: 13:37 26/022/21: full monty killed after 4 days; mistake in save function? Trying small scale test first.\n# 1% : Took        5 min 17 sec. Last updated by nch at March 03 2021, 10:46:03 AM.\n#      Took        8 min 36 sec. Last updated by nch at March 04 2021,  8:35:22 PM (rm * in directory prior to running this cell; manual rm * takes a few seconds)\n#      Took 1 hrs 56 min 48 sec. Last updated by nch at March 04 2021, 10:38:31 PM (!!! no manual removal prior to running)\n#      Took        5 min 39 sec. Last updated by nch at March 05 2021,  8:15:33 AM (repeatability check: manual rm * prior to run)\n# 10% : Took      25 min 32 sec. Last updated by nch at March 05 2021, 11:54:29 AM. (taking care to rm * manually beforehand!)\n#\n# Reconstituted system based on 4VMS and temp storage still locally hobbled:\n#\n# 4% : Took 23 min 26 sec. Last updated by nch at March 10 2021, 11:47:34 AM. (reading 4% from parquet)\n#      Took 26 min  7 sec. Last updated by nch at March 10 2021, 3:42:37 PM (ditto - straight repeatability run)\n# 1%   Took  7 min 51 sec. Last updated by nch at March 10 2021, 4:12:30 PM. (back to reading csv files, so directly comparable)\n#      Took 2 hrs 17 min 7 sec. Last updated by nch at March 10 2021, 6:34:21 PM (did I forget to rm * manually... try again)\n#      Took 6 min 23 sec. Last updated by nch at March 10 2021, 8:20:06 PM (... must\u0027ve forgotten the manual rm * ...!!!)\n#      Took 6 min 43 sec. Last updated by nch at March 10 2021, 8:34:04 PM.(repeatability ...)\n#      Took 7 min 54 sec. Last updated by nch at March 10 2021, 8:42:42 PM. (and again)\n# 10% :Took 24 min 43 sec. Last updated by nch at March 10 2021, 9:12:42 PM (good)\n#100% : Failed as expected.\n\n# 100% : Took 6 hrs 8 min 27 sec. Last updated by nch at March 15 2021, 4:47:14 PM. (temp store on Cinder, final output written to CephFS)\n\n# 100% : Took 4 hrs 1 min 47 sec. Last updated by nch at March 29 2021, 4:35:53 PM (writing to hdfs).\n\n\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.997",
       "progress": 0,
       "config": {
@@ -158,7 +158,7 @@
     {
       "title": "Check the partitioned / bucketed data resource",
       "text": "%pyspark\n\n# reattach existing data set to the spark context (if necessary):\nreattachParquetFileResourceToSparkContext(\"gaia_source\", \"hdfs://master01:9000/partitioned/gaia/edr3\", gaia_source_schema)\n\n# do something trivial to action an underlying transformation in the lazy set-up...\ndf \u003d spark.sql(\"SELECT * FROM gaia_source WHERE source_id \u003d 4295806720\")\ndf.show()\n\n# check it\u0027s there\nspark.sql(\"SHOW TABLES\").show()\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.997",
       "progress": 0,
       "config": {
@@ -200,7 +200,7 @@
     {
       "title": "Check the table schema",
       "text": "%pyspark\n\n# EUM: try spark.table(\u0027gaia_source_bucketed_by_source_id\u0027) - ie. exactly what is in the table description. Works from in memory Derby DB.\n# If you want to access the same resource from another context, or by another user -\u003e need to persist the in-memory DB to disk somehow.\n# Two solutions: \n# - set up bespoke DB and configure Spark to use this (easier). OR \n# - use an SQL command to define the data source \"pre-loaded\" ready for use (harder).\n\nspark.sql(\u0027DESCRIBE EXTENDED gaia_source\u0027).show(300, truncate \u003d False)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.997",
       "progress": 0,
       "config": {
@@ -241,7 +241,7 @@
     },
     {
       "text": "%pyspark\n\ndf \u003d spark.sql(\"SELECT COUNT(*) FROM gaia_source\")\ndf.show()\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.997",
       "progress": 0,
       "config": {
@@ -281,7 +281,7 @@
     },
     {
       "text": "%pyspark\n\nspark.sql(\u0027DESCRIBE EXTENDED gaia_source_bucketed_by_source_id\u0027).show(300, truncate \u003d False)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.997",
       "progress": 0,
       "config": {
@@ -312,8 +312,8 @@
     },
     {
       "text": "%pyspark\n\nspark.catalog.listTables()\n",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:49:48.997",
+      "user": "anonymous",
+      "dateUpdated": "2022-07-04 19:27:11.938",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -325,7 +325,7 @@
         "colWidth": 12.0,
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
-        "editorHide": true,
+        "editorHide": false,
         "results": {},
         "enabled": true
       },
@@ -352,7 +352,7 @@
     },
     {
       "text": "%pyspark\n\nprint(spark.conf.get(\"spark.sql.join.preferSortMergeJoin\"))\nprint(spark.conf.get(\"spark.sql.autoBroadcastJoinThreshold\"))\nprint(spark.conf.get(\"spark.sql.sources.partitionColumnTypeInference.enabled\")) # if this were disabled, string type is used for partitioning columns.\n#print(spark.conf.get(\"spark.sessionState.conf.bucketingEnabled\")) no such thing apparently.\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.997",
       "progress": 0,
       "config": {
@@ -392,7 +392,7 @@
     },
     {
       "text": "%pyspark\n\n# sanity check: source counts in cells:\n\nsql_df \u003d spark.sql(\u0027SELECT floor(source_id / 562949953421312) AS hpx5, COUNT(*) AS n FROM gaia_source GROUP BY hpx5\u0027)\n\n# plot up the sky counts\nimport matplotlib.pyplot as plt\n\nimport numpy as np\nimport healpy as hp\n\n# healpy constants\nNSIDE \u003d 32\nNPIX \u003d hp.nside2npix(NSIDE)\n\n# do the visualisation\narray_like \u003d np.empty(NPIX)\nfor item in sql_df.rdd.collect():  array_like[item[0]] \u003d item[1]\nhp.mollview(array_like, nest\u003dTrue, title\u003d\u0027Source counts at HEALPix level 5\u0027, norm\u003d\u0027log\u0027)\nhp.graticule(coord\u003d\u0027E\u0027, color\u003d\u0027white\u0027)\n\n# executes in 2min 6sec\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.997",
       "progress": 0,
       "config": {
@@ -436,7 +436,7 @@
     },
     {
       "text": "%pyspark\n\n# now for PanSTARRS DR1 object-thin-mean-objs (N.B. no column headers in the csv!):\n\n#ps1_otmo_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027false\u0027).schema(panstarrs_dr1_otmo_schema).csv(\u0027file:////user/nch/CSV/PS1/*.csv\u0027)\n#ps1_otmo_df.write.mode(\u0027overwrite\u0027).parquet(\u0027file:///user/nch/PARQUET/TESTS/PS1\u0027)\n\n# finished in 3h 47m 31s. Data size of raw parquet is 273 G.\n\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -467,7 +467,7 @@
     },
     {
       "text": "%pyspark\n\n# check full reformatting:\n\nre_read_df \u003d sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/TESTS/PS1/*.parquet\u0027)\n\nprint(\u0027Row count: \u0027,re_read_df.count())\n# should be 1,919,106,885: fine (executed in 59 sec)\n\nre_read_df.show()",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -498,7 +498,7 @@
     },
     {
       "text": "%pyspark\n\n# validate: histogram by mag, excluding the defaults (mag \u003d -999.0, or simply mag \u003c 0)\n\n# define the data frame source \ndf \u003d sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/TESTS/PS1/*.parquet\u0027)\n\n# register as an sql context queryable object\nsqlContext.registerDataFrameAsTable(df, \u0027ps1_otmo\u0027)\n\n# do the query\nsql_df \u003d spark.sql(\u0027SELECT round(gMeanPSFMag*10.0, 0)/10.0 AS g_mean_bin, COUNT(*) AS n FROM ps1_otmo WHERE gMeanPSFMag \u003e 0 GROUP BY g_mean_bin\u0027)\n\n# plot up the binned counts\nimport matplotlib.pyplot as plot\nplot.figure(1, figsize \u003d (9.7, 6.0))\nplot.yscale(\u0027log\u0027)\nx \u003d list(sql_df.select(\u0027g_mean_bin\u0027).toPandas()[\u0027g_mean_bin\u0027])\nheight \u003d list(sql_df.select(\u0027n\u0027).toPandas()[\u0027n\u0027])\nplot.bar(x, height, width \u003d 0.1)\nplot.xlabel(\u0027g mean PSF mag / mag\u0027)\nplot.ylabel(\u0027Number of sources\u0027)\n\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -529,7 +529,7 @@
     },
     {
       "text": "%pyspark\n\n# 2MASS bulk load:\n\n#twomass_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027false\u0027).option(\u0027delimiter\u0027,\u0027|\u0027).option(\u0027nullValue\u0027,\u0027\\\\N\u0027).schema(twomass_psc_schema).csv(\u0027file:////user/nch/CSV/2MASS/psc_*\u0027)\n#twomass_df.write.mode(\u0027overwrite\u0027).parquet(\u0027file:///user/nch/PARQUET/TESTS/2MASS\u0027)\n\n# finished in 3h 21m 03s; 37G of parquet data... seems rather low ... \n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -560,7 +560,7 @@
     },
     {
       "text": "%pyspark\n\ntest_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027false\u0027).option(\u0027delimiter\u0027,\u0027|\u0027).option(\u0027nullValue\u0027,\u0027\\\\N\u0027).schema(twomass_psc_schema).csv(\u0027file:////user/nch/CSV/2MASS/psc_aaa\u0027)\ntest_df.show()\n\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -591,7 +591,7 @@
     },
     {
       "text": "%pyspark\n\nre_read_df \u003d  sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/TESTS/2MASS/*.parquet\u0027)\n\nprint(\u0027Row count: \u0027,re_read_df.count())\n# should be \n\nre_read_df.show()",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -622,7 +622,7 @@
     },
     {
       "text": "%pyspark\n\n# Finally ALLWISE:\n\n#allwise_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027false\u0027).option(\u0027delimiter\u0027,\u0027|\u0027).schema(allwise_sc_schema).csv(\u0027file:////user/nch/CSV/ALLWISE/irsa.ipac.caltech.edu/data/download/wise-allwise/wise-allwise-cat-part*\u0027)\n#allwise_df.drop(\u0027spare\u0027).write.mode(\u0027overwrite\u0027).parquet(\u0027file:///user/nch/PARQUET/TESTS/ALLWISE\u0027)\n\n# done in 2h 03m 31s (dirst run, including dummy column \u0027spare\u0027)\n#   \"  \"  2h 04m 52s (second run, dropping dummy column)\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -653,7 +653,7 @@
     },
     {
       "text": "%pyspark\n\nre_read_df \u003d  sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/TESTS/ALLWISE/*.parquet\u0027)\n\nprint(\u0027Row count: \u0027,re_read_df.count())\n# 747,634,026 (should be 747,634,026)\n\nre_read_df.show()",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -684,7 +684,7 @@
     },
     {
       "text": "%pyspark\n\n# define the data frame source \ndf \u003d sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/TESTS/ALLWISE/*.parquet\u0027)\n\n# register as an sql context queryable object\nsqlContext.registerDataFrameAsTable(df, \u0027allwise\u0027)\n\n# do the query\nsql_df \u003d spark.sql(\u0027SELECT glon, glat FROM allwise WHERE MOD(cntr, 1000) \u003d 0\u0027)\n\n# plot up the sub-sampling\nimport math\nplot.figure(3, figsize \u003d (16.18, 10.0))\nplot.subplot(111, projection\u003d\u0027aitoff\u0027)\nplot.grid(True)\nx \u003d list((sql_df.select(\u0027glon\u0027).toPandas()[\u0027glon\u0027] - 180.0) * math.pi / 180.0)\ny \u003d list(sql_df.select(\u0027glat\u0027).toPandas()[\u0027glat\u0027] * math.pi / 180.0)\nplot.title(\u0027ALLWISE 1/1000 sources; Galactic coords\u0027)\nplot.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1)\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -716,7 +716,7 @@
     {
       "title": "Join, bucket, partition and write PS1",
       "text": "%pyspark\n\n# PS1 best neighbours\n\n# ~ 1%: Took 1 hrs 44 min 29 sec. Last updated by nch at March 15 2021, 7:02:01 PM.\n#ps1xm_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(panstarrs1_best_neighbour_schema).csv(\u0027file:////user/nch/CSV/PS1_BEST_NEIGHBOURS/panstarrs1BestNeighbour0001.csv\u0027)\nps1xm_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(panstarrs1_best_neighbour_schema).csv(\u0027file:////user/nch/CSV/PS1_BEST_NEIGHBOURS/*csv\u0027)\n\n# read in the plain parquet-formatted data already done:\n#ps1_df \u003d sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/TESTS/PS1/*.parquet\u0027)\n# from original csv (with revised column names):\nps1_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027false\u0027).schema(panstarrs_dr1_otmo_schema).csv(\u0027file:////user/nch/CSV/PS1/*.csv\u0027)\n\n# join up on the external catalogue identifier\ncombo_df \u003d ps1xm_df.join(ps1_df, ps1xm_df.original_ext_source_id \u003d\u003d ps1_df.obj_id)\n\n# save it to hdfs://master01:9000/partitioned/\nsaveToBinnedParquet(combo_df, \u0027hdfs://master01:9000/hdfs/partitioned/GEDR3_PS1_BEST_NEIGHBOURS\u0027, name \u003d \u0027gaia_source_ps1_best_neighbours\u0027, mode \u003d \u0027overwrite\u0027)\n\n# Full monty to HDFS: Took 3 hrs 45 min 40 sec. Last updated by nch at March 28 2021, 12:02:03 AM.",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -753,7 +753,7 @@
     {
       "title": "Join, bucket, partition and write 2MASS PSC",
       "text": "%pyspark\n\n# 2MASS best neighbours\ntmassxm_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(tmasspscxsc_best_neighbour_schema).csv(\u0027file:////user/nch/CSV/2MASS_BEST_NEIGHBOURS/*csv\u0027)\n\n# from original csv:\ntmass_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027false\u0027).option(\u0027delimiter\u0027,\u0027|\u0027).option(\u0027nullValue\u0027,\u0027\\\\N\u0027).schema(twomass_psc_schema).csv(\u0027file:////user/nch/CSV/2MASS/psc_*\u0027)\n# trim leading/trailing spaces in the designation ID string since the DPAC neighbour tables do so (apparently):\nfrom pyspark.sql.functions import trim\ntmass_df \u003d tmass_df.withColumn(\"designation\", trim(tmass_df.designation))\n\n# join up on the external catalogue identifier\ncombo_df \u003d tmassxm_df.join(tmass_df, tmassxm_df.original_ext_source_id \u003d\u003d tmass_df.designation)\n# N.B. let\u0027s stick to an inner join. Could do a right-outer join to preserve unmatched external catalogue records, but the resulting table would need\n#      to be used with extreme care since it will contain duplicates (the same external catalogue source can be the best match to more than one Gaia source).\n\n# save it to hdfs://master01:9000/partitioned/\nsaveToBinnedParquet(combo_df, \u0027hdfs://master01:9000/hdfs/partitioned/GEDR3_2MASSPSC_BEST_NEIGHBOURS\u0027, name \u003d \u0027gaia_source_tmasspsc_best_neighbours\u0027, mode \u003d \u0027overwrite\u0027)\n\n# Full monty to HDFS: Took 50 min 8 sec. Last updated by nch at March 29 2021, 11:15:01 AM.",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -790,7 +790,7 @@
     {
       "title": "Join, bucket, partition and write ALLWISE",
       "text": "%pyspark\n\n# ALLWISE best neighbours\nallwisexm_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(allwise_best_neighbour_schema).csv(\u0027file:////user/nch/CSV/ALLWISE_BEST_NEIGHBOURS/allwiseBestNeighbour*csv\u0027)\n\n# from original csv (remembering to drop the dummy column which is needed to map the csv since the containing a trailing delimiter!):\n#allwise_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027false\u0027).option(\u0027delimiter\u0027,\u0027|\u0027).schema(allwise_sc_schema).csv(\u0027file:////user/nch/CSV/ALLWISE/irsa.ipac.caltech.edu/data/download/wise-allwise/wise-allwise-cat-part*\u0027)\n#allwise_df.drop(\u0027spare\u0027)\n# 2nd try: read from parquet, renaming source_id -\u003e src_id to try to squeeze into existing scratch space. If probs, move stuff off hdfs to cephfs to clear some breathing space:\n# e.g. hadoop fs get hdfs:///c,,... cephfs\nallwise_df \u003d sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/TESTS/ALLWISE/*.parquet\u0027).withColumnRenamed(\"source_id\", \"src_id\")\n\n# join up on the external catalogue identifier N.B. ALLWISE column source_id must be renamed to src_id (see schema definition cell at start of this notebook) to avoid name clash.\ncombo_df \u003d allwisexm_df.join(allwise_df, allwisexm_df.original_ext_source_id \u003d\u003d allwise_df.designation)\n\n# save it to hdfs://master01:9000/partitioned/\nsaveToBinnedParquet(combo_df, \u0027hdfs://master01:9000/hdfs/partitioned/GEDR3_ALLWISE_BEST_NEIGHBOURS\u0027, name \u003d \u0027gaia_source_allwise_best_neighbours\u0027, mode \u003d \u0027overwrite\u0027)\n\n# Full monty to HDFS: Took 4 hrs 26 min 43 sec. Last updated by nch at March 31 2021, 10:16:16 PM.",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -826,7 +826,7 @@
     },
     {
       "text": "%pyspark\n\nspark.catalog.listTables()",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -865,7 +865,7 @@
     },
     {
       "text": "%pyspark\n\n# plain spark join between Gaia main catalogue and ps1 best neighbours on the primary key source ID:\ngs \u003d spark.sql(\u0027select * from gaia_source\u0027)\nxps1 \u003d spark.sql(\u0027select * from gaia_source_ps1_best_neighbours\u0027)\n\ntest_df \u003d gs.join(xps1, gs.source_id \u003d\u003d xps1.source_id)\ntest_df.explain()\n\n# careful now...\n#test_df.show()\n# 1% : Took 59 sec. Last updated by nch at March 03 2021, 12:20:05 PM\n\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -906,7 +906,7 @@
     {
       "title": "PS1 XM sanity check: g v. G scatter plot",
       "text": "%pyspark\n\n# sanity check: y\u003dx plot of G mag versus PS1 g:\nmags_df \u003d test_df.select(\u0027phot_g_mean_mag\u0027, \u0027gMeanPSFMag\u0027).filter(\u0027MOD(gaia_source.source_id, 100) \u003d 0 AND gMeanPSFMag \u003e 0\u0027)\n\nimport matplotlib.pyplot as plot\nplot.figure(5, figsize \u003d (10.0, 10.0))\nplot.grid(True)\nx \u003d list(mags_df.select(\u0027phot_g_mean_mag\u0027).toPandas()[\u0027phot_g_mean_mag\u0027])\ny \u003d list(mags_df.select(\u0027gMeanPSFMag\u0027).toPandas()[\u0027gMeanPSFMag\u0027])\nplot.title(\u0027Gaia source x PS1 sanity check\u0027)\nplot.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1)\nplot.xlabel(\u0027Gaia G mag\u0027)\nplot.ylabel(\u0027PS1 PSF g mag\u0027)\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:48.999",
       "progress": 0,
       "config": {
@@ -951,7 +951,7 @@
     },
     {
       "text": "%pyspark\n\n#spark.sql(\u0027SELECT COUNT(*) FROM gaia_source_tmasspsc_best_neighbours WHERE original_ext_source_id IS NOT NULL\u0027).show()\nspark.sql(\u0027SELECT * FROM gaia_source_tmasspsc_best_neighbours LIMIT 50\u0027).show()",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.001",
       "progress": 0,
       "config": {
@@ -991,7 +991,7 @@
     },
     {
       "text": "%pyspark\n\nspark.sql(\u0027SELECT * FROM gaia_source_bucketed_by_source_id WHERE source_id \u003d 69410967253632\u0027).show()\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.001",
       "progress": 0,
       "config": {
@@ -1032,7 +1032,7 @@
     {
       "title": "2MASS XM sanity check: two colour diagram",
       "text": "%pyspark\n\n# sampled data:\nmags_df \u003d spark.sql(\u0027SELECT j_m-k_m AS jmk, bp_rp AS bmr \u0027 + \\\n    \u0027FROM gaia_source_tmasspsc_best_neighbours AS n INNER JOIN gaia_source_bucketed_by_source_id AS g ON n.source_id \u003d g.source_id \u0027 + \\\n    \u0027WHERE bp_rp IS NOT NULL AND j_m IS NOT NULL AND k_m IS NOT NULL LIMIT 100000\u0027)\n#mags_df.explain() # BroadcastHashJoin... OK?\n\nimport matplotlib.pyplot as plot\nplot.figure(6, figsize \u003d (10.0, 10.0))\nplot.grid(True)\nx \u003d list(mags_df.select(\u0027bmr\u0027).toPandas()[\u0027bmr\u0027])\ny \u003d list(mags_df.select(\u0027jmk\u0027).toPandas()[\u0027jmk\u0027])\nplot.title(\u0027Gaia source x 2MASS sanity check\u0027)\nplot.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1)\nplot.xlabel(\u0027Gaia BP - RP / mag\u0027)\nplot.ylabel(\u00272MASS J - Ks / mag\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.001",
       "progress": 0,
       "config": {
@@ -1078,7 +1078,7 @@
     {
       "title": "ALLWISE XM sanity check: 2MASS photometry",
       "text": "%pyspark\n\n# re-establish the previously formatted 2MASS XM in this fresh Spark context (only needed the on first execution of this cell!):\n#reattachParquetFileResourceToSparkContext(\u0027gaia_source_tmasspsc_best_neighbours\u0027, \u0027file:////user/nch/PARQUET/REPARTITIONED/GEDR3_2MASSPSC_BEST_NEIGHBOURS\u0027, tmasspscxsc_best_neighbour_schema, twomass_psc_schema)\n\n# sanity check on the ALLWISE best neighbours joined to 2MASS through Gaia source_id\n# (ALLWISE catalogue includes the 2MASS photometry for counterparts assigned at IPAC):\nmags_df \u003d spark.sql(\u0027SELECT j_m-k_m AS jmk_2mass, j_m_2mass - k_m_2mass AS jmk_allwise \u0027 + \\\n    \u0027FROM gaia_source_tmasspsc_best_neighbours AS t INNER JOIN gaia_source_allwise_best_neighbours AS a ON t.source_id \u003d a.source_id \u0027 + \\\n    \u0027WHERE j_m IS NOT NULL AND k_m IS NOT NULL AND j_m_2mass IS NOT NULL AND k_m_2mass IS NOT NULL LIMIT 100000\u0027)\n#mags_df.explain()\n\nimport matplotlib.pyplot as plot\nplot.figure(6, figsize \u003d (10.0, 10.0))\nplot.grid(True)\nx \u003d list(mags_df.select(\u0027jmk_allwise\u0027).toPandas()[\u0027jmk_allwise\u0027])\ny \u003d list(mags_df.select(\u0027jmk_2mass\u0027).toPandas()[\u0027jmk_2mass\u0027])\nplot.title(\u0027ALLWISE x 2MASS via Gaia Source IDs sanity check\u0027)\nplot.scatter(x, y, marker \u003d \u0027.\u0027, s \u003d 1)\nplot.xlabel(\u0027ALLWISE (J - K) / mag\u0027)\nplot.ylabel(\u00272MASS (J - K) / mag\u0027)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.002",
       "progress": 0,
       "config": {
@@ -1122,7 +1122,7 @@
     },
     {
       "text": "%pyspark\n#spark.sql(\u0027DESCRIBE EXTENDED gaia_source_ps1_best_neighbours\u0027).show(300, truncate \u003d False)\nspark.sql(\u0027DESCRIBE EXTENDED gaia_source_allwise_best_neighbours\u0027).show(400, truncate \u003d False)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.002",
       "progress": 0,
       "config": {
@@ -1161,7 +1161,7 @@
     },
     {
       "text": "%pyspark\nspark.sql(\u0027DESCRIBE EXTENDED gaia_source_bucketed_by_source_id\u0027).show(300, truncate \u003d False)",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.002",
       "progress": 0,
       "config": {
@@ -1200,7 +1200,7 @@
     },
     {
       "text": "%pyspark\n\n# Get the metastore command needed to set up the table again from the parquet dataset if the current in-memory metastore is lost because of spark reboot or context loss etc\n#spark.sql(\"SHOW CREATE TABLE gaia_source_bucketed_by_source_id\").show(1, truncate \u003d False)\nspark.sql(\"SHOW CREATE TABLE panstarrs1_best_neighbour\").show(1, truncate \u003d False)\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.002",
       "progress": 0,
       "config": {
@@ -1239,7 +1239,7 @@
     },
     {
       "text": "%pyspark\n\nps1_df.show()\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.002",
       "progress": 0,
       "config": {
@@ -1270,7 +1270,7 @@
     },
     {
       "text": "%pyspark\n\n# check the neighbour table ingest: histogram of separations:\n\n# define the data frame source (folder moved from where it was written)\nps1neighbs_reread_df \u003d sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/HPX12_BUCKETS/PS1_BEST_NEIGHBOURS/*.parquet\u0027)\n\n# register as an sql context queryable object\nsqlContext.registerDataFrameAsTable(ps1neighbs_reread_df, \u0027ps1xn\u0027)\n\n# do the query\nsql_df \u003d spark.sql(\u0027SELECT round(angular_distance*100.0, 0)/100.0 AS bin, COUNT(*) AS n FROM ps1xn GROUP BY bin\u0027)\n\n# plot up the binned counts\nimport matplotlib.pyplot as plot\nplot.figure(1, figsize \u003d (9.7, 6.0))\nplot.yscale(\u0027log\u0027)\nx \u003d list(sql_df.select(\u0027bin\u0027).toPandas()[\u0027bin\u0027])\nheight \u003d list(sql_df.select(\u0027n\u0027).toPandas()[\u0027n\u0027])\nplot.bar(x, height, width \u003d 0.01)\nplot.xlabel(\u0027Angular distance / arcsec\u0027)\nplot.ylabel(\u0027Number of sources\u0027)\n\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.002",
       "progress": 0,
       "config": {
@@ -1301,7 +1301,7 @@
     },
     {
       "text": "%pyspark\n\n# new formatting of GEDR3 with HPX12 buckets:\ngaia_source_df \u003d sqlContext.read.option(\u0027mode\u0027,\u0027failfast\u0027).option(\u0027header\u0027, \u0027true\u0027).schema(gaia_source_schema).csv(\u0027file:////user/nch/CSV/GEDR3/*.csv\u0027)\nsaveToBinnedParquet(gaia_source_df, \u0027file:///user/nch/PARQUET/HPX12_BUCKETS/GEDR3\u0027, name \u003d \u0027gaia_source\u0027, mode \u003d \u0027overwrite\u0027)\n\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.003",
       "progress": 0,
       "config": {
@@ -1332,7 +1332,7 @@
     },
     {
       "text": "%pyspark\n\n# check\ngs_hpx_df \u003d sqlContext.read.parquet(\u0027file:////user/nch/PARQUET/HPX12_BUCKETS/GEDR3/*.parquet\u0027)\n\n# register as an sql context queryable object\nsqlContext.registerDataFrameAsTable(gs_hpx_df, \u0027gshpx\u0027)\n\n# counts in cells:\nsql_df \u003d spark.sql(\u0027SELECT hpx12, COUNT(*) AS n FROM gshpx GROUP BY hpx12\u0027)\n\n# plot up the sky counts\nimport matplotlib.pyplot as plt\n\nimport numpy as np\nimport healpy as hp\n\n# healpy constants\nNSIDE \u003d 32\nNPIX \u003d hp.nside2npix(NSIDE)\n\n# do the visualisation\narray_like \u003d np.empty(NPIX)\nfor item in sql_df.rdd.collect():  array_like[item[0]] \u003d item[1]\nhp.mollview(array_like, nest\u003dTrue, title\u003d\u0027Source counts at HEALPix level 12\u0027, norm\u003d\u0027log\u0027)\nhp.graticule(coord\u003d\u0027E\u0027, color\u003d\u0027white\u0027)\n\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.003",
       "progress": 0,
       "config": {
@@ -1363,7 +1363,7 @@
     },
     {
       "text": "%pyspark\n\nprint (time.localtime())",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.003",
       "progress": 0,
       "config": {
@@ -1394,8 +1394,8 @@
     },
     {
       "text": "%pyspark\n\n# displays the existing list of tables in the in-memory meta-store.\n\nspark.sql(\"SHOW TABLES\").show()\n",
-      "user": "gaiauser",
-      "dateUpdated": "2021-12-12 21:49:49.003",
+      "user": "nch",
+      "dateUpdated": "2022-07-04 19:11:10.743",
       "progress": 0,
       "config": {
         "editorSetting": {
@@ -1419,7 +1419,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "+--------+--------------------+-----------+\n|database|           tableName|isTemporary|\n+--------+--------------------+-----------+\n| default|gaia_source_bucke...|      false|\n| default|panstarrs1_best_n...|      false|\n|        |      cached_sources|       true|\n|        |     dcr_gaia_source|       true|\n|        |         gaia_source|       true|\n|        |         raw_sources|       true|\n+--------+--------------------+-----------+\n\n"
+            "data": "+--------+--------------------+-----------+\n|database|           tableName|isTemporary|\n+--------+--------------------+-----------+\n|gaiaedr3|         gaia_source|      false|\n|gaiaedr3|gaia_source_allwi...|      false|\n|gaiaedr3|gaia_source_ps1_b...|      false|\n|gaiaedr3|gaia_source_tmass...|      false|\n+--------+--------------------+-----------+\n\n"
           }
         ]
       },
@@ -1429,11 +1429,13 @@
       "jobName": "paragraph_1639345789003_755043817",
       "id": "20210226-121555_1767677412",
       "dateCreated": "2021-12-12 21:49:49.003",
-      "status": "READY"
+      "dateStarted": "2022-07-04 19:11:10.753",
+      "dateFinished": "2022-07-04 19:11:10.790",
+      "status": "FINISHED"
     },
     {
       "text": "%pyspark\n\n# check raw parquet data set for gaia_source:\ncheck_df \u003d spark.read.parquet(\"file:////user/nch/PARQUET/REPARTITIONED/GEDR3\")\n\n# debug: physical execution plan and resulting schema\ncheck_df.explain()\ncheck_df.show()\ncheck_df.schema\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.003",
       "progress": 0,
       "config": {
@@ -1472,7 +1474,7 @@
     },
     {
       "text": "%pyspark\n",
-      "user": "gaiauser",
+      "user": "anonymous",
       "dateUpdated": "2021-12-12 21:49:49.003",
       "progress": 0,
       "config": {},
